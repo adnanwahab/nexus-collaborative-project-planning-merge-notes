@@ -35,6 +35,35 @@ let poll_data = {
         ]
       }
     };
+const handleKeyDown =     async function (e) {
+        let _ = e.target.value.split('\n')
+        let your_nexus = get('.your-nexus')
+        your_nexus.innerHTML = ''
+         let beforeRender = _.map(compile)
+         console.log(beforeRender)
+              beforeRender.forEach(function (elOrString) {
+            //data is the rest of the parameters after the action/first parameter.
+            //todo //make a hash of each render function keyed by action_name
+            //track the dependencies
+            //when any dependency changes -> 
+            //replace with a more structured render method -> input = data -> output => element
+            if (typeof elOrString === 'string') {
+                let div = document.createElement('divs')
+                div.innerHTML = elOrString
+                your_nexus.appendChild(div)
+            }
+            else your_nexus.appendChild(elOrString)
+         })
+    
+        // let hello_world = await fetch(baseRoute +'.netlify/functions/columns', {
+        //     method: 'POST',
+        //     body: JSON.stringify({message: e.target.value})
+        // });
+        // hello_world = await hello_world.json()
+        // console.log(hello_world)
+        //this method should write to database
+        //on interval -> update database every 5 seconds
+    }
 //import {getLineInfo, TokContext, tokTypes as tt, Parser} from "acorn";
 // import defaultGlobals from "./globals.js";
 // import findReferences from "./references.js";
@@ -184,8 +213,6 @@ for (let i = 0; i < conan_o_brien.length; i++) {
     puns.push(conan_o_brien[i])
     humor.push(conan_o_brien[i])
 }
-console.log(jokes,puns, humor)
-
 
 const fns = {
     ':find': function (args) {
@@ -225,7 +252,7 @@ function compile(_, index) {
     if (_.indexOf(':if-poll-red') === 0) {
        return console.log(trackDependenentVariables)
     }
-    if (_.indexOf(':flight-search') === 0) return flightSearch()
+    //if (_.indexOf(':flight-search') === 0) return flightSearch()
     if (_.indexOf(':blink') === 0) {
         return `<div class="blink">${_.slice(5)}</div>`
     }
@@ -236,7 +263,9 @@ function compile(_, index) {
         return JSON.stringify(airbnbSearch().filter(row => JSON.stringify(row).indexOf(args) !== -1).slice(0, 100))
     }
     if (_.indexOf(':find') === 0) {
-        let _ = _.slice(1,).trim()
+        console.log(_.split(' ')[1])
+        if (_.split(' ')[1] === 'flights') return flightSearch()
+//        let _ = _.slice(1,).trim()
         //find all ___  
         //parts of speech grammar -> if word2 === noun then search registry of all db for noun
         //if not found, find synonyms of noun and search for those
@@ -251,18 +280,13 @@ function compile(_, index) {
         let args = _.split(':poll').join('').split(' ')
         if (args.find((s) => s === 'poll.11')) {
             let foodOrActivity = args.find((s) => s =='food') ? 'food' : 'stuff_to_do'
-            console.log(args, foodOrActivity, 'isfood', args.find((s) => 'food'))
-
             args = poll_data[foodOrActivity][state.poll1 || 'japan']
-//            console.log(foodOrActivity, args)
-
         }
-        //console.log('args',args)
         trackDependenentVariables[index] = getPoll(args)
-        //console.log('poll123',trackDependenentVariables)
-
         trackDependenentVariables[index].addEventListener('click', function (e) {
             state.poll1 = e.target.value
+            if (e.target.tagName === 'input') return
+            handleKeyDown({target: {value: get('textarea').value}})
         })
         return trackDependenentVariables[index]
     }
@@ -282,15 +306,7 @@ function compile(_, index) {
     if (_.indexOf(':solve-community-problem-make-it-super-easy-to-organize-groups') === 0) return 'poll: what is your favorite color'
     if (_.indexOf(':find-a-cafe-to-play-chess-and-board-games') === 0) return 'poll: what is your favorite color'
     if (_.indexOf(':yt') === 0) return `<iframe width="560" height="315" src="https://www.youtube.com/embed/TD5Rp__T668?si=Gl7O4PBllXKr5sft" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
-    if (_.indexOf(':stockprice') === 0) return  (() => { 
-        return JSON.stringify({
-        "AAPL": 123.45 * Math.random(),
-        "AMZN": 234.56* Math.random(),
-        "GOOG": 345.67* Math.random(),
-        "MSFT": 456.78* Math.random(),
-        "FB": 567.89 * Math.random(),
-        "TSLA": 678.90* Math.random()
-    }) })()
+
     //special cases computational bio
     if (_.indexOf(':collaborate-on-algae-design') === 0) return JSON.stringify(coCollaborateOnAlgaeDesign('glowing'))
     if (_.indexOf(':visualize-pdb') === 0) return polling_options()
@@ -325,36 +341,8 @@ setInterval(async function () {
         }).join('\n')
     get('.all-nexus').innerHTML = otherNexus   
 }, 5000)
-get('textarea').addEventListener('keydown', async function (e) {
-    let _ = e.target.value.split('\n')
-    let your_nexus = get('.your-nexus')
-    your_nexus.innerHTML = ''
-     let beforeRender = _.map(compile)
-     console.log(beforeRender)
-          beforeRender.forEach(function (elOrString) {
-        //data is the rest of the parameters after the action/first parameter.
-        //todo //make a hash of each render function keyed by action_name
-        //track the dependencies
-        //when any dependency changes -> 
-
-        //replace with a more structured render method -> input = data -> output => element
-        if (typeof elOrString === 'string') {
-            let div = document.createElement('divs')
-            div.innerHTML = elOrString
-            your_nexus.appendChild(div)
-        }
-        else your_nexus.appendChild(elOrString)
-     })
-
-    let hello_world = await fetch(baseRoute +'.netlify/functions/columns', {
-        method: 'POST',
-        body: JSON.stringify({message: e.target.value})
-    });
-    hello_world = await hello_world.json()
-    console.log(hello_world)
-    //this method should write to database
-    //on interval -> update database every 5 seconds
-})
+get('textarea').addEventListener('keyup', handleKeyDown)
+setTimeout(handleKeyDown, 2000)
 
 let renderGantChart = function () {
         const tasks = [
@@ -386,7 +374,7 @@ let renderGantChart = function () {
           const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
           text.setAttribute("x", start * 40);
           text.setAttribute("y", index * 30 + 15);
-          ext.setAttribute("stroke", "aliceblue");
+          text.setAttribute("fill", "aliceblue");
           text.textContent = name;
           // Add to group and then add the group to SVG
           g.appendChild(rect);
@@ -417,17 +405,6 @@ console.log('123')
     `;
     console.log(1231313)
 }, 1000);
-
-
-
-isDeployed ? '' :
-`list all of the parks in houston and kansas
-find airbnb in brooklyn that are in quiet areas and less than 1.5 miles from a yoga studio
-make a todo list for things to do when you arrive in city
-- get groceries
-- get clothes
-- visit 3 cites of interest near selected airbnb
-- reccomend 3 airbnbs and create a poll`
 
 function flightSearch() {
     return [
@@ -473,14 +450,18 @@ function getPoll(options=['red', 'blue', 'green']) {
     options = options.filter(_ => _.length > 0)
     state.poll = 0
     let container = document.createElement('div')
+
+    options = options.map(str => str === ':custom' ? '<input type="text" />' : str)
+
     container.innerHTML  = 
-    `<div>${(options.map((op) => 
+    `<div>${(options.map((op) => op.indexOf('input') > -1 ? op : 
         `<label>${op}</label><input type="radio" id="huey" name="drone" value="${op.replace(',','')}"  />`)).join('\n')
     }</div>`
     container.addEventListener('click', function (e) {
         console.log(e.target.value)
         state.poll = e.target.value
     })
+    container.innerHTML += '▁▂▃▅▂▇'
     return container
 }
 let mapbox = 'pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg'
