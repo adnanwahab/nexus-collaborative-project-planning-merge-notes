@@ -1,3 +1,4 @@
+//no reply + get shit done
 module.exports.read = async event => {
   console.log('Starting read function');
   if(!event || !event.queryStringParameters || !event.queryStringParameters.cells) {
@@ -15,9 +16,6 @@ module.exports.read = async event => {
 };
 
 //https://dev.to/a0viedo/writing-to-a-google-sheet-using-serverless-2ndc
-
-
-
 // import gspread
 // from oauth2client.service_account import ServiceAccountCredentials
 

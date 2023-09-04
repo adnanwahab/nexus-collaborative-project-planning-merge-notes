@@ -40,7 +40,7 @@ const handler = async (event) => {
   console.log(event)
   let message 
   let auth = await authorize()
-  if (event.body && event.httpMethod === 'GET'
+  if (event.body && event.httpMethod === 'POST'
   ) message =JSON.parse(event.body)
   console.log(message)
   let topics = await readCell(auth, 'Sheet1!Q:Q') //read the topics
