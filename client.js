@@ -5,6 +5,36 @@ window.location.host === `coop-party.surge.sh`
 let baseRoute = 'https://nexus-merge-sort-300-people.netlify.app/'
 let baseName = 'https://nexus-merge-sort-300-people.netlify.app'
 let state = {};
+let poll_data = {
+      stuff_to_do: {
+        japan: [
+          "karaoke",
+          "anime-convention",
+          "7/11",
+          "train",
+          "mueseum",
+          "hiroshima"
+        ],
+        london: ["castle windsor", "subway", "stone henge", "prehistoric lake"],
+        shanghai: [
+          "great wall of china",
+          "mongolia border",
+          "port",
+          "farmers market"
+        ]
+      },
+      food: {
+        japan: ["sushi", "octopus", "kelp", "boba"],
+        london: ["fish and chips", "bangers and mash", "crumpet", "hamburger"],
+        shanghai: [
+          "Peking Duck.",
+          "Zongzi (Sticky Rice Dumplings)",
+          "Jianbing (Egg Crepe)",
+          "Cong You Bing (Scallion Pancakes)",
+          "Tanghulu (Candied Hawthorn)"
+        ]
+      }
+    };
 //import {getLineInfo, TokContext, tokTypes as tt, Parser} from "acorn";
 // import defaultGlobals from "./globals.js";
 // import findReferences from "./references.js";
@@ -16,13 +46,9 @@ let state = {};
 
 //data anaalysis
 //for every tv show on this week -> find the funniest jokes and save them to a database
-
-
 const humor =[]
-const puns = `I used to play piano by ear, but now I use my hands.
-
+const puns = `
 I'm reading a book about anti-gravity, and it's impossible to put down.
-
 
 A bicycle can't stand on its own because it's two-tired.
 
@@ -185,7 +211,17 @@ get('.all-nexus').addEventListener('click', function (e) {
     let editProposal = document.createElement('input')
     e.target.appendChild(editProposal)
 })
-function compile(_) {
+
+let lineNumberComponents = [
+
+]
+
+function compile(_, index) {
+    console.log(_.indexOf(':poll'))
+
+    //make parsing better -doesnt have to be first thing -> just remove whitespace
+    //make dependent variable tracking without react
+    //l
     if (_.indexOf(':if-poll-red') === 0) {
        return console.log(trackDependenentVariables)
     }
@@ -213,8 +249,22 @@ function compile(_) {
     if (_.indexOf(':math') === 0) return console.log(123), eval(_.split(' ').slice(1).join(''))
     if (_.indexOf(':poll') === 0) { 
         let args = _.split(':poll').join('').split(' ')
-        trackDependenentVariables[0] = [getPoll(args), 0]
-        return trackDependenentVariables[0][0]
+        if (args.find((s) => s === 'poll.11')) {
+            let foodOrActivity = args.find((s) => s =='food') ? 'food' : 'stuff_to_do'
+            console.log(args, foodOrActivity, 'isfood', args.find((s) => 'food'))
+
+            args = poll_data[foodOrActivity][state.poll1 || 'japan']
+//            console.log(foodOrActivity, args)
+
+        }
+        //console.log('args',args)
+        trackDependenentVariables[index] = getPoll(args)
+        //console.log('poll123',trackDependenentVariables)
+
+        trackDependenentVariables[index].addEventListener('click', function (e) {
+            state.poll1 = e.target.value
+        })
+        return trackDependenentVariables[index]
     }
     if (_.indexOf(':pun') === 0) { 
         //filter out by targeted audienece
@@ -280,6 +330,7 @@ get('textarea').addEventListener('keydown', async function (e) {
     let your_nexus = get('.your-nexus')
     your_nexus.innerHTML = ''
      let beforeRender = _.map(compile)
+     console.log(beforeRender)
           beforeRender.forEach(function (elOrString) {
         //data is the rest of the parameters after the action/first parameter.
         //todo //make a hash of each render function keyed by action_name
@@ -354,7 +405,20 @@ function  coCollaborateOnAlgaeDesign(traitsRequestedBasedOnPoll){
         shipToLab: `<button>Ship to Lab And then Ship to you</button>`,
     }
 }
-document.querySelector('textarea').value = '';
+
+console.log('123')
+;setTimeout(function () {
+    console.log(1231313)
+    document.querySelector('textarea').value = `
+:poll japan, london, shanghai
+:poll food options in poll.11
+:poll activity options in poll.11
+:plant-trees find places to plant trees nearby 20418 autumn shore drive
+    `;
+    console.log(1231313)
+}, 1000);
+
+
 
 isDeployed ? '' :
 `list all of the parks in houston and kansas
@@ -406,11 +470,15 @@ function getPoll(options=['red', 'blue', 'green']) {
     //make this write to excel
     //new excel tab = new year,month,week,day????
     //register variable in state
+    options = options.filter(_ => _.length > 0)
     state.poll = 0
     let container = document.createElement('div')
     container.innerHTML  = 
-    `<div>${options.map((op) => `<label>${op}</label><input type="radio" id="huey" name="drone" value="${op}"  />`)}</div>`
+    `<div>${(options.map((op) => 
+        `<label>${op}</label><input type="radio" id="huey" name="drone" value="${op.replace(',','')}"  />`)).join('\n')
+    }</div>`
     container.addEventListener('click', function (e) {
+        console.log(e.target.value)
         state.poll = e.target.value
     })
     return container
