@@ -37,7 +37,6 @@ async function readCell(auth, RANGE) {
 }
 // Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 const handler = async (event) => {
-  console.log(event)
   let message 
   let auth = await authorize()
   if (event.body && event.httpMethod === 'POST'

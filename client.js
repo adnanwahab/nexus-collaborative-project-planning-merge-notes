@@ -14,6 +14,8 @@ let state = {};
 //https://ui.shadcn.com/docs/components/checkbox
 //track components not just by row but by type -> if the sequene order changes, then "code" no longer works  
 
+//data anaalysis
+//for every tv show on this week -> find the funniest jokes and save them to a database
 
 
 const humor =[]
