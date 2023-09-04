@@ -48,7 +48,7 @@ const handler = async (event) => {
     let documents = await updateCell(auth, 'Sheet1!Q:Q', message) // write the document
   }
 
-  return {statusCode: 200, body: JSON.stringify({ message: topics.data.values })}
+  return {statusCode: 200, body: JSON.stringify({ message: topics })}
   return { statusCode: 500, body: error.toString() }
 
   try {
