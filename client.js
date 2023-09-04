@@ -239,18 +239,401 @@ get('.all-nexus').addEventListener('click', function (e) {
     e.target.appendChild(editProposal)
 })
 
-let lineNumberComponents = [
+function scheduledScraper (url) {
+    fetch(`/scheduled-function/getChatFromTwitch?channel=${url}`)
+}
 
-]
+function cluster(data){
+    fetch('/cluster/getChatFromTwitch', {
+        body: JSON.stringify(data)
+    })
+
+
+    //just render the clusters - dont hardcode
+}
+
 
 function compile(_, index) {
-    console.log(_.indexOf(':poll'))
+    //console.log(_.indexOf(':poll'))
 
     //make parsing better -doesnt have to be first thing -> just remove whitespace
     //make dependent variable tracking without react
     //l
-    if (_.indexOf(':if-poll-red') === 0) {
-       return console.log(trackDependenentVariables)
+    //make streaming apis that you can pipe line unix 
+    // if (_.indexOf(':stream') === 0) {
+
+    //     return stream
+    // }
+
+
+    //
+
+
+    if (_.indexOf(':simulate-reaction') === 0) {
+        let args = _.match(/:simulate-reaction (a-z)* (a-z)*/)
+        
+        let div = document.createElement('div')
+
+        let select = document.createElement('select')
+        let select2 = document.createElement('select')
+        div.appendChild(select2)
+        div.appendChild(select)
+        div.addEventListener('change', function (e) {
+            console.log(e.target.value)
+        })
+        let compounds = [
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/RC00096",
+            "https://www.kegg.jp/entry/RC02896",
+            "https://www.kegg.jp/entry/6.3.4.10",
+            "https://www.kegg.jp/entry/RC00043",
+            "https://www.kegg.jp/entry/RC00070",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/RC00096",
+            "https://www.kegg.jp/entry/RC02896",
+            "https://www.kegg.jp/entry/6.3.4.11",
+            "https://www.kegg.jp/entry/RC00043",
+            "https://www.kegg.jp/entry/RC00070",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/RC00096",
+            "https://www.kegg.jp/entry/RC02896",
+            "https://www.kegg.jp/entry/6.3.4.12",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/RC00555",
+            "https://www.kegg.jp/entry/6.3.4.13",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/RC00166",
+            "https://www.kegg.jp/entry/6.3.4.14",
+            "https://www.kegg.jp/entry/RC00253",
+            "https://www.kegg.jp/entry/6.3.4.15",
+            "https://www.kegg.jp/entry/RC00043",
+            "https://www.kegg.jp/entry/RC00070",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/RC00096",
+            "https://www.kegg.jp/entry/RC02896",
+            "https://www.kegg.jp/entry/6.3.4.16",
+            "https://www.kegg.jp/entry/RC00002",
+            "https://www.kegg.jp/entry/RC02804",
+            "https://www.kegg.jp/entry/6.3.4.17",
+            "https://www.kegg.jp/entry/RC00026",
+            "https://www.kegg.jp/entry/RC00111",
+            "https://www.kegg.jp/entry/6.3.4.18",
+            "https://www.kegg.jp/entry/RC01927",
+            "https://www.kegg.jp/entry/6.3.4.19",
+            "https://www.kegg.jp/entry/RC02633",
+            "https://www.kegg.jp/entry/RC02634",
+            "https://www.kegg.jp/entry/6.3.4.20",
+            "https://www.kegg.jp/entry/RC00959",
+            "https://www.kegg.jp/entry/6.3.4.21",
+            "https://www.kegg.jp/entry/RC00033",
+            "https://www.kegg.jp/entry/6.3.4.22",
+            "https://www.kegg.jp/entry/RC01421",
+            "https://www.kegg.jp/entry/RC03167",
+            "https://www.kegg.jp/entry/6.3.4.23",
+            "https://www.kegg.jp/entry/RC00263",
+            "https://www.kegg.jp/entry/RC00323",
+            "https://www.kegg.jp/entry/6.3.4.24",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/RC00096",
+            "https://www.kegg.jp/entry/6.3.4.25",
+            "https://www.kegg.jp/entry/6.3.5.1",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/RC00100",
+            "https://www.kegg.jp/entry/6.3.5.2",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/RC00204",
+            "https://www.kegg.jp/entry/RC02798",
+            "https://www.kegg.jp/entry/6.3.5.3",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/RC01160",
+            "https://www.kegg.jp/entry/6.3.5.4",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/RC02798",
+            "https://www.kegg.jp/entry/6.3.5.5",
+            "https://www.kegg.jp/entry/RC00002",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/RC00043",
+            "https://www.kegg.jp/entry/RC02750",
+            "https://www.kegg.jp/entry/RC02798",
+            "https://www.kegg.jp/entry/RC03314",
+            "https://www.kegg.jp/entry/6.3.5.6",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/6.3.5.7",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/6.3.5.9",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/RC01301",
+            "https://www.kegg.jp/entry/6.3.5.10",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/RC01302",
+            "https://www.kegg.jp/entry/6.3.5.11",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/RC01301",
+            "https://www.kegg.jp/entry/6.3.5.12",
+            "https://www.kegg.jp/entry/RC01301",
+            "https://www.kegg.jp/entry/6.3.5.13",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/RC00043",
+            "https://www.kegg.jp/entry/RC00358",
+            "https://www.kegg.jp/entry/RC02798",
+            "https://www.kegg.jp/entry/6.3.5.-",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/RC00358",
+            "https://www.kegg.jp/entry/RC00950",
+            "https://www.kegg.jp/entry/RC02596",
+            "https://www.kegg.jp/entry/6.3.-.-",
+            "https://www.kegg.jp/entry/6.4.1.1",
+            "https://www.kegg.jp/entry/RC00040",
+            "https://www.kegg.jp/entry/RC00367",
+            "https://www.kegg.jp/entry/6.4.1.2",
+            "https://www.kegg.jp/entry/RC00040",
+            "https://www.kegg.jp/entry/RC00367",
+            "https://www.kegg.jp/entry/6.4.1.3",
+            "https://www.kegg.jp/entry/RC00097",
+            "https://www.kegg.jp/entry/RC00609",
+            "https://www.kegg.jp/entry/RC00626",
+            "https://www.kegg.jp/entry/6.4.1.4",
+            "https://www.kegg.jp/entry/RC00367",
+            "https://www.kegg.jp/entry/RC00942",
+            "https://www.kegg.jp/entry/6.4.1.5",
+            "https://www.kegg.jp/entry/RC00367",
+            "https://www.kegg.jp/entry/RC00942",
+            "https://www.kegg.jp/entry/6.4.1.6",
+            "https://www.kegg.jp/entry/RC00040",
+            "https://www.kegg.jp/entry/RC00367",
+            "https://www.kegg.jp/entry/6.4.1.7",
+            "https://www.kegg.jp/entry/RC00626",
+            "https://www.kegg.jp/entry/6.4.1.8",
+            "https://www.kegg.jp/entry/RC00040",
+            "https://www.kegg.jp/entry/6.4.1.9",
+            "https://www.kegg.jp/entry/6.4.1.-",
+            "https://www.kegg.jp/entry/6.5.1.1",
+            "https://www.kegg.jp/entry/RC00005",
+            "https://www.kegg.jp/entry/6.5.1.2",
+            "https://www.kegg.jp/entry/RC00005",
+            "https://www.kegg.jp/entry/6.5.1.3",
+            "https://www.kegg.jp/entry/RC00296",
+            "https://www.kegg.jp/entry/6.5.1.4",
+            "https://www.kegg.jp/entry/RC00296",
+            "https://www.kegg.jp/entry/6.5.1.5",
+            "https://www.kegg.jp/entry/RC00296",
+            "https://www.kegg.jp/entry/6.5.1.6",
+            "https://www.kegg.jp/entry/RC00005",
+            "https://www.kegg.jp/entry/6.5.1.7",
+            "https://www.kegg.jp/entry/RC00005",
+            "https://www.kegg.jp/entry/6.5.1.8",
+            "https://www.kegg.jp/entry/6.5.1.9",
+            "https://www.kegg.jp/entry/RC00900",
+            "https://www.kegg.jp/entry/6.5.1.-",
+            "https://www.kegg.jp/entry/6.6.1.1",
+            "https://www.kegg.jp/entry/RC01012",
+            "https://www.kegg.jp/entry/6.6.1.2",
+            "https://www.kegg.jp/entry/RC02000",
+            "https://www.kegg.jp/entry/6.7.1.1",
+            "https://www.kegg.jp/entry/7.1.1.1",
+            "https://www.kegg.jp/entry/RC00001",
+            "https://www.kegg.jp/entry/7.1.1.2",
+            "https://www.kegg.jp/entry/RC00061",
+            "https://www.kegg.jp/entry/7.1.1.3",
+            "https://www.kegg.jp/entry/RC00061",
+            "https://www.kegg.jp/entry/7.1.1.4",
+            "https://www.kegg.jp/entry/RC00819",
+            "https://www.kegg.jp/entry/7.1.1.5",
+            "https://www.kegg.jp/entry/RC00819",
+            "https://www.kegg.jp/entry/7.1.1.6",
+            "https://www.kegg.jp/entry/RC01002",
+            "https://www.kegg.jp/entry/7.1.1.7",
+            "https://www.kegg.jp/entry/RC00061",
+            "https://www.kegg.jp/entry/7.1.1.8",
+            "https://www.kegg.jp/entry/7.1.1.9",
+            "https://www.kegg.jp/entry/RC00016",
+            "https://www.kegg.jp/entry/7.1.1.10",
+            "https://www.kegg.jp/entry/7.1.1.11",
+            "https://www.kegg.jp/entry/7.1.1.12",
+            "https://www.kegg.jp/entry/7.1.2.1",
+            "https://www.kegg.jp/entry/7.1.2.2",
+            "https://www.kegg.jp/entry/7.1.3.1",
+            "https://www.kegg.jp/entry/7.2.1.1",
+            "https://www.kegg.jp/entry/7.2.1.2",
+            "https://www.kegg.jp/entry/7.2.1.3",
+            "https://www.kegg.jp/entry/7.2.2.1",
+            "https://www.kegg.jp/entry/7.2.2.2",
+            "https://www.kegg.jp/entry/7.2.2.3",
+            "https://www.kegg.jp/entry/7.2.2.4",
+            "https://www.kegg.jp/entry/7.2.2.5",
+            "https://www.kegg.jp/entry/7.2.2.6",
+            "https://www.kegg.jp/entry/7.2.2.7",
+            "https://www.kegg.jp/entry/7.2.2.8",
+            "https://www.kegg.jp/entry/7.2.2.9",
+            "https://www.kegg.jp/entry/7.2.2.10",
+            "https://www.kegg.jp/entry/7.2.2.11",
+            "https://www.kegg.jp/entry/6.3.2.40",
+            "https://www.kegg.jp/entry/RC00003",
+            "https://www.kegg.jp/entry/RC03165",
+            "https://www.kegg.jp/entry/RC03166",
+            "https://www.kegg.jp/entry/6.3.2.41",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00141",
+            "https://www.kegg.jp/entry/6.3.2.42",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00141",
+            "https://www.kegg.jp/entry/RC01227",
+            "https://www.kegg.jp/entry/6.3.2.43",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/6.3.2.44",
+            "https://www.kegg.jp/entry/RC00096",
+            "https://www.kegg.jp/entry/RC00141",
+            "https://www.kegg.jp/entry/6.3.2.45",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00141",
+            "https://www.kegg.jp/entry/6.3.2.46",
+            "https://www.kegg.jp/entry/RC00096",
+            "https://www.kegg.jp/entry/RC00957",
+            "https://www.kegg.jp/entry/6.3.2.47",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00141",
+            "https://www.kegg.jp/entry/6.3.2.48",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00141",
+            "https://www.kegg.jp/entry/6.3.2.49",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00141",
+            "https://www.kegg.jp/entry/6.3.2.50",
+            "https://www.kegg.jp/entry/6.3.2.51",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/6.3.2.52",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/6.3.2.53",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00141",
+            "https://www.kegg.jp/entry/6.3.2.54",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/RC00096",
+            "https://www.kegg.jp/entry/6.3.2.55",
+            "https://www.kegg.jp/entry/6.3.2.56",
+            "https://www.kegg.jp/entry/6.3.2.57",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/6.3.2.58",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/RC00096",
+            "https://www.kegg.jp/entry/6.3.2.59",
+            "https://www.kegg.jp/entry/RC00096",
+            "https://www.kegg.jp/entry/RC00141",
+            "https://www.kegg.jp/entry/6.3.2.60",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/6.3.2.61",
+            "https://www.kegg.jp/entry/6.3.2.62",
+            "https://www.kegg.jp/entry/6.3.2.-",
+            "https://www.kegg.jp/entry/RC00064",
+            "https://www.kegg.jp/entry/RC00090",
+            "https://www.kegg.jp/entry/RC00141",
+            "https://www.kegg.jp/entry/6.3.3.1",
+            "https://www.kegg.jp/entry/RC01100",
+            "https://www.kegg.jp/entry/6.3.3.2",
+            "https://www.kegg.jp/entry/RC00183",
+            "https://www.kegg.jp/entry/6.3.3.3",
+            "https://www.kegg.jp/entry/RC00868",
+            "https://www.kegg.jp/entry/6.3.3.4",
+            "https://www.kegg.jp/entry/RC01389",
+            "https://www.kegg.jp/entry/6.3.3.5",
+            "https://www.kegg.jp/entry/RC03170",
+            "https://www.kegg.jp/entry/6.3.3.6",
+            "https://www.kegg.jp/entry/RC03195",
+            "https://www.kegg.jp/entry/6.3.3.7",
+            "https://www.kegg.jp/entry/6.3.4.2",
+            "https://www.kegg.jp/entry/RC00010",
+            "https://www.kegg.jp/entry/RC00074",
+            "https://www.kegg.jp/entry/RC02798",
+            "https://www.kegg.jp/entry/6.3.4.3",
+            "https://www.kegg.jp/entry/RC00026",
+            "https://www.kegg.jp/entry/RC00111",
+            "https://www.kegg.jp/entry/6.3.4.4",
+            "https://www.kegg.jp/entry/RC00458",
+            "https://www.kegg.jp/entry/RC00459",
+            "https://www.kegg.jp/entry/6.3.4.5",
+            "https://www.kegg.jp/entry/RC00380",
+            "https://www.kegg.jp/entry/RC00629",
+            "https://www.kegg.jp/entry/6.3.4.6",
+            "https://www.kegg.jp/entry/RC00378",
+            "https://www.kegg.jp/entry/6.3.4.7",
+            "https://www.kegg.jp/entry/RC00431",
+            "https://www.kegg.jp/entry/6.3.4.8",
+            "https://www.kegg.jp/entry/RC01067",
+            "https://www.kegg.jp/entry/6.3.4.9",
+            "https://www.kegg.jp/entry/RC00043",
+            "https://www.kegg.jp/entry/RC00070"
+        ]
+        for (let i = 0; i < 100; i++) {
+            select.appendChild(Object.assign(document.createElement('option'), {
+                value: compounds[i],
+                textContent: compounds[i],
+            }))
+            select2.appendChild(Object.assign(document.createElement('option'), {
+                value: compounds[i],
+                textContent: compounds[i],
+            }))
+        }
+        return div
+    }
+
+
+
+
+    if (_.indexOf(':stream') === 0) {
+        let div = document.createElement('div')
+            div.innerHTML = Math.random()
+        return div
+    }
+
+
+
+
+
+
+
+    if (_.indexOf(':stream') === 0) {
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //:when theres a meteor shower -> send an alert to local astronomy club
+    if (_.indexOf(':stream') === 0) {
+        let args = _.split(':stream')[1].trim()
+        let otherArgs = _.split(':stream').slice(1)
+        let stream = document.createElement('div')
+        stream.className = 'stream'
+        console.log(123)
+        stream.innerHTML = 'clusters = humor, requests_for_demo, win trading, food ban, walk?'
+        setInterval(function () {
+            let comments = scheduledScraper(args)
+            let topics = cluster(comments)
+        }, 1000)
+        //think of something more cool than stream
+        //1 might use it, and can use the same code for 100s of other tasks 
+        //fix the demo so the stream can sleep tonight 
+       return stream
     }
     //if (_.indexOf(':flight-search') === 0) return flightSearch()
     if (_.indexOf(':blink') === 0) {
@@ -331,18 +714,19 @@ setInterval(async function () {
         console.log(response)
         message = ''
     }
-    get('.chapters').innerHTML = [...Array(message.length)].map(_ =>'<div>*</div>').join('')
-    let otherNexus = Object.entries(message).map(entry => {
-        let [title, contents] = entry;
-        contents = JSON.parse(contents)
-        contents = contents.flat().filter(line => line.length > 2).sort((one, two) => one[1].length - two[1].length)
-        let listView = contents.map(element => `<div class="bg-green-100">${element}</div>`).join('')
-            return `<div class="bg-blue-100">${title}</div>${listView}`
-        }).join('\n')
-    get('.all-nexus').innerHTML = otherNexus   
+    // renable database
+    // get('.chapters').innerHTML = [...Array(message.length)].map(_ =>'<div>*</div>').join('')
+    // let otherNexus = Object.entries(message).map(entry => {
+    //     let [title, contents] = entry;
+    //     contents = JSON.parse(contents)
+    //     contents = contents.flat().filter(line => line.length > 2).sort((one, two) => one[1].length - two[1].length)
+    //     let listView = contents.map(element => `<div class="bg-green-100">${element}</div>`).join('')
+    //         return `<div class="bg-blue-100">${title}</div>${listView}`
+    //     }).join('\n')
+    // get('.all-nexus').innerHTML = otherNexus   
 }, 5000)
 get('textarea').addEventListener('keyup', handleKeyDown)
-setTimeout(handleKeyDown, 2000)
+//setTimeout(handleKeyDown, 2000)
 
 let renderGantChart = function () {
         const tasks = [
@@ -394,16 +778,13 @@ function  coCollaborateOnAlgaeDesign(traitsRequestedBasedOnPoll){
     }
 }
 
-console.log('123')
-;setTimeout(function () {
-    console.log(1231313)
+setTimeout(function () {
     document.querySelector('textarea').value = `
 :poll japan, london, shanghai
 :poll food options in poll.11
 :poll activity options in poll.11
 :plant-trees find places to plant trees nearby 20418 autumn shore drive
     `;
-    console.log(1231313)
 }, 1000);
 
 function flightSearch() {
@@ -653,499 +1034,3 @@ confetti({
       }
   })
 })
-
-//run client with llm+g + intermediate representation
-// this is cool
-// this makes sense
-// make cool stuff
-// make a cake that is cool
-// make cool stuff
-//try to make 5 really cool 50,000 word eassay or stories
-
-// https://voyager.minedojo.org/
-
-//play video games for me
-//jump in mega man X 
-//https://hannibunny.github.io/mlbook/transformer/intent_classification_with_bert.html
-// window.location.hash === '#one' ? 
-// `there are 500 cats in the neighborhood.
-// there was a train being made from kansas to seattle.
-// yesterday i ate popcorn.` : 
-// `there are 300 cats in the neighborhood.
-// there was a train being made from kansas to seattle.
-// yesterday i ate toast.
-// send instant pot to 440 west 34th street
-// send ingredients weekly to 440 west 34th street
-// send .140 satoshis to #121alsdfjasdfjaeofijas;ofjasd
-// start instant pot
-// add peppers, turkey, kabob, and tomatoes to pot
-// saute onions until carmelized
-// apply salt, spice and vinnegar
-// then make soup
-// `
-//create bounties for improvements and solutions to problems within document
-//:bitcoin .1 to person who can make a better version of this document
-//build something that 100% of telepathy and lots of people would want to know about
-
-
-//type a sentence -> just see cool shit happen on the right side instantly
-//client side LLM -> .1 second instant feedback
-//[does not compile] - really- really goood autocomplete
-//10 different "llms" + modules -> figure out which one to use based on the sentence grammar -> problem "domain" -> use a classifier to predict which llm to use 
-//:shader - write a shader to 
-//autocomplete = most important part -> 8 hours a day -> 3 months ekeing 20% better prediction = different between unsuable to wow its exactly what i needed basd on the context of previous sentences in this nexus 
-
-//make something anyone wouldnt have predicted 4 days ago
-//make best possible thing -> use english to 
-//make brwoser based LLM work -> spam on all possible subsets and substitutions 
-
-
-//make a diagram of the 20 best tweets by time and humor
-//write a function to split a string by colons and commas
-// Determine whether the sentiment of text is positive
-// Use a web service to determine the sentiment of text
-//execute live repl in bottom pane
-// let final = document.querySelector('.attempt-at-consolidation')
-// document.querySelector('.nexus').addEventListener('click', function (e) {
-//     console.log(123)
-//     let text = e.target.textContent
-//     final.textContent += text
-// })
-//switch to react later
-//fetch george.txt
-//https://stackoverflow.com/questions/74070505/how-to-run-fastapi-application-inside-jupyter
-
-//simplify -> upload -> "nexus" to gcloud to excel
-//use "sentene-transformers" to transform all documents into one document
-//track the transformations at every step -> so the indices are always correct
-//on keypress -> send edit to serverless function -> 
-//changed document ideas get stored in 2nd spreadsheet tab
-//use spreadsheet as a message queue
-//Machine Learning Process = outgoing only -> requests to notebook cells with changed documents
-//those changes then get added into the nexus
-//dont need fastapi 
-//serverless function updates spreadsheet
-//pytorch server updates spreadsheet to cluster "chat" or "document" or "story" or "essay" or "book"
-//make pytorch server a batch process -> do some kind of bayesian optimization to make it make sense
-//suggest eddits and what not
-
-//if the server goes down
-//users can just manually assign topic to their message :snooze
-
-//https://www.kaggle.com/datasets/marquis03/metal-organic-frame-materials-prediction
-
-//all data in notebook is classified by the text that creates it 
-//find intersection between all notebooks -> everyone writes their own constiution -> sort by mergability 
-//give feedback based on which lines are not mergeable
-
-
-
-
-
-//could put 900 hours of work 
-//Given 3 peoples schedules, find a time to meet and a place to meet -> add 3 emails 
-//writes to a spreadsheet and keeps track of your board games -> catan, chess and poker
-
-
-
-//come up with all the data all the code gpt can make -> which will be lots of things
-//problem -> chatGPT doesnt come up with perfect code every time 
-  //fine tune gpt-4 to make it better at writing code -> export -> test -> 3 months to cool thing 
-
-
-  //use a poll -> should executable text be :action
-//how to execute -> one magic spell (not sure)
-
-//https://ui.shadcn.com/docs/components/calendar
-//everyone writes together -> becomes one document 
-//a next generation constitution would have things like all 300 people should vote everyday and they get free piano lessons and -10% on taxes. It should have ammendments daily. It should have automatic daily taxes if you act negatively. It should ban walled gardens and things like imessage and sms should be in a database that has red, yellow and green tiers of access. 
-//red = 100% anonymized, 
-//yelow = semi-anonymous
-//get -5% taxes for allowing your texts to be yellow
-//300 million people have 1million more ideas and implementations and proofs than 1000 people. 
-// Compute the difference, intersection, and join between n essays -> 
-// add random data analysis and program executions in the middle (vscode, git, replit, observable, jupyter, retool, usemacro, excel, )
-
-//choose your own adventure text game 
-//categorize all the text in the nexus in buckets 
-
-//changes baseroute to https://merge-sentences-todo.ngrok.io/ if you want to test locally
-
-
-//list -> 
-//for all cells -> get intersection of people who responded blue to poll_one and red to poll_two
-//buy flights for them to go to vancouver and then back to their home town 
-//just need lists and functions -> fn args -> infinite args for all functions 
-
-//to test -> translate passage or page from books -> english -> french -> japanese -> english
-//or intentionally rephrase using whatever 
-
-
-//300 people typing per second -> how good can you make the draft without extra work
-//collaboratively make story
-//intersection is cool and is easier now but not really possible 5  ago
-//use client side GPU w/ google sheets - no server + no login 
-//tree is cool 
-
-//extract meaning from text -> do pairwise matching
-//sort by sum of encoding
-//
-
-//300 people typing - how fun can you make it to think together - cool diagram
-
-
-//editing is lots of work -> how to make this take 50% less time
-
-
-
-
-
-//db -> have to do a pairwise comparision with your version and canonical version
-//also do a pairwise comparision with your set of sentences and everyone elses set of sentences
-
-
-//nexus = intersection of 300 million circles 
-
-// 300 million circles -> render by similarity, humor, 
-// show some way over in the corners -> margin vs center
-//try to get your circle to overlap with everyone elss but also have useful, funny or relevant 'tangents'
-
-//300 people will work together to type up a "draft,plan,story"
-//300 circles - venn diagram -> 
-//try on the client -> no server -> 7 billion people -> 10 years from now 
-//for each pair -> ast, encoding = latent representation -> 32 columns 
-//as you edit -> "suggest -> this sentence is malformed, please make it like this "
-//if you want someone to do great work, why would you put stupid shit in their head ? poll audience
-// document.onpaste = function (event) {
-//     var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-//     console.log(JSON.stringify(items)); // might give you mime types
-//     for (var index in items) {
-//         var item = items[index];
-//         if (item.kind === 'file') {
-//             var blob = item.getAsFile();
-//             var reader = new FileReader();
-//             reader.onload = function (event) {
-//                 console.log(event.target.result); // data url!
-//             }; 
-//             let img = document.createElement('img')
-//             let base64Data = reader.readAsDataURL(blob)
-//             console.log(base64Data)
-//             img.src = base64Data
-//             // console.log(reader.readAsDataURL(blob))
-//             document.querySelector('body').appendChild(img)
-//         }
-//     }
-// };
-//keep all the useful stuff out of scope beyond basic live queries
-//make it daily
-//but also a scratch pad you can post memes and opinion polls and favorite quotes 
-//natural language interface to as many apis as possible with gpt in between
-//augment data that user types
-//90 min timer -> compile then 2nd line 
-//client Side LLM -> tomororw
-//build soemthing that is worth knowing about -> 
-//what would telepathy want to build
-//components - UI, AI, ML, NLP,
-//webgpu custom graphics -> simulate a wind field 
-//publish button -> wikipedia page -> wikipedia integrates exported pages ?????
-//find all houses in houston 
-//email me them
-//set a watcher for new houses that match my criteria
-//dont use a broker
-//make a comic books about the wizards saving the word
-//request for features
-//use a function to categorize ->
-//solve all leetcode difficult using english 
-//make a list from 1 to 500
-//make cool functions that can be used to solve problems
-//telepathy is unhappy with this code base and their experience of me
-//figure out a problem 
-
-//english language notebook/editor to make it easier to solve data analysis problems
-//also let english language speakers execute code in a more structured way on servers they know ntohing about using custom appliocatons 
-//cooperation - cluster notebooks by topic ->
-//one nexus -> write a 'constitution' or an operating system for a country/city in english so everyone can read and write to it
-//this is cool so that everyone can see what is going on and participate in the process of making decisions
-//also it is cool because everyone can focus on a different part and improve it as it pertains to them ro someone they know or just soemthing they think is cool 
-//https://docs.chain.link/
-//brooklyn near yoga studio and quiet 
-//get list of yoga studios
-//get list of airbnbs
-//get list of noise complaints 
-//near_studio_apt = list(set([for apt in airbnbs:
-//for studio in yoga_studio
-//if distance(studio, apt) < 1.5 return true]))
-//quiet= [apt for apt in airbns if 5 < len(noise_complaints.filter({location} => distance(location, apt) < 1.5))]
-//get average of noise complaints in radius of each apt 
-//find weather forecast
-//plan hike on 3rd dray
-//if weather is good, send notification to all people who voted yes
-//if weather is rainy -> send notification that it is postponed 
-//
-//make hello world take a different set of parameters -> post / get
-//get content 
-//faster than searching -> travel planning in 5 minutes instead of 4 hours 
-
-//work on parser use peg
-//https://pegjs.org/documentation
-//
-//make something like neopets
-//100 people draft a document
-//document says there are 100 parks in city
-//document then generates code for generating invoice for adding park maintenance to city budget
-//document also generates code for other applications to support parks
-//document also 
-
-//I would like there to be 100 parks in houston
-//snapshot city before parks
-//snapshot city after parks
-//make cities more data driven -> 311 service requests are 
-
-//go to phily
-//why are all corporation dellaware c corp? 
-//i like leslie knope
-//make it easier for congresspeople to implement new initiatives 
-//track them
-//10,000 cities in the world - 50% of people live in cities, 30% in rural areas, 20% in suburbs
-
-
-//statically analyze generated code
-//automatically provision data and servers for it
-//automatically make ui widgets to interact with it -> scheduling, debug output and logs, etc
-//anomaly detection, capacity planning, crisis diagnosis, system design 
-//
-
-//make a living constitution that updates every day -> according to votes from the audience 
-//audience can make suggestions for changes to the constitution ->
-//these changes can be discussed and scrutinized and this discussion is kept on record
-//this constution can also creates procedures that can be executed 10^15 times a second
-    //exectue subprocedures and track logs in excel 
-    //everyone can see and debug the data about each procedure 
-    //people can also propose edits for each procedure and
-    //get a new passport = one button press
-    //doing taxes = one button press
-    //figure out more details that make sense
-
-    //question? how to reorganize code that is generated ?? -> one namespace and thats fine no one cares
-
-
-//goal: write a 5 page essay collaboratively
-//then see if it can have all the functions fall out of it 
-
-//this way citizens can be like 
-
-//we want 4 new houses in quadrant z42 -> 
-//they can see the progress daily till its complete 
-
-//excel based persistence
-//write procudures that mutate pixels in spreadsheet like reddit.com/r/place
-
-//start with this
-//let 300 people in editor type shit
-//i want a picture of a dinosaur wearing sunglasses in the top right or z51 that says "cool beans"
-
-
-//:actions => eval to value / results
-//english => provides data for actions
-
-
-//makes up a server -> provisions resources, data
-//get/make input/outputs for all science courses + books + research ppaers 
-//browserify does it - static analysis + observable does it too
-//find the variables that are important in lots of code that they know nothing about
-//generated code from gpt, internet, whatever -> 
-//one you know the variables for any code that matches with a user's query
-//ask the user for those variables 
-//try that out
-
-//type a bunch of text
-//issue a command using above context
-
-//me and my chess club are meeting at the cafe every thursday
-//sometimes the coffee shop is too loud
-//find a cafe that is quiet and has a chess board
-//find a cafe that is quiet and has a chess board and is less than 1.5 miles from my house
-//write some code that does this task
-//if "computers" suggestion is not precisely what you want, tell it what you wanted -> with a poll -> with a tree of optiosn 
-//make database+ui+gpu_script super ez - make a faucet-handle-cover for 'intelligence is now part of the plumbing / water supply'
-
-//i want to talk to gpt collaboratively
-//but also i want to run the code in a more structured way
-
-
-//find a list of every hiking place in the world
-//return a table
-
-
-//
-//make hello world take a different set of parameters -> post / get
-//get content 
-//faster than searching -> travel planning in 5 minutes instead of 4 hours 
-
-//work on parser use peg
-//https://pegjs.org/documentation
-//
-//make something like neopets
-//100 people draft a document
-//document says there are 100 parks in city
-//document then generates code for generating invoice for adding park maintenance to city budget
-//document also generates code for other applications to support parks
-//document also 
-
-//I would like there to be 100 parks in houston
-//snapshot city before parks
-//snapshot city after parks
-//make cities more data driven -> 311 service requests are 
-
-//go to phily
-//why are all corporation dellaware c corp? 
-//i like leslie knope
-//make it easier for congresspeople to implement new initiatives 
-//track them
-//10,000 cities in the world - 50% of people live in cities, 30% in rural areas, 20% in suburbs
-
-
-//statically analyze generated code
-//automatically provision data and servers for it
-//automatically make ui widgets to interact with it -> scheduling, debug output and logs, etc
-//anomaly detection, capacity planning, crisis diagnosis, system design 
-//
-
-//make a living constitution that updates every day -> according to votes from the audience 
-//audience can make suggestions for changes to the constitution ->
-//these changes can be discussed and scrutinized and this discussion is kept on record
-//this constution can also creates procedures that can be executed 10^15 times a second
-    //exectue subprocedures and track logs in excel 
-    //everyone can see and debug the data about each procedure 
-    //people can also propose edits for each procedure and
-    //get a new passport = one button press
-    //doing taxes = one button press
-    //figure out more details that make sense
-
-    //question? how to reorganize code that is generated ?? -> one namespace and thats fine no one cares
-
-
-//goal: write a 5 page essay collaboratively
-//then see if it can have all the functions fall out of it 
-
-//this way citizens can be like 
-
-//we want 4 new houses in quadrant z42 -> 
-//they can see the progress daily till its complete 
-
-//excel based persistence
-//write procudures that mutate pixels in spreadsheet like reddit.com/r/place
-
-//start with this
-//let 300 people in editor type shit
-//i want a picture of a dinosaur wearing sunglasses in the top right or z51 that says "cool beans"
-
-
-//:actions => eval to value / results
-//english => provides data for actions
-
-
-//makes up a server -> provisions resources, data
-//get/make input/outputs for all science courses + books + research ppaers 
-//browserify does it - static analysis + observable does it too
-//find the variables that are important in lots of code that they know nothing about
-//generated code from gpt, internet, whatever -> 
-//one you know the variables for any code that matches with a user's query
-//ask the user for those variables 
-//try that out
-
-//type a bunch of text
-//issue a command using above context
-
-//me and my chess club are meeting at the cafe every thursday
-//sometimes the coffee shop is too loud
-//find a cafe that is quiet and has a chess board
-//find a cafe that is quiet and has a chess board and is less than 1.5 miles from my house
-//write some code that does this task
-//if "computers" suggestion is not precisely what you want, tell it what you wanted -> with a poll -> with a tree of optiosn 
-//make database+ui+gpu_script super ez - make a faucet-handle-cover for 'intelligence is now part of the plumbing / water supply'
-
-//i want to talk to gpt collaboratively
-//but also i want to run the code in a more structured way
-
-
-//find a list of every hiking place in the world
-//return a table
-//what problems can data analysis not solve s
-
-//1. dependency - live updates (weather, stock price, population , use another cell(use a generator))
-//get list of dependencies by calling walk on the acorn tree
-//render the component by creating a div and setting the html
-//2. 
-//humor sort the quotes -> render a video player for all of the quotes
-//make a canvas that reads all the quote sequences from all the video tags into one and makes it saveable
-//make it easys to remix video using searched for quotes
-//that time when jerry said "hello" and then kramer said "hello" and then george said "hello" and then elaine said "hello"
-//make flames, blinks and sparkles, 
-//switch to react
-//
-
-//poll maybe doesnt need to be an action/function, instead it exists outside the editor and in the toolbar
-
-//deploy today and send to people you know
-
-
-//steps to turn existing app into lien 29-38
-
-//draft a new version of the constituion
-//0 every line or two gets a poll to check if everyone thinks its a good idea
-//if they dont then they say why
-//then each why must be resolved by peers -> everyone in the country approves each line.
-//each edit proposal comes with a reasoning and a list of substitutions
-    //each edit requires approval from multiple people to be bubble up to next level of approval
-
-//ususally a congressman drafts a bill - according to stephen colbert, most of them dont even read it 
-
-//what is best place to put road, theres lots of congestion on route 66 and i10
-//poll the residents -> should put it here or there -> show pros and cons of each road
-
-//https://maps.googleapis.com/maps/api/place/details/json
-// ?place_id=ChIJrTLr-GyuEmsRBfy61i59si0
-// &fields=address_components
-// &key=YOUR_API_KEY
-    //get the concentration / frequency of noise complaints for each appartment -> filter out all above mean -> heatmap
-//use h3 and count within buckets 
-//list all common tasks that community organizers tend to have 
-//go on remote year and study what the  community managers do
-//ask them if they think this tool is cool
-//help them with common tasks -> convert to automation 
-//remote year is hard to scale beyond like 3-4 trips 
-//make it easier for 1000s of remote years -> 30,000 people per year
-//make it easy to predict things in the future -> prevent problems before they happen
-//anomaly detection, capacity planning, crisis diagnosis,system design https://bost.ocks.org/mike/cubism/intro/#2
-//try to find all jupyter notebooks
-//find all excel worksheets -> all data science courses -> get list of queries
-//make sure these queries are all backed by apis 
-//manually curate 100 APIs that can be used to solve problems -> natural language + lots of data 
-//allow user to boot a server -> download a dataset and then run a model on it if needed 
-//do all kinds of common data "science" for users -> 
-//:add-action 
-//this app is a useful tool that can make lots of cool tasks easier -> add widgets that run scripts in the 
-//browser or on a server -> write serverless functions with natural language -> execute them -> 
-//serverless function takes a string and then calls eval on it -> loads the dependent data
-
-//government has 10 choices
-//there are dependencies between choices
-//so if you choose one, you can't choose another
-//a bill can be drafted in 10 billion ways
-//the text in the document should change based on the choices
-//theres no way a person can hold that many permutations in their head
-//this is why these documents get so long and we need armies of lawyers and accountants for simpel things
-//since simple things are so difficult, it makes difficult things impossible
-//if we just simplified the process, we could get so much more done.
-
-//10% of all people work in the governmetn 
-
-//const baseRoute = isDeployed ? 'https://merge-sentences-todo.ngrok.io/' : `http://localhost:8000/`
-//1.needs focus -> write code with english
-//2.write english for simultaneous collaboration with multiple people 
-//discussion place as a place to do 1+2 
-//multiple actions ? -> :blink :media-quote -> is this a consistent syntax mental model
-//setInterval(function () {}, 500) re-render
-//make a cell that reads data from the poll
-//get consensus from 300m people
