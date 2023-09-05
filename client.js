@@ -18,6 +18,7 @@ async function saveDocument() {
 async function fetchTwitch() {
     
     let hello_world = await fetch(baseRoute + '.netlify/functions/getHTML', {})
+    hello_world = await hello_world.json()
     console.log(hello_world)
 }
 
