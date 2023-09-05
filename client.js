@@ -5,6 +5,8 @@
 //parts of speech tagging -> happens at lambda function 
 //save source data -> compile data to code on client
 //just use firebase
+let baseRoute = 'https://nexus-merge-sort-300-people.netlify.app/'
+let baseName = 'https://nexus-merge-sort-300-people.netlify.app'
 async function saveDocument() {
     let document = get('.your-nexus').value
 
@@ -45,8 +47,7 @@ import confetti from 'https://cdn.skypack.dev/canvas-confetti'; //https://github
 import _ from 'https://underscorejs.org/underscore-esm-min.js'
 let isDeployed =  window.location.host === `merge-sentences-todo.ngrok.io` || 
 window.location.host === `coop-party.surge.sh`
-let baseRoute = 'https://nexus-merge-sort-300-people.netlify.app/'
-let baseName = 'https://nexus-merge-sort-300-people.netlify.app'
+
 let state = {};
 let poll_data = {
       stuff_to_do: {
