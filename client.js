@@ -690,7 +690,7 @@ function compile(_, index) {
         let rows = get('textarea').value.split('\n')
         const isFood = function (words) {
             let foodsKeyWords = ['pizza', 'vegetables', 'hamburger', 'food', 'groceries', 'instacart', 'order', 'orderInstacart']
-            return words.split(' ').filter(w => foodsKeyWords.indexOf(w) !== -1).length > 0
+            return words.split(' ').filter(w => foodsKeyWords.indexOf(w) !== -1)
 
         }
         //debugger
@@ -712,7 +712,8 @@ function compile(_, index) {
 
         //compile(textarea.value)  -> code -> new WebWorker or "RPC" on server/serverless/idk 
         //-> display result which is a json store or spreadsheet 
-        let result = fetchTwitch.split('\n').filter(isFood)
+        let result = fetchTwitch.split('\n').map(isFood).filter(_ => _.length)
+        console.log('result', result)
         return 'order' + JSON.stringify(result)
     }
 
