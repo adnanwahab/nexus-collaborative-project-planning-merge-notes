@@ -49,7 +49,9 @@ exports.handler = async (event) => {
   const text = getHTML()
   return {
     statusCode: 200,
-    body: JSON.stringify(text),
+    body: JSON.stringify({text,
+      'asdfasdfasdf':'asdfasfdasdfasfa'
+    }),
     // // more keys you can return:
     // headers: { "headerName": "headerValue", ... },
     // isBase64Encoded: true,
