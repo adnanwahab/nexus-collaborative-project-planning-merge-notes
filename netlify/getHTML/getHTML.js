@@ -1,65 +1,6 @@
 
-Write
-
-Adnan Wahab
-Using Puppeteer with AWS Lambda and Serverless
-Kyle Higginson
-Kyle Higginson
-
-·
-Follow
-
-2 min read
-·
-Jul 1
-5
-
-
-1
-
-
-
-
-
-
-Puppeteer
-This article will talk you through how to use AWS Lambda to run automated UI scripts with Puppeteer and deployed using the Serverless framework.
-
-Or just want to view it on Github? Click here!
-
-Install the two dependencies required for this: @sparticuz/chromium and puppeteer-core. Your package.json will end up like this:
-{
-  "name": "aws-lambda-puppeteer-serverless",
-  "author": {
-    "name": "Kyle Higginson",
-    "email": "kylehigginson20@gmail.com"
-  },
-  "scripts": {},
-  "dependencies": {
-    "@sparticuz/chromium": "^114.0.0",
-    "puppeteer-core": "^20.7.4"
-  }
-}
-2. Add your serverless.yml file, like so:
-
-service: aws-lambda-puppeteer-serverless
-
-provider:
-  name: aws
-  region: us-east-1
-  runtime: nodejs18.x
-
-functions:
-  puppeteerExample:
-    handler: run_puppeteer.handler
-    timeout: 20
-    events:
-      - schedule: rate(10 minutes)
-With this configuration, once deployed the lambda will run every 10 minutes.
-
-3. Create a file named run_puppeteer.js at the root of your project, this will contain our handler for the lambda:
-
 const chromium = require("@sparticuz/chromium")
+const { get } = require("express/lib/response")
 const puppeteer = require("puppeteer-core")
 
 function delay(time) {
@@ -67,14 +8,19 @@ function delay(time) {
     setTimeout(resolve, time)
   })
 }
+console.log('hi')
 
-exports.handler = async (event) => {
+async function getHTML(){
+  console.log('hi')
+
   const browser = await puppeteer.launch({
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
     executablePath: await chromium.executablePath(),
-    headless: chromium.headless,
+    headless: true,
     ignoreHTTPSErrors: true,
+    args: ['--no-sandbox', '--enable-logging,', '--v=1', '--single-process'],
+    dumpio: true,
   })
 
   const page = await browser.newPage()
@@ -95,7 +41,12 @@ exports.handler = async (event) => {
   await delay(1000)
 
   await browser.close()
+  return text
+}
 
+exports.handler = async (event) => {
+ 
+  const text = getHTML()
   return {
     statusCode: 200,
     body: JSON.stringify(text),
@@ -104,3 +55,5 @@ exports.handler = async (event) => {
     // isBase64Encoded: true,
   }
 }
+
+getHTML()

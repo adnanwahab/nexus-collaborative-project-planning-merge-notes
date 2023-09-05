@@ -13,7 +13,13 @@ async function saveDocument() {
     return document
 }
 
+async function fetchTwitch() {
+    
+    let hello_world = await fetch(baseRoute + '.netlify/functions/getHTML', {})
+    console.log(hello_world)
+}
 
+fetchTwitch()
 async function mockFlights () {
 
     const url = 'https://flight-fare-search.p.rapidapi.com/v2/flights/?from=LHR&to=DXB&date=%3CREQUIRED%3E&adult=1&type=economy&currency=USD';
@@ -675,39 +681,6 @@ function compile(_, index) {
 //i have 5 errands to do -> batch them into one trip with least amount of time -> cant do easily with gmaps
 //:airbnb-search less noisy + more pizza places 
 //:stream find comments with sentiment greater than .8 and list their subjects - find strongest opinions and resolve/adress them
-
-
-
-
-
-
-
-
-
-
-
-    function __() {}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     if (_.indexOf(':find-shortest-path-errands') === 0) {
         let routes = [
