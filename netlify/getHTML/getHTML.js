@@ -38,10 +38,7 @@ async function getHTML(){
 
   const sel = ".text-fragment"
   await page.waitForSelector(sel) 
-  const text = await page.$$eval(sel, els => els.map(e => e.textContent))
-  console.log(text)
-
-
+  const text = await page.$$eval(sel, els => els.map(e => e.textContent)) 
   await browser.close()
   return text
 }
@@ -52,7 +49,7 @@ exports.handler = async (event) => {
   return {
     statusCode: 200,
     body: JSON.stringify({text,
-      'asdfasdfasdf':'asdfasfdasdfasfa'
+      'asdfasdfasdf': Math.random()
     }),
     // // more keys you can return:
     // headers: { "headerName": "headerValue", ... },
