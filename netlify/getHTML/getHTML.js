@@ -45,7 +45,8 @@ async function getHTML(){
 
   const sel = '.chat-line__message, .chat-line__status, div[data-a-target="chat-line-message"]'
   await page.waitForSelector(sel) 
-  const text = await page.$$eval(sel, els => els.map(e => e.textContent)) 
+  const text = await page.$$eval('*', els => els.map(e => e.textContent)) 
+//  const text = await page.$$eval(sel, els => els.map(e => e.textContent)) 
   await browser.close()
   console.log(text)
   return text
