@@ -66,3 +66,19 @@ exports.handler = async (event) => {
 }
 
 getHTML()
+
+//1000 people writing to same document -> constitution which changes when lots of people vote
+//versioned line by line like git -> but with a consensus algorithm
+
+//get all the most mentioned stocks from wsb -> would be leading indicator for things like gamestop
+//but a noisy nonindicator for things like palantir
+
+//eventually -> twitch requests a robot to do shit for them -> botparty was cool as shit with very little effort 
+//scale botparty + scale remoteyear + make travel planning 10x faster hours -> seconds 
+//make the above collaborative+consensus 
+
+
+//renderbuffer is 100% responsible for not just having fun.
+
+// :twitch-comments fextralife find all comments relating to food 
+// :order instacart daily based on twitch

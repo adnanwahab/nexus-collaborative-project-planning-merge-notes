@@ -867,11 +867,13 @@ function  coCollaborateOnAlgaeDesign(traitsRequestedBasedOnPoll){
 
 setTimeout(function () {
     document.querySelector('textarea').value = `
+:plan-dinner
 :poll japan, london, shanghai
 :poll food options in poll.11
 :poll activity options in poll.11
 :plant-trees find places to plant trees nearby 20418 autumn shore drive
     `;
+    onkeydown({target: {value: get('textarea').value}}
 }, 1000);
 
 function flightSearch() {
