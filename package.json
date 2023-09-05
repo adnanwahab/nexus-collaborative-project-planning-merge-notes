@@ -5,6 +5,7 @@
   },
   "dependencies": {
     "@netlify/functions": "^1.6.0",
+    "@sparticuz/chromium": "^116.0.0",
     "@types/node": "^18.17.14",
     "acorn": "^8.10.0",
     "cookie-parser": "^1.4.6",
@@ -16,6 +17,7 @@
     "passport": "^0.6.0",
     "passport-github2": "^0.1.12",
     "passport-jwt": "^4.0.1",
+    "puppeteer-core": "^21.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "serverless-http": "^2.7.0",

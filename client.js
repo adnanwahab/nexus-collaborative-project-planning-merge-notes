@@ -1,3 +1,40 @@
+//use an actual database -> 
+//convert to react+vite
+//add 20 components
+//webgpu based llm -> auto  complete
+//parts of speech tagging -> happens at lambda function 
+//save source data -> compile data to code on client
+//just use firebase
+async function saveDocument() {
+    let document = get('.your-nexus').value
+
+    let hello_world = await fetch(baseRoute + '.netlify/functions/documentSave', {})
+
+    return document
+}
+
+
+async function mockFlights () {
+
+    const url = 'https://flight-fare-search.p.rapidapi.com/v2/flights/?from=LHR&to=DXB&date=%3CREQUIRED%3E&adult=1&type=economy&currency=USD';
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': '462e34fcb4msha4f8c9c42043c3cp1e73dcjsn85634fe3e2a7',
+            'X-RapidAPI-Host': 'flight-fare-search.p.rapidapi.com'
+        }
+    };
+    try {
+        const response = await fetch(url, options);
+        const result = await response.text();
+        console.log(result);
+        return JSON.stringify(result)
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 import confetti from 'https://cdn.skypack.dev/canvas-confetti'; //https://github.com/catdad/canvas-confetti/blob/master/src/confetti.js  change to heart
 import _ from 'https://underscorejs.org/underscore-esm-min.js'
 let isDeployed =  window.location.host === `merge-sentences-todo.ngrok.io` || 
@@ -13,7 +50,6 @@ let poll_data = {
           "7/11",
           "train",
           "mueseum",
-          "hiroshima"
         ],
         london: ["castle windsor", "subway", "stone henge", "prehistoric lake"],
         shanghai: [
@@ -70,7 +106,6 @@ const handleKeyDown =     async function (e) {
 // import findFeatures from "./features.js";https://github.com/observablehq/parser/blob/09901d06904ec2277baa56eca74efe7aedc2720a/src/parse.js#L367-L369
 //https://github.com/estree/estree
 //mad lib generator -> text adventure game -> 
-//https://ui.shadcn.com/docs/components/checkbox
 //track components not just by row but by type -> if the sequene order changes, then "code" no longer works  
 
 //data anaalysis
@@ -161,8 +196,6 @@ The soldier who survived mustard gas and pepper spray was a seasoned veteran.
 Sausage puns are the wurst.
 
 What do you call a bear with no teeth? A gummy bear.
-
-How did Darth Vader know what luke was getting him for his birthday? He could sense his presence.
 
 Why shouldn’t you trust atoms? They make up everything.
 
@@ -596,7 +629,7 @@ function compile(_, index) {
 
 
 
-    if (_.indexOf(':stream') === 0) {
+    if (_.indexOf(':') === 0) {
     }
 
 
@@ -615,6 +648,77 @@ function compile(_, index) {
 
 
 
+
+
+
+
+
+
+
+//figure out something that can impress the whole stream
+//realtalk + observable + replit + lighttable + wolfram + gpt + retool + usemacro + airtable + notion + airbnb + google maps + google flights + google search + google translate + google docs + google sheets + google slides + google drive + google calendar + google photos + google keep + google news + google books + google scholar + google finance + google trends + google alerts + google analytics + google ads + google adsense + google adwords + google ad manager + google ad exchange + google
+//+ 
+
+
+
+//frequent travel - automate searches -> weekly
+
+//make a deepfake of obama and biden sword fighting and then singing the declaration of independence so i can get out of school
+//
+//make ai edited photos
+//make a voice clip of my mom and call school to ask them if i can have a week off to go to cancun 
+//
+//make a pipeline from one ai model to the next -> 
+//figure out how to figure out how to 
+//
+//
+//i have 5 errands to do -> batch them into one trip with least amount of time -> cant do easily with gmaps
+//:airbnb-search less noisy + more pizza places 
+//:stream find comments with sentiment greater than .8 and list their subjects - find strongest opinions and resolve/adress them
+
+
+
+
+
+
+
+
+
+
+
+    function __() {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if (_.indexOf(':find-shortest-path-errands') === 0) {
+        let routes = [
+            [[123,123], [123,456], [789, 101213]]
+        ]
+        _.shuffle(routes).map(path => distance(path))
+        //given a list of 10 errands -> find the shortest path between all of them 
+        //so that there are no backtracks or limited 
+        //scenic route
+        //plot two routes and diff any differences between them
+    }
 
 
 
@@ -635,7 +739,7 @@ function compile(_, index) {
         //fix the demo so the stream can sleep tonight 
        return stream
     }
-    //if (_.indexOf(':flight-search') === 0) return flightSearch()
+    //if (_.indexOf(':flight-search') === 0) return mockFlights()
     if (_.indexOf(':blink') === 0) {
         return `<div class="blink">${_.slice(5)}</div>`
     }
@@ -769,6 +873,14 @@ let renderGantChart = function () {
         return svg;
 }
 
+let actions = {
+    ':poll': function() {},
+}
+
+function parseSentence(sentence) {
+    return sentence.split(' ')
+}
+
 function  coCollaborateOnAlgaeDesign(traitsRequestedBasedOnPoll){ 
     return {
         fasta: `GATCATAC`, 
@@ -861,6 +973,9 @@ let lineTypes = {
     4: 'live-query', // poll.0.results.1 -> re-eval infomration in cell z51 -> Free Piano Lessons for all kids who live in _
     5: 'live-query', // poll.1.results.most -> when 300 people edit this -> save snapshot of nexus to s3
     6: 'live-query', // send this request to GPT to convert to code -> _1 = cell z0, _2 = z4 => send (_1 + _2) roses to white-house
+}
+function ___() {
+
 }
 
 let coolLineTypes = {
@@ -1034,3 +1149,4 @@ confetti({
       }
   })
 })
+
