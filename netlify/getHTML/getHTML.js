@@ -1,3 +1,6 @@
+//use Fly.IO + websockets to stream data to client
+
+
 
 const puppeteer = require( 'puppeteer' )
 
@@ -29,16 +32,16 @@ async function getHTML(){
     height: 1080,
   })
 
-  await page.goto("https://www.twitch.tv/zackrawrr", {
+  await page.goto("https://www.twitch.tv/fextralife", {
     waitUntil: "networkidle2",
     timeout: 0,
   })
 
-  await delay(10000)
+  await delay(30000)
   await page.waitForFunction( function () {
     const el = document.querySelector( 'div[data-a-target="chat-welcome-message"].chat-line__status' )
     return !!el
-  }, { polling: 250 } )
+  }, { timeout: 25000 } )
 
   const sel = '.chat-line__message, .chat-line__status, div[data-a-target="chat-line-message"]'
   await page.waitForSelector(sel) 
