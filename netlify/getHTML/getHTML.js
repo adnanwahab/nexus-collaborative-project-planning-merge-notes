@@ -38,19 +38,19 @@ async function getHTML(){
     timeout: 0,
   })
 
-  await delay(8000)
+  await delay(1000)
   await page.waitForFunction( function () {
     const el = document.querySelector( 'div[data-a-target="chat-welcome-message"].chat-line__status' )
     return !!el
-  }, { timeout: 25000 } )
+  }, { poll: 250 } )
 
   const sel = '.chat-line__message, .chat-line__status, div[data-a-target="chat-line-message"]'
   await page.waitForSelector(sel) 
-  const text = await page.$$eval('*', els => els.map(e => e.textContent)) 
-//  const text = await page.$$eval(sel, els => els.map(e => e.textContent)) 
+  //const text = await page.$$eval('*', els => els.map(e => e.textContent)) 
+  const text = await page.$$eval(sel, els => els.map(e => e.textContent)) 
   await browser.close()
   console.log(text)
-  return page.content()
+  return text
 }
 
 exports.handler = async (event) => {
