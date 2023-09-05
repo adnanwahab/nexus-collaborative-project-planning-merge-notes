@@ -33,12 +33,14 @@ async function getHTML(){
     waitUntil: "networkidle2",
     timeout: 0,
   })
+
+  await delay(10000)
+
   const sel = ".text-fragment"
   await page.waitForSelector(sel) 
   const text = await page.$$eval(sel, els => els.map(e => e.textContent))
   console.log(text)
 
-  await delay(1000)
 
   await browser.close()
   return text
