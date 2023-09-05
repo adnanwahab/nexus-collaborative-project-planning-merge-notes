@@ -805,7 +805,6 @@ setInterval(async function () {
     // get('.all-nexus').innerHTML = otherNexus   
 }, 5000)
 get('textarea').addEventListener('keyup', handleKeyDown)
-//setTimeout(handleKeyDown, 2000)
 
 let renderGantChart = function () {
         const tasks = [
@@ -866,14 +865,18 @@ function  coCollaborateOnAlgaeDesign(traitsRequestedBasedOnPoll){
 }
 
 setTimeout(function () {
-    document.querySelector('textarea').value = `
-:plan-dinner
+    document.querySelector('textarea').value = `:plan-dinner
+:twitch-comments find all relating to food
+:order-instacart
 :poll japan, london, shanghai
 :poll food options in poll.11
 :poll activity options in poll.11
 :plant-trees find places to plant trees nearby 20418 autumn shore drive
     `;
-    onkeydown({target: {value: get('textarea').value}})
+    setTimeout(() => {
+        handleKeyDown({target: {value: get('textarea').value}})
+
+    }, 1000)
 }, 1000);
 
 function flightSearch() {
