@@ -32,7 +32,8 @@ async function getHTML(){
     height: 1080,
   })
 
-  await page.goto("https://www.twitch.tv/psybear_tv", {
+  let url = 'http://www.paulgraham.com/getideas.html'
+  await page.goto(url, {
     waitUntil: "networkidle2",
     timeout: 0,
   })
