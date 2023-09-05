@@ -1,7 +1,5 @@
 
-const chromium = require("@sparticuz/chromium")
-const { get } = require("express/lib/response")
-const puppeteer = require("puppeteer-core")
+const puppeteer = require( 'puppeteer' )
 
 function delay(time) {
   return new Promise(function (resolve) {
@@ -14,13 +12,15 @@ async function getHTML(){
   console.log('hi')
 
   const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
-    headless: true,
-    ignoreHTTPSErrors: true,
-    args: ['--no-sandbox', '--enable-logging,', '--v=1', '--single-process'],
-    dumpio: true,
+    pipe:true
+  //   args: chromium.args,
+  //   defaultViewport: chromium.defaultViewport,
+  //   executablePath: await chromium.executablePath(),
+  //   headless: true,
+  //   ignoreHTTPSErrors: true,
+  //   args: ['--no-sandbox', '--enable-logging,', '--v=1', '--single-process'],
+  //   dumpio: true,
+  // })
   })
 
   const page = await browser.newPage()
@@ -44,6 +44,7 @@ async function getHTML(){
   await page.waitForSelector(sel) 
   const text = await page.$$eval(sel, els => els.map(e => e.textContent)) 
   await browser.close()
+  console.log(text)
   return text
 }
 
