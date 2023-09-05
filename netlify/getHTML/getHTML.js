@@ -32,12 +32,12 @@ async function getHTML(){
     height: 1080,
   })
 
-  await page.goto("https://www.twitch.tv/fextralife", {
+  await page.goto("https://www.twitch.tv/psybear_tv", {
     waitUntil: "networkidle2",
     timeout: 0,
   })
 
-  await delay(30000)
+  await delay(8000)
   await page.waitForFunction( function () {
     const el = document.querySelector( 'div[data-a-target="chat-welcome-message"].chat-line__status' )
     return !!el
