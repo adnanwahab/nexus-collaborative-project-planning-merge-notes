@@ -6,7 +6,8 @@
 //save source data -> compile data to code on client
 //just use firebase
 let baseRoute = 'https://nexus-merge-sort-300-people.netlify.app/'
-let baseName = 'https://nexus-merge-sort-300-people.netlify.app'
+let baseName = 'localhost:3000'
+'https://nexus-merge-sort-300-people.netlify.app'
 async function saveDocument() {
     let document = get('.your-nexus').value
 
