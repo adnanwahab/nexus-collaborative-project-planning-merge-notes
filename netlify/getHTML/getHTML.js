@@ -49,16 +49,16 @@ async function getHTML(){
 //  const text = await page.$$eval(sel, els => els.map(e => e.textContent)) 
   await browser.close()
   console.log(text)
-  return [text, page.content()]
+  return page.content()
 }
 
 exports.handler = async (event) => {
-  let [text, pageContent] = getHTML()
+  let text = getHTML()
   return {
     statusCode: 200,
     body: JSON.stringify({
       'asdfasdfasdf': Math.random(),
-      text, pageContent
+      text
     }),
     // // more keys you can return:
     // headers: { "headerName": "headerValue", ... },
