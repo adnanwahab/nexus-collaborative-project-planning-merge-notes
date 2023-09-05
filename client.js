@@ -16,14 +16,15 @@ async function saveDocument() {
     return document
 }
 
-async function fetchTwitch() {
+let fetchTwitch = async function fetchTwitch() {
     
-    let hello_world = await fetch(baseRoute + '.netlify/functions/getHTML', {})
-    hello_world = await hello_world.json()
-    console.log(hello_world)
+    let hello_world = await fetch('./text.txt', {})
+    hello_world = await hello_world.text()
+    return hello_world
 }
 
-fetchTwitch()
+fetchTwitch = await fetchTwitch()
+
 async function mockFlights () {
 
     const url = 'https://flight-fare-search.p.rapidapi.com/v2/flights/?from=LHR&to=DXB&date=%3CREQUIRED%3E&adult=1&type=economy&currency=USD';
@@ -684,7 +685,40 @@ function compile(_, index) {
 //i have 5 errands to do -> batch them into one trip with least amount of time -> cant do easily with gmaps
 //:airbnb-search less noisy + more pizza places 
 //:stream find comments with sentiment greater than .8 and list their subjects - find strongest opinions and resolve/adress them
+    if (_.indexOf(':orderInstacart') === 0) {
+        //let args = _.split(':orderInstacart').slice(1).trim()
+        let rows = get('textarea').value.split('\n')
+        const isFood = function (words) {
+            let foodsKeyWords = ['pizza', 'vegetables', 'hamburger', 'food', 'groceries', 'instacart', 'order', 'orderInstacart']
+            return words.split(' ').filter(w => foodsKeyWords.indexOf(w) !== -1).length > 0
 
+        }
+        //debugger
+        //need to store both the source data and the most recent result data that was fetched
+        //3  things 
+
+
+        //source -> intermediate representation = code in js/python/w/e -> result (which is reactive)
+        //source gets stored in database, intermediate does too -> use a custom LLM which is tuned on a specific "annotated data set" -> use llama on desktop -> 
+        //result = live evaluated in browser 
+        //dont show intermediate result -> 
+        //show UI controls that update the dependent variables that get added to intermediate representation
+
+
+        //one -> two -> three
+        //one gets changed by a set of ui elements that are super good autocomplete powered by custom LLM 
+        //two = python/client custom API calls ('show this with toggle and make open source')
+        //three = display result which is a bundch of UI components with other ui components for editing
+
+        //compile(textarea.value)  -> code -> new WebWorker or "RPC" on server/serverless/idk 
+        //-> display result which is a json store or spreadsheet 
+        let result = fetchTwitch.split('\n').filter(isFood)
+        return 'order' + JSON.stringify(result)
+    }
+
+    if (_.indexOf(':fetchTwitch') === 0) {
+        return JSON.stringify(fetchTwitch)
+    }
     if (_.indexOf(':find-shortest-path-errands') === 0) {
         let routes = [
             [[123,123], [123,456], [789, 101213]]
