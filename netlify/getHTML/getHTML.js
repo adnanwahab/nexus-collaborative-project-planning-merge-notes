@@ -56,7 +56,7 @@ exports.handler = async (event) => {
   let [text, pageContent] = getHTML()
   return {
     statusCode: 200,
-    body: JSON.stringify({,
+    body: JSON.stringify({
       'asdfasdfasdf': Math.random(),
       text, pageContent
     }),
