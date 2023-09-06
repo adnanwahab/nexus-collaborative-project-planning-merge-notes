@@ -301,9 +301,11 @@ async def index():
     return JSONResponse(content={'shit': 1})
 
 @app.get("/makeFn")
-async def makeFn():
+async def makeFn()
+:
     result = processMessages(messages)
     fn = makeFunctionFromText('get all the comments on my twitch page and list the ones that have popcorn in them')[0]['generated_text']
+    print('something else')
     return JSONResponse(content={'fn': fn})
 
 @app.get("/admin")
