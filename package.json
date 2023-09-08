@@ -1,0 +1,34 @@
+{
+
+  "scripts": {
+
+    "build": "netlify functions:build --src=./netlify/run-rpc/",
+
+    "deploy": "netlify deploy"
+
+  },
+
+  "dependencies": {
+
+    "@netlify/functions": "^1.6.0",
+
+    "dominos": "^3.3.1",
+
+    "expres": "^0.0.5",
+
+    "express": "^4.18.2",
+
+    "middy": "^0.36.0",
+
+    "node-fetch": "^2.7.0",
+
+    "puppeteer": "^21.1.1",
+
+    "react": "^18.2.0",
+
+    "react-dom": "^18.2.0"
+
+  }
+
+}
+
