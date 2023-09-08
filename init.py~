@@ -1,3 +1,0 @@
-from llama2_wrapper import LLAMA2_WRAPPER 
-llama2_wrapper = LLAMA2_WRAPPER(backend_type="gptq")
-# Automatically downloading model to: ./models/Llama-2-7b-Ch

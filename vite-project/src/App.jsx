@@ -2,7 +2,9 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import Favicon from "react-favicon";
 
+//npm install react-favicon --save
 
 import React, {useRef, useEffect} from "react";
 import {Runtime, Inspector} from "@observablehq/runtime";

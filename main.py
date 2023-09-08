@@ -329,9 +329,9 @@ async def makeFn(FnText:FnText):
         data = getAllAirbnbInCityThatAreNotNoisy() #todo make reactive live query
         return {'fn': data}
     
-    gottenProgram = open('./watch-all-tweets-that-have-pizza.js', 'r').read()
+    gottenProgram = open('./RPC/watch-all-tweets-that-have-pizza.js', 'r').read()
     if 'twitch' in FnText.fn[0]:
-        otherProgram = open('./fetch-twitch.js', 'r').read()
+        otherProgram = open('./RPC/fetch-twitch.js', 'r').read()
     else: otherProgram = gottenProgram
     #gottenProgram = '(functi qqon () { return -50 + -Math.random(); })()'
     programs = [otherProgram for sentence in FnText.fn]

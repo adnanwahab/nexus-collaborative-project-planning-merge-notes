@@ -371,7 +371,7 @@ function flightSearch() {
 }
 
 let airbnb = async function () {
-    let req = await fetch('./airbnb.json')
+    let req = await fetch('./data/airbnb.json')
     state.airbnb = await req.json()
     //console.log(state.airbnb)
 
@@ -399,7 +399,7 @@ get('textarea').addEventListener('mousemove', function (e) {
 })
 let state = {};
 state.modernFamily = `I learned a long time ago you can fight it or try to make the best of it. And that's all a lot easier if you've got people who love you to help you face whatever life throws at you.Luke: How come you never wrote a poem for me?Manny: Don't you get it? They were all for you.Claire: They're really leaving. What do we do?Phil: What we always do. Leave the porch light on, they'll come back. Mom, I'm the lucky one. You guys know you can call me anytime, right? We make a good team. I can't go to jail. I'm a gay prosecutor, there's no prison gangs for that!Haley: Thanks for putting in a good word for us. Mitch: They just needed some reassurance, considering most of Dylan's money is tied up in Dave and Busters' gift cards.Cam: Don't hate me for your son leaving. Jay: You're both my sons.Cam: I want you to read this, but not until after I leave.Gloria: It's going to make me cry isn't it, you beautiful cornfed son-of-a-bitch. I'll reinvent myself. I'm gonna dye my hair blue and carry around an emotional support pig. I shouldn't be penalized for being too smart, I'm not running for president. You could pretend to get sick at the table. You know cough, stomachache,  dealer's choice, I don't care just sell it. Thank you Uncle Mannny\n"`.split('\n')
-fetch('george.txt').then(req => req.text()).then(text => {
+fetch('data/george.txt').then(req => req.text()).then(text => {
     state.seinfeld = text.split('\n');
 });
 
@@ -439,7 +439,7 @@ Object.entries(trackDependenentVariables).forEach(function (pair) {
 })
 
 async function fetchTwitch() {
-    return await fetch('./twitch.json').then(req => req.json()).then(json => json)
+    return await fetch('./data/twitch.json').then(req => req.json()).then(json => json)
 }
 
 function compile(line, index) {
