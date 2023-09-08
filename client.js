@@ -1,5 +1,37 @@
 import confetti from 'https://cdn.skypack.dev/canvas-confetti'; //https://github.com/catdad/canvas-confetti/blob/master/src/confetti.js  change to heart
 import _ from 'https://underscorejs.org/underscore-esm-min.js'
+
+import firebaseFirestore from 'https://cdn.skypack.dev/@firebase/firestore';
+
+import firebase from "https://cdn.skypack.dev/firebase@8.7.0/app";
+// import "https://cdn.skypack.dev/firebase@8.7.0/auth";
+// import "https://cdn.skypack.dev/firebase@8.7.0/firestore";
+// const { collection, doc, setDoc } = firebase 
+
+// const citiesRef = collection(db, "cities");
+firebase.initializeApp({ 
+    apiKey: "AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY",
+});
+// await setDoc(doc(citiesRef, "SF"), {
+//     name: "San Francisco", state: "CA", country: "USA",
+//     capital: false, population: 860000,
+//     regions: ["west_coast", "norcal"] });
+// await setDoc(doc(citiesRef, "LA"), {
+//     name: "Los Angeles", state: "CA", country: "USA",
+//     capital: false, population: 3900000,
+//     regions: ["west_coast", "socal"] });
+// await setDoc(doc(citiesRef, "DC"), {
+//     name: "Washington, D.C.", state: null, country: "USA",
+//     capital: true, population: 680000,
+//     regions: ["east_coast"] });
+// await setDoc(doc(citiesRef, "TOK"), {
+//     name: "Tokyo", state: null, country: "Japan",
+//     capital: true, population: 9000000,
+//     regions: ["kanto", "honshu"] });
+// await setDoc(doc(citiesRef, "BJ"), {
+//     name: "Beijing", state: null, country: "China",
+//     capital: true, population: 21500000,
+//     regions: ["jingjinji", "hebei"] });
 //https://github.com/standard/standard
 //new function - pass in different arguments -lambda
 //https://www.npmjs.com/package/@webscopeio/react-textarea-autocomplete
@@ -157,6 +189,7 @@ let genCode = async function (event) {
         //container.innerHTML = (text[i])
         console.log(fn.fn[i])
         container.innerHTML += fn.fn[i]
+
         const renderAsync = async function (e) {
             let tweets = await fetch('http://localhost:3001/rpc', {
                 method : 'POST',
@@ -175,7 +208,8 @@ let genCode = async function (event) {
             }
             container.className = 'hasTwitch'
         }
-        renderAsync()
+        if (text[i].indexOf('twitch') !== -1) 
+            renderAsync()
         container.addEventListener('click',renderAsync )
         //send to serverless -> run that and then return the result and list it underneath
         //hide the fn definition and make a button
