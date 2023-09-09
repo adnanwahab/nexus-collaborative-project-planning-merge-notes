@@ -3,9 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Favicon from "react-favicon";
-
 //npm install react-favicon --save
-
 import React, {useRef, useEffect} from "react";
 import {Runtime, Inspector} from "@observablehq/runtime";
 import notebook from "@uwdata/mosaic-cross-filter-flights-10m";
@@ -15,9 +13,10 @@ function MosaicCrossFilterFlightsM() {
 
   useEffect(() => {
     const runtime = new Runtime();
-    runtime.module(notebook, name => {
+    const module0 = runtime.module(notebook, name => {
       if (name === "viewof flights") return new Inspector(viewofFlightsRef.current);
-    });
+    })
+    module0.variable().define("foo", 42);
     return () => runtime.dispose();
   }, []);
 
@@ -43,34 +42,49 @@ function consoleLog(event) {
   return console.log("hello world", event.target.value)
 }
 
+let vote_titles = [
+  'Astrophysics', 'Condensed Matter', 'Mathematical Physics', 'Mesoscale and Nanoscale Physics'
+]
+let votes = [0,0,0,0] //swap with 
+fetch('http://localhost:8080/.netlify/functions/run-rpc', {
+
+})
 
 function App() {
   const [count, setCount] = useState(0)
+  const [voted, setHasVoted] = useState(false)
+
+
+  function vote ( ){
+    setHasVoted(true)
+  }
+
+  let buttons = <>
+      <button onClick={() => vote(0)}>
+           {vote_titles[0]}
+        </button>
+        <button onClick={() => vote(1)}>
+        {vote_titles[1]}
+        </button>
+        <button onClick={() => vote(2)}>
+        {vote_titles[2]}
+        </button>
+        <button onClick={() => vote(3)}>
+        {vote_titles[3]}
+        </button>
+  </>
+
+  let graph = (<iframe width="100%" height="584" frameborder="0"
+  src="https://observablehq.com/embed/@d3/bar-chart?cells=chart"></iframe>)
 
   return (
     <>
     <CodeEditor></CodeEditor>
-    <MosaicCrossFilterFlightsM />
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
+    {/* <MosaicCrossFilterFlightsM /> */}
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+    {voted ? graph : buttons}
+      
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }

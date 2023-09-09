@@ -322,20 +322,45 @@ def getProgram(sentence):
 
     json.dump(program_generator_cache, open('encodings.json', 'w'))
     return {'fn': program_generator_cache[encodings]}
+
+
+
+def findAirbnb():
+    from ipynb.fs.defs.geospatial import getAllAirbnbInCityThatAreNotNoisy
+    data = getAllAirbnbInCityThatAreNotNoisy() #todo make reactive live query
+    return data
+
+
+def poll():
+    return open('./poll.json', 'r').read()
+
+jupyter_functions = [findAirbnb, 
+                     poll
+                     ]
+
+[
+    "find all airbnb that are not noisy and are near a yoga studio", #find airbnb
+    ":poll russia australia antarctica", #poll = transformed into a poll on the client -> into poll data on server 
+    ":poll food options in poll.11", #poll = transformed into a poll on the client -> into poll data on server
+    ":poll activity options in poll.11", #poll = transformed into a poll on the client -> into poll data on server
+    ":plant-trees find places to plant trees nearby 20418 autumn shore drive" #transformed ignore 
+]
+#on client if colon -> substitute on client 
+
+
 @app.post("/makeFn")
 async def makeFn(FnText:FnText):
     if 'airbnb' in FnText.fn[0]:
-        from ipynb.fs.defs.geospatial import getAllAirbnbInCityThatAreNotNoisy
-        data = getAllAirbnbInCityThatAreNotNoisy() #todo make reactive live query
-        return {'fn': data}
-    
+        return {'fn': jupyter_functions() }
     gottenProgram = open('./RPC/watch-all-tweets-that-have-pizza.js', 'r').read()
+    #print('gottenProgram', gottenProgram)
     if 'twitch' in FnText.fn[0]:
         otherProgram = open('./RPC/fetch-twitch.js', 'r').read()
     else: otherProgram = gottenProgram
+    #print('otherProgram', otherProgram, gottenProgram)
     #gottenProgram = '(functi qqon () { return -50 + -Math.random(); })()'
     programs = [otherProgram for sentence in FnText.fn]
-    print(programs)
+    #print(programs)
 
     return {'fn': programs}
     # print(Fn)
@@ -375,13 +400,13 @@ async def admin():
 async def metrics():
     return FileResponse('index.html')
 
-@app.get("/client.js")
+@app.get("client.js")
 async def js():
     return FileResponse('client.js', media_type="application/javascript")
 
-@app.get("/george.txt")
+@app.get("/data/george.txt")
 async def george():
-    return FileResponse('george.txt', media_type="text/plain")
+    return FileResponse('/data/george.txt', media_type="text/plain")
 
 
 

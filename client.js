@@ -9,9 +9,9 @@ import firebase from "https://cdn.skypack.dev/firebase@8.7.0/app";
 // const { collection, doc, setDoc } = firebase 
 
 // const citiesRef = collection(db, "cities");
-firebase.initializeApp({ 
-    apiKey: "AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY",
-});
+// firebase.initializeApp({ 
+//     apiKey: "AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY",
+// });
 // await setDoc(doc(citiesRef, "SF"), {
 //     name: "San Francisco", state: "CA", country: "USA",
 //     capital: false, population: 860000,
@@ -72,12 +72,9 @@ firebase.initializeApp({
 //these documents can be used to generate integration + unit tests 
 
 //users can write down their streams and then execute an MVP that might take like 3 months
-
-
-function addresToGeoCode () {
+function addressToGeoCode () {
     const accessToken = "pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg";  // Replace with your actual access token
     const address = "1600 Amphitheatre Parkway, Mountain View, CA"; // Replace with the address you want to geocode
-    
     const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${accessToken}`;
     
     fetch(geocodeUrl)
@@ -91,11 +88,7 @@ function addresToGeoCode () {
         }
       })
       .catch(error => console.log("An error occurred:", error));
-    
 }
-
-
-
 let isDeployed =  window.location.host === `merge-sentences-todo.ngrok.io` || 
 window.location.host === `coop-party.surge.sh`
 const port = 8000
@@ -152,6 +145,9 @@ let poll_data = {
     `enable multiplayer. :poll. if poll.Z > 50% then regenerate paragraph z till 100% of people agree`,
 
   ]
+
+
+
   //
 //   <option value="2">2 - Twitch comments</option>
 //   <option value="3">3 - Geospatial Data</option>
@@ -160,6 +156,7 @@ let poll_data = {
 get('select').addEventListener('change', function (e) {
     console.log(e.target.value)
     get('textarea').value = templates[e.target.value]
+    genCode()
 });
 let genCode = async function (event) {
     let text = get('textarea').value.split('\n')
@@ -438,11 +435,33 @@ Object.entries(trackDependenentVariables).forEach(function (pair) {
     })
 })
 
+let actions = {
+    airbnb: function (args) {
+
+    }
+}
+
+function addAction(text, index) {
+    console.log('wat')
+    actions[index] = text.slice(':addAction'.length + 1)
+}
+
 async function fetchTwitch() {
     return await fetch('./data/twitch.json').then(req => req.json()).then(json => json)
 }
 
+function npmInstall() {}
+
+
 function compile(line, index) {
+    console.log(line)
+    for (let key in actions ) {
+        if (line.indexOf(key) !== -1) {
+            return eval(actions[key](line))
+        }
+    }
+    if (line.indexOf(':npmInstall')) return npmInstall(line, index)
+    if (line.indexOf(':addAction') === 0) return addAction(line, index)
     if (line.indexOf(':fetchTwitch') === 0) return fetchTwitch()
     if (line.indexOf(':plan-dinner') === 0) return makeGantChart()
     if (line.indexOf(':flight-search') === 0) return flightSearch()
