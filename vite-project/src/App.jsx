@@ -49,7 +49,6 @@ async function _() {
 }
 
 function CodeEditor({setComponents}) {
-  let [code, setCode] = useState("hello world")
   async function apply_(){
     let data = await _()
     data = compile(data);
@@ -57,11 +56,10 @@ function CodeEditor({setComponents}) {
   }
 
   return (<><textarea 
-  className="w-full h-64 border border-gray-300 rounded-lg p-2"
+  className="bg-blue-200 w-full h-64 border border-gray-300 rounded-lg p-2"
   onKeyDown={(e) => setCode(e.target.value)}
   onKeyUp={apply_}> 
-  </textarea
-  > <div>{code}</div>
+  </textarea> 
   </>)
 }
 
@@ -77,38 +75,29 @@ let vote_titles = [
 let votes = [0,0,0,0] //swap with 
 // fetch('http://localhost:8000/.netlify/functions/run-rpc', {
 
-// })
-
-
-
 const components = {
   'poll': Poll,
   'List': List
 }
 
 function compile (dataList) {
-  console.log(dataList)
+
   return dataList.fn.map(function (datum) {
     if (Array.isArray(datum)) return List(datum)
-    //if poll return Poll
+    if (datum === 'lots of cool polling data') return Poll()
     return datum
   })
 }
-
 let templateContent = [
-    `find all airbnb that are not noisy and are near a yoga studio
+    `find all airbnb that are not noisy and are near a coworking space
 :poll russia australia antarctica
 :poll food options in poll.11
 :poll activity options in poll.11
 :plant-trees find places to plant trees nearby 20418 autumn shore drive`,
-    `:plan-dinner
-:order-instacart
-:twitch-comments find all relating to food`,
+`:poll astronomy, physics, infoTheory
+    find all papers on arxiv relating to astornomy`,
     `find all books on wikipedia and them chart the by date and theme
         make clickable charts that send you to the wikipedia page`,
-    `:poll astronomy, physics, infoTheory
-    find all papers on arxiv relating to astornomy`,
-    `enable multiplayer. :poll. if poll.Z > 50% then regenerate paragraph z till 100% of people agree`,
 ]
 
 let templateNames = [
@@ -123,16 +112,18 @@ function App() {
 
   return (
     <div className="grid grid-cols-2">
-    <label>pick a template</label>
-      <select
-       onChange={(e) => 
-       get('textarea').value = templateContent[e.target.selectedIndex]
-       }
-       className="m-5 border border-bluegray-800 border-dashed">
-      {templateNames.map(key => <option value={key}>{key}</option>)}
-    </select>
-    <CodeEditor setComponents={setComponents}></CodeEditor>
-    {/* <MosaicCrossFilterFlightsM /> */}
+      <div>
+        <label>pick a template</label>
+          <select 
+          onChange={(e) => 
+          get('textarea').value = templateContent[e.target.selectedIndex]
+          }
+          className="w-64 m-5 border border-bluegray-800 border-dashed">
+          {templateNames.map(key => <option value={key}>{key}</option>)}
+        </select>
+        <CodeEditor setComponents={setComponents}></CodeEditor>
+      </div>
+
       <div className="card">{components}</div>
     </div>
   )
