@@ -4,20 +4,37 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Favicon from "react-favicon";
 //npm install react-favicon --save
-import React, {useRef, useEffect} from "react";
 import {Runtime, Inspector} from "@observablehq/runtime";
 import notebook from "@uwdata/mosaic-cross-filter-flights-10m";
 
-import React, {useRef, useEffect} from "react";
-import {Runtime, Inspector} from "@observablehq/runtime";
-import notebook from "@rithwikanand/histogram";
+//import notebook from "@rithwikanand/histogram";
+
+// const LASTDAY= function () {
+//   console.log(LASTDAY)
+//     return (
+//      <>
+//      <div id="observablehq-lineChart-c1e4ccc8"></div>
+//       <p>Credit: <a href="https://observablehq.com/d/1420c244c74cb1bb">GNSS Position Timeseries by Yang</a></p>
+//     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@observablehq/inspector@5/dist/inspector.css">
+//     <script type="module">
+//   import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@5/dist/runtime.js";
+//   import define from "https://api.observablehq.com/d/1420c244c74cb1bb.js?v=3";
+//   new Runtime().module(define, name => {
+//     if (name === "lineChart") return new Inspector(document.querySelector("#observablehq-lineChart-c1e4ccc8"));
+//   });
+//   </script>
+//   </>)
+// }
+
 
 function Histogram() {
   const chartRef = useRef();
 
   useEffect(() => {
+    console.log('HISTOGRAM')
     const runtime = new Runtime();
     runtime.module(notebook, name => {
+      console.log('chart')
       if (name === "chart") return new Inspector(chartRef.current);
     });
     return () => runtime.dispose();
@@ -31,15 +48,15 @@ function Histogram() {
   );
 }
 
-
 import React, {useRef, useEffect} from "react";
-import {Runtime, Inspector} from "@observablehq/runtime";
-import notebook from "1420c244c74cb1bb";
+//import notebook from "1420c244c74cb1bb";
 
 function Notebook() {
   const lineChartRef = useRef();
 
   useEffect(() => {
+    console.log('TIMESERIES')
+
     const runtime = new Runtime();
     runtime.module(notebook, name => {
       if (name === "lineChart") return new Inspector(lineChartRef.current);
@@ -55,15 +72,10 @@ function Notebook() {
   );
 }
 
-
-
-
-diagrams = {
-  'histogram': iframeHistogram,
+const diagrams = {
+  'histogram': Histogram,
   'timeSeries': Notebook
 }
-
-iframeHistogram = Histogram
 
 // `<iframe width="100%" height="584" frameborder="0"
 //   src="https://observablehq.com/embed/@rithwikanand/histogram?cells=chart"></iframe>`
@@ -116,7 +128,6 @@ function CodeEditor({setComponents}) {
 
   return (<><textarea 
   className="bg-blue-200 w-full h-64 border border-gray-300 rounded-lg p-2"
-  onKeyDown={(e) => setCode(e.target.value)}
   onKeyUp={apply_}> 
   </textarea> 
   </>)
@@ -169,8 +180,8 @@ function App() {
   const [components, setComponents] = useState([])
 
 
-  One = diagrams['histogram']
-  two = diagrams['timeSeries']
+  let One = diagrams['histogram']
+  let Two = diagrams['timeSeries']
 
   
   return (
@@ -185,9 +196,10 @@ function App() {
           {templateNames.map(key => <option value={key}>{key}</option>)}
         </select>
         <CodeEditor setComponents={setComponents}></CodeEditor>
-        <One></One>
+        <Histogram></Histogram>
         <Two></Two>
-
+        <iframe width="100%" height="724"
+  src="https://observablehq.com/embed/@mattdzugan/the-same-but-different?cells=a"></iframe>
       </div>
 
       <div className="card">{components}</div>
