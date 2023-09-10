@@ -90,3 +90,22 @@ function App() {
 }
 
 export default App
+
+
+
+
+function Poll() {
+
+}
+const List = (list) => list.map(item => <div key="item">{item}</div>)
+
+
+const components = {
+  'poll': Poll,
+  'List': List
+}
+
+
+const json = [
+  {component: 'poll', data: {}}
+]

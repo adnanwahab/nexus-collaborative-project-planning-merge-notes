@@ -126,21 +126,21 @@ let poll_data = {
   let templates = [
 
     `first`,
-    `
-    find all airbnb that are not noisy and are near a yoga studio
-    :poll russia australia antarctica
-     :poll food options in poll.11
-     :poll activity options in poll.11
-     :plant-trees find places to plant trees nearby 20418 autumn shore drive`,
+    `find all airbnb that are not noisy and are near a yoga studio
+:poll russia australia antarctica
+:poll food options in poll.11
+:poll activity options in poll.11
+:plant-trees find places to plant trees nearby 20418 autumn shore drive`,
     `:plan-dinner
-    :order-instacart
-    :twitch-comments find all relating to food
+:order-instacart
+:twitch-comments find all relating to food
     `,
     `find all books on wikipedia and them chart the by date and theme
         make clickable charts that send you to the wikipedia page
     `,
     `todo`,
-    `find all papers on arxiv relating to knowledge representation and machine learning`,
+    `:poll astronomy, physics, infoTheory
+    find all papers on arxiv relating to astornomy`,
 
     `enable multiplayer. :poll. if poll.Z > 50% then regenerate paragraph z till 100% of people agree`,
 
@@ -154,80 +154,107 @@ let poll_data = {
 //   <option value="4">4 - Books Wikipedia</option>
 //   <option value="5">5 - Research Paper Meta analysis?</option>
 get('select').addEventListener('change', function (e) {
-    console.log(e.target.value)
+    //console.log(e.target.value)
     get('textarea').value = templates[e.target.value]
     genCode()
 });
 let genCode = async function (event) {
     let text = get('textarea').value.split('\n')
     if (! text) return console.log('write some code in english')
-    const queryString = `${text}`;
+    let port = 8000
+
     let fn = await fetch(`http://localhost:${port}/makeFn/`, {
         method: 'POST',
 		headers: { "Content-Type": "application/json"},
 							   body: JSON.stringify({fn:text})
 	})
     fn = await fn.json()
-    console.log(0, 22, 11, 55)
-    console.log('made function', fn)
+    console.log('results', fn)
     get('.nexus').innerHTML = ''
 
-    text.forEach(async function (line, i) {
-       if (line.indexOf(':') === 0) {
-        fn[i] = await compile(line)
-       } else {
-        fn[i] = eval(fn[i])
-       }
+    // function createListView(data) {
+    //     let ul = document.createElement('ul')
+    //     data.forEach(function (datum) {
+    //         let li = document.createElement('li')
+    //         li.textContent = 'asdfasdf'
+    //         ul.appendChild(li)
+    //     })
+    //     return ul
+    // }
 
-       //console.log(fn[i])
-       let container = document.createElement('div')
-       console.log(fn, text)
-       if (! fn[i])  {
-        //container.innerHTML = (text[i])
-        console.log(fn.fn[i])
-        container.innerHTML += fn.fn[i]
+    // let _ = fn.fn.filter(_=>_)
+    // _.forEach((_, i, list) => {  
+    //     if (_.name === 'airbnb') list[i] = createListView(_.data)
+    // })
 
-        const renderAsync = async function (e) {
-            let tweets = await fetch('http://localhost:3001/rpc', {
-                method : 'POST',
-                body: JSON.stringify({fn: fn.fn[i]}),
-            })
+    //:find all :airbnb that are blue and built in 2023
+    //and does not have asbestos -> convert "does not have asbestos" to lookup in city hall blueprints -> what is the material of this building -> if asbestos -> return false
 
-            let json = await tweets.json()
-            container.innerHTML = JSON.stringify(json, null, 2)
-            window.json = JSON.parse(json)
-            container.json = json
+    fn.fn[0].name 
+    let listView = document.createElement('ul')
+    fn.fn[0].data.forEach(datum => listView.appendChild(Object.assign(document.createElement('li'), {textContent: datum}) ))
+    listView.style.overflow = 'scroll'
+    listView.style.height = '100px'
+    get('.nexus').innerHTML = ''
+    get('.nexus').appendChild(listView)
+    //get('.nexus').innerHTML = JSON.stringify(fn.fn[0].data, null, 2)
+    // let result = fn.fn.filter(_=>_).map(compile)
+    // result.forEach((_) => { get('.nexus').appendChild(_) })
+
+    // text.forEach(async function (line, i) {
+    //    if (line.indexOf(':') === 0) {
+    //     fn[i] = await compile(line)
+    //    } else {
+    //     fn[i] = eval(fn[i])
+    //    }
+
+    //    //console.log(fn[i])
+    //    let container = document.createElement('div')
+    //    if (! fn[i])  {
+    //     //container.innerHTML = (text[i])
+    //     //console.log(fn.fn[i])
+    //     container.innerHTML += fn.fn[i]
+
+    //     const renderAsync = async function (e) {
+    //         let tweets = await fetch('http://localhost:3001/rpc', {
+    //             method : 'POST',
+    //             body: JSON.stringify({fn: fn.fn[i]}),
+    //         })
+
+    //         let json = await tweets.json()
+    //         container.innerHTML = JSON.stringify(json, null, 2)
+    //         window.json = JSON.parse(json)
+    //         container.json = json
             
-            if (container.className === 'hasTwitch') {
-                container.innerHTML = window.json.filter(
-                    el => el.indexOf('LOL')
-                ).join('\n')
-            }
-            container.className = 'hasTwitch'
-        }
-        if (text[i].indexOf('twitch') !== -1) 
-            renderAsync()
-        container.addEventListener('click',renderAsync )
-        //send to serverless -> run that and then return the result and list it underneath
-        //hide the fn definition and make a button
-       }
-       else if (typeof fn[i] === 'string') container.innerHTML = fn[i]
-       else if (Array.isArray(fn[i]) ) fn[i].forEach((_) => container.innerHTML += _)
-       else container.appendChild(fn[i])
-       get('.nexus').appendChild(container)
-       console.log('123 456', fn)
-       fn.fn.forEach((_) => {
-        let child = document.createElement('div')
-        child.innerHTML = _
-        container.appendChild(child)
-       })
+    //         if (container.className === 'hasTwitch') {
+    //             container.innerHTML = window.json.filter(
+    //                 el => el.indexOf('LOL')
+    //             ).join('\n')
+    //         }
+    //         container.className = 'hasTwitch'
+    //     }
+    //     if (text[i].indexOf('twitch') !== -1) 
+    //         renderAsync()
+    //     container.addEventListener('click',renderAsync )
+    //     //send to serverless -> run that and then return the result and list it underneath
+    //     //hide the fn definition and make a button
+    //    }
+    //    else if (typeof fn[i] === 'string') container.innerHTML = fn[i]
+    //    else if (Array.isArray(fn[i]) ) fn[i].forEach((_) => container.innerHTML += _)
+    //    else container.appendChild(fn[i])
+    //    get('.nexus').appendChild(container)
+    //    fn.fn.forEach((_) => {
+    //     let child = document.createElement('div')
+    //     child.innerHTML = _
+    //     container.appendChild(child)
+    //    })
     //make untrackable -> use serverless -> 
     //topic modeling every 5 seconds 
     //top part of nexus = scratch or uncategorized 
     //dont delete anything just catgeorize it -> fade out only show if hover or click - > pop modal - are you sure?
     //document.querySelector('.nexus').innerHTML += [...Array(100).keys()].map(_ => '<br>').join('\n')
     //document.querySelector('.nexus').innerHTML += 
-    })
+    //})
     let GetAllNexus = await fetch(`${baseRoute}concatIntersection`, {
         mode: 'cors',
         method: 'POST',
@@ -454,12 +481,13 @@ function npmInstall() {}
 
 
 function compile(line, index) {
-    console.log(line)
-    for (let key in actions ) {
-        if (line.indexOf(key) !== -1) {
-            return eval(actions[key](line))
-        }
-    }
+    return makeGantChart()
+    // console.log(line)
+    // for (let key in actions ) {
+    //     if (line.indexOf(key) !== -1) {
+    //         return eval(actions[key](line))
+    //     }
+    // }
     if (line.indexOf(':npmInstall')) return npmInstall(line, index)
     if (line.indexOf(':addAction') === 0) return addAction(line, index)
     if (line.indexOf(':fetchTwitch') === 0) return fetchTwitch()

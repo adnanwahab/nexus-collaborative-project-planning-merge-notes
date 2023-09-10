@@ -325,18 +325,26 @@ def getProgram(sentence):
 
 
 
-def findAirbnb():
+def findAirbnb(_):
     from ipynb.fs.defs.geospatial import getAllAirbnbInCityThatAreNotNoisy
-    data = getAllAirbnbInCityThatAreNotNoisy() #todo make reactive live query
-    return data
+    GTorLT = 'not noisy' in _
+    #use sentence to genreate function that call on the data of other functions to map filter
+    #convert clauses to functions
+    #look for clause 
+    #write sentence in 5 ways
+    #find airbnbs in city that are not noisy
+    #find airbnbs in city that are noisy
+    #find airbnbs in city that are noisy
+    #find airbnbs in city that are noisy
+
+    data = getAllAirbnbInCityThatAreNotNoisy(GTorLT) #todo make reactive live query
+    return len(data)
 
 
-def poll():
+def poll(_):
+    return 'lots of cool polling data'
     return open('./poll.json', 'r').read()
 
-jupyter_functions = [findAirbnb, 
-                     poll
-                     ]
 
 [
     "find all airbnb that are not noisy and are near a yoga studio", #find airbnb
@@ -345,24 +353,68 @@ jupyter_functions = [findAirbnb,
     ":poll activity options in poll.11", #poll = transformed into a poll on the client -> into poll data on server
     ":plant-trees find places to plant trees nearby 20418 autumn shore drive" #transformed ignore 
 ]
+
+
+hasRendered = False
+hasRenderedContent = False
+def arxiv (_):
+    global hasRendered, hasRenderedContent  # Declare as global to modify
+    print('ARXIV')
+    # from ipynb.fs.defs.Untitled import getAllArxiv
+    # return getAllArxiv()
+    import pdfplumber
+    # Open the PDF file
+    import glob
+    fileList = glob.glob('./*.pdf')[:3]
+    print(fileList)
+    content = []
+    if hasRendered: return hasRenderedContent
+    for f in fileList:
+        print(f)
+        with pdfplumber.open(f) as pdf:
+            # Loop through each page
+            for i, page in enumerate(pdf.pages):
+            # Extract text from the page
+                text = page.extract_text()
+                content.append(text)
+               #print(f'Content from page {i + 1}:\n{text}')
+    print(content)
+    hasRendered = True
+    hasRenderedContent = content
+    return content
+
+jupyter_functions = {'airbnb': findAirbnb, 
+                     'poll': poll,
+                     'plant-trees': lambda _: 'put map here',
+                     'arxiv': arxiv
+}
+
 #on client if colon -> substitute on client 
 
+def substitute(name):
+    #search, encodings + similarity + who knows
+    #find most important word in the sentence and use that for component 
+    #sort words by relevance / importance 
+    print(name, name[0])
+    if (name[0] == ':'): return name
+    for k in jupyter_functions:
+        print(k,name)
+        if k in name:
+            return {'data':jupyter_functions[k](name)[:100],
+                    'name': k,
+            }
+    # for k, v in jupyter_functions:
+    #     if computeSimilarity(k, encode(name)) > .75:
+    #         return v
+    # if 'airbnb' in name:
+    #     return findAirbnb()
+    # if 'twitch' in name:
+    #     return open('./RPC/fetch-twitch.js', 'r').read()
 
 @app.post("/makeFn")
 async def makeFn(FnText:FnText):
-    if 'airbnb' in FnText.fn[0]:
-        return {'fn': jupyter_functions() }
-    gottenProgram = open('./RPC/watch-all-tweets-that-have-pizza.js', 'r').read()
-    #print('gottenProgram', gottenProgram)
-    if 'twitch' in FnText.fn[0]:
-        otherProgram = open('./RPC/fetch-twitch.js', 'r').read()
-    else: otherProgram = gottenProgram
-    #print('otherProgram', otherProgram, gottenProgram)
-    #gottenProgram = '(functi qqon () { return -50 + -Math.random(); })()'
-    programs = [otherProgram for sentence in FnText.fn]
-    #print(programs)
-
-    return {'fn': programs}
+    functions = [substitute(fn) for fn in FnText.fn]
+    return {'fn': functions}
     # print(Fn)
     # fn = makeFunctionFromText(Fn)[0]['generated_text']
     # print('something else')
