@@ -281,3 +281,20 @@ function Poll() {
 }
 
 
+
+
+
+`transportation`
+`wikimedia edits`
+
+`watch all tweets on that mention pizza and tennis 
+visualize sentiment over time series -> 2 graphs
+time Series Frequency #0 -> 2 graphs 
+`
+
+
+
+
+`twitch_comments
+getTopics
+if topic is food order a pizza `

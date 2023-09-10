@@ -389,11 +389,30 @@ def trees_histogram(_):
     print('trees histogram')
     return trees_histogram()
 
+def twitch_comments(_):
+    return json.load(open('./data/twitch.json', 'r'))
+
+
+
+
+def getTopics(sentences):
+    counts = defaultdict(int)
+    for sentence in sentences:
+        for word in sentence.split(' '):
+            counts[word] += 1
+    topics = []
+    for k in counts:
+        if counts[k] > 2:
+            topics.append(k)
+    return topics
+
 jupyter_functions = {'airbnb': findAirbnb, 
                      'poll': poll,
                      'plant-trees': lambda _: 'put map here',
                      'arxiv': arxiv,
                      'trees_histogram' : trees_histogram,
+                     'twitch_comments' : twitch_comments,
+                     'getTopics': getTopics
 }
 
 #on client if colon -> substitute on client 
@@ -407,7 +426,7 @@ def substitute(name):
     for k in jupyter_functions:
         print('k---name',   k,name)
         if k in name:
-            return jupyter_functions[k](name)
+            return jupyter_functions[k]
             return {'data':jupyter_functions[k](name),
                     'name': k,
             }
@@ -424,9 +443,12 @@ def substitute(name):
 async def makeFn(FnText:FnText):
     print('FnText', FnText)
     functions = [substitute(fn) for fn in FnText.fn]
-    print('functions', functions)
-    print(functions, )
-    return {'fn': functions}
+    val = False
+    args = []
+    for fn in functions: 
+        val = fn(val)
+        args.append(val)
+    return {'fn': args}
     # print(Fn)
     # fn = makeFunctionFromText(Fn)[0]['generated_text']
     # print('something else')
