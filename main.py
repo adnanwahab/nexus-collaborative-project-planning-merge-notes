@@ -400,6 +400,7 @@ def substitute(name):
     for k in jupyter_functions:
         print(k,name)
         if k in name:
+            return jupyter_functions[k](name)
             return {'data':jupyter_functions[k](name),
                     'name': k,
             }
