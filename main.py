@@ -384,8 +384,9 @@ def arxiv (_):
     return content
 
 
-def trees_histogram():
+def trees_histogram(_):
     from ipynb.fs.defs.geospatial import trees_histogram
+    print('trees histogram')
     return trees_histogram()
 
 jupyter_functions = {'airbnb': findAirbnb, 
@@ -404,13 +405,13 @@ def substitute(name):
     print(name)
     if (name[0] == ':'): return name
     for k in jupyter_functions:
-        print(k,name)
+        print('k---name',   k,name)
         if k in name:
             return jupyter_functions[k](name)
             return {'data':jupyter_functions[k](name),
                     'name': k,
             }
-        else: return name
+    return name
     # for k, v in jupyter_functions:
     #     if computeSimilarity(k, encode(name)) > .75:
     #         return v

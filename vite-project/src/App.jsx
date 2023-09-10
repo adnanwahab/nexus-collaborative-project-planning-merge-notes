@@ -183,6 +183,14 @@ function compile (dataList) {
   return dataList.fn.map(function (datum) {
     if (Array.isArray(datum)) return List(datum)
     if (datum === 'lots of cool polling data') return Poll()
+    if (typeof datum === 'object') { 
+      return (
+      <>
+      <Histogram2 />
+      {/* { List(Object.values()) } */}
+      </>
+      )
+    }
     return datum
   })
 }
@@ -194,14 +202,16 @@ let templateContent = [
 :plant-trees find places to plant trees nearby 20418 autumn shore drive`,
 `:poll astronomy, physics, infoTheory
     find all papers on arxiv relating to astornomy`,
-    `find all books on wikipedia and them chart the by date and theme
-        make clickable charts that send you to the wikipedia page`,
+    `find all trees in nyc 
+     visualize how many are of which species in a histogram
+
+    `,
 ]
 
 let templateNames = [
   'Group Travel Planning 4 Conferences - Remote Year',
   'arxiv - find papers which are good but not highly cited and find papers that may be highly cited in future ',
-  'Gant Chart for Dinner'
+  'Tree visualization - find best place to plant tree '
 ]
 
 
