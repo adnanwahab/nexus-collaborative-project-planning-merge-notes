@@ -383,10 +383,16 @@ def arxiv (_):
     hasRenderedContent = content
     return content
 
+
+def trees_histogram():
+    from ipynb.fs.defs.geospatial import trees_histogram
+    return trees_histogram()
+
 jupyter_functions = {'airbnb': findAirbnb, 
                      'poll': poll,
                      'plant-trees': lambda _: 'put map here',
-                     'arxiv': arxiv
+                     'arxiv': arxiv,
+                     'trees_histogram' : trees_histogram,
 }
 
 #on client if colon -> substitute on client 
