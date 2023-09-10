@@ -162,7 +162,7 @@ let genCode = async function (event) {
     let text = get('textarea').value.split('\n')
     if (! text) return console.log('write some code in english')
     let port = 8000
-
+    console.log(text)
     let fn = await fetch(`http://localhost:${port}/makeFn/`, {
         method: 'POST',
 		headers: { "Content-Type": "application/json"},
@@ -186,17 +186,22 @@ let genCode = async function (event) {
     // _.forEach((_, i, list) => {  
     //     if (_.name === 'airbnb') list[i] = createListView(_.data)
     // })
+    get('.nexus').innerHTML = ''
 
     //:find all :airbnb that are blue and built in 2023
     //and does not have asbestos -> convert "does not have asbestos" to lookup in city hall blueprints -> what is the material of this building -> if asbestos -> return false
+    // you have to focus and finish the demo before noon 
+    //you have to get it done right just keep coding
+    //if (Array.isArray(fn.fn[0].data)) {
+        fn.fn[0].name 
+        let listView = document.createElement('ul')
+        fn.fn[0].data.forEach(datum => listView.appendChild(Object.assign(document.createElement('li'), {textContent: datum}) ))
+        listView.style.overflow = 'scroll'
+        listView.style.height = '200px'
+        get('.nexus').appendChild(listView)
 
-    fn.fn[0].name 
-    let listView = document.createElement('ul')
-    fn.fn[0].data.forEach(datum => listView.appendChild(Object.assign(document.createElement('li'), {textContent: datum}) ))
-    listView.style.overflow = 'scroll'
-    listView.style.height = '100px'
-    get('.nexus').innerHTML = ''
-    get('.nexus').appendChild(listView)
+    //}
+  
     //get('.nexus').innerHTML = JSON.stringify(fn.fn[0].data, null, 2)
     // let result = fn.fn.filter(_=>_).map(compile)
     // result.forEach((_) => { get('.nexus').appendChild(_) })

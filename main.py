@@ -338,7 +338,7 @@ def findAirbnb(_):
     #find airbnbs in city that are noisy
 
     data = getAllAirbnbInCityThatAreNotNoisy(GTorLT) #todo make reactive live query
-    return len(data)
+    return data
 
 
 def poll(_):
@@ -395,12 +395,12 @@ def substitute(name):
     #search, encodings + similarity + who knows
     #find most important word in the sentence and use that for component 
     #sort words by relevance / importance 
-    print(name, name[0])
+    print(name)
     if (name[0] == ':'): return name
     for k in jupyter_functions:
         print(k,name)
         if k in name:
-            return {'data':jupyter_functions[k](name)[:100],
+            return {'data':jupyter_functions[k](name),
                     'name': k,
             }
     # for k, v in jupyter_functions:
@@ -413,7 +413,10 @@ def substitute(name):
 
 @app.post("/makeFn")
 async def makeFn(FnText:FnText):
+    print('FnText', FnText)
     functions = [substitute(fn) for fn in FnText.fn]
+    print('functions', functions)
+    print(functions, )
     return {'fn': functions}
     # print(Fn)
     # fn = makeFunctionFromText(Fn)[0]['generated_text']

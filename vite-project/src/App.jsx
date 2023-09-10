@@ -8,6 +8,10 @@ import React, {useRef, useEffect} from "react";
 import {Runtime, Inspector} from "@observablehq/runtime";
 import notebook from "@uwdata/mosaic-cross-filter-flights-10m";
 
+function get (query) {
+  return document.querySelector(query)
+}
+
 function MosaicCrossFilterFlightsM() {
   const viewofFlightsRef = useRef();
 
@@ -31,24 +35,42 @@ function MosaicCrossFilterFlightsM() {
 function CodeEditor() {
   let [code, setCode] = useState("hello world")
   return (<><textarea 
+  class="w-full h-64 border border-gray-300 rounded-lg p-2"
   onKeyDown={(e) => setCode(e.target.value)}
-  onKeyUp={consoleLog}> 
-  </textarea> <div>{code}</div>
+  onKeyUp={_}> 
+  </textarea
+  > <div>{code}</div>
   </>)
 }
 
 
 function consoleLog(event) {
-  return console.log("hello world", event.target.value)
+  return console.log(event.target.value)
 }
 
 let vote_titles = [
   'Astrophysics', 'Condensed Matter', 'Mathematical Physics', 'Mesoscale and Nanoscale Physics'
 ]
 let votes = [0,0,0,0] //swap with 
-fetch('http://localhost:8080/.netlify/functions/run-rpc', {
+// fetch('http://localhost:8000/.netlify/functions/run-rpc', {
 
-})
+// })
+
+
+async function _() {
+  let text = get('textarea').value.split('\n')
+  //text = ['asdfasd', 'asdfasdf', 'asdf']
+  let port = 8000
+  console.log(text)
+
+  let fn = await fetch(`http://localhost:${port}/makeFn/`, {
+    method: 'POST',
+    headers: { "Content-Type": "application/json"},
+              body: JSON.stringify({fn:text})
+  })
+  fn = await fn.json()
+  console.log('fn', fn.fn)
+}
 
 function App() {
   const [count, setCount] = useState(0)
@@ -78,21 +100,21 @@ function App() {
   src="https://observablehq.com/embed/@d3/bar-chart?cells=chart"></iframe>)
 
   return (
-    <>
+    <div className="grid grid-cols-2">
     <CodeEditor></CodeEditor>
     {/* <MosaicCrossFilterFlightsM /> */}
       <div className="card">
     {voted ? graph : buttons}
       
       </div>
-    </>
+    </div>
   )
 }
 
 export default App
 
 
-
+console.log(12312)
 
 function Poll() {
 
