@@ -8,6 +8,65 @@ import React, {useRef, useEffect} from "react";
 import {Runtime, Inspector} from "@observablehq/runtime";
 import notebook from "@uwdata/mosaic-cross-filter-flights-10m";
 
+import React, {useRef, useEffect} from "react";
+import {Runtime, Inspector} from "@observablehq/runtime";
+import notebook from "@rithwikanand/histogram";
+
+function Histogram() {
+  const chartRef = useRef();
+
+  useEffect(() => {
+    const runtime = new Runtime();
+    runtime.module(notebook, name => {
+      if (name === "chart") return new Inspector(chartRef.current);
+    });
+    return () => runtime.dispose();
+  }, []);
+
+  return (
+    <>
+      <div ref={chartRef} />
+      <p>Credit: <a href="https://observablehq.com/@rithwikanand/histogram">Histogram by Rithwik Anand</a></p>
+    </>
+  );
+}
+
+
+import React, {useRef, useEffect} from "react";
+import {Runtime, Inspector} from "@observablehq/runtime";
+import notebook from "1420c244c74cb1bb";
+
+function Notebook() {
+  const lineChartRef = useRef();
+
+  useEffect(() => {
+    const runtime = new Runtime();
+    runtime.module(notebook, name => {
+      if (name === "lineChart") return new Inspector(lineChartRef.current);
+    });
+    return () => runtime.dispose();
+  }, []);
+
+  return (
+    <>
+      <div ref={lineChartRef} />
+      <p>Credit: <a href="https://observablehq.com/d/1420c244c74cb1bb">GNSS Position Timeseries by Yang</a></p>
+    </>
+  );
+}
+
+
+
+
+diagrams = {
+  'histogram': iframeHistogram,
+  'timeSeries': Notebook
+}
+
+iframeHistogram = Histogram
+
+// `<iframe width="100%" height="584" frameborder="0"
+//   src="https://observablehq.com/embed/@rithwikanand/histogram?cells=chart"></iframe>`
 
 function get (query) {
   return document.querySelector(query)
@@ -81,7 +140,6 @@ const components = {
 }
 
 function compile (dataList) {
-
   return dataList.fn.map(function (datum) {
     if (Array.isArray(datum)) return List(datum)
     if (datum === 'lots of cool polling data') return Poll()
@@ -110,6 +168,11 @@ function App() {
   const [count, setCount] = useState(0)
   const [components, setComponents] = useState([])
 
+
+  One = diagrams['histogram']
+  two = diagrams['timeSeries']
+
+  
   return (
     <div className="grid grid-cols-2">
       <div>
@@ -122,6 +185,9 @@ function App() {
           {templateNames.map(key => <option value={key}>{key}</option>)}
         </select>
         <CodeEditor setComponents={setComponents}></CodeEditor>
+        <One></One>
+        <Two></Two>
+
       </div>
 
       <div className="card">{components}</div>

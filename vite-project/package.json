@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "1420c244c74cb1bb": "https://api.observablehq.com/d/1420c244c74cb1bb.tgz?v=3",
     "@observablehq/runtime": "5",
+    "@rithwikanand/histogram": "https://api.observablehq.com/@rithwikanand/histogram.tgz?v=3",
     "@uwdata/mosaic-cross-filter-flights-10m": "https://api.observablehq.com/@uwdata/mosaic-cross-filter-flights-10m.tgz?v=3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

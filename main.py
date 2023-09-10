@@ -404,11 +404,12 @@ def substitute(name):
             return {'data':jupyter_functions[k](name),
                     'name': k,
             }
+        else: return name
     # for k, v in jupyter_functions:
     #     if computeSimilarity(k, encode(name)) > .75:
     #         return v
     # if 'airbnb' in name:
-    #     return findAirbnb()
+    #     return findAirbnb(l)
     # if 'twitch' in name:
     #     return open('./RPC/fetch-twitch.js', 'r').read()
 
