@@ -95,8 +95,27 @@ function compile (dataList) {
   })
 }
 
+let templateContent = [
+    `find all airbnb that are not noisy and are near a yoga studio
+:poll russia australia antarctica
+:poll food options in poll.11
+:poll activity options in poll.11
+:plant-trees find places to plant trees nearby 20418 autumn shore drive`,
+    `:plan-dinner
+:order-instacart
+:twitch-comments find all relating to food`,
+    `find all books on wikipedia and them chart the by date and theme
+        make clickable charts that send you to the wikipedia page`,
+    `:poll astronomy, physics, infoTheory
+    find all papers on arxiv relating to astornomy`,
+    `enable multiplayer. :poll. if poll.Z > 50% then regenerate paragraph z till 100% of people agree`,
+]
 
-
+let templateNames = [
+  'Group Travel Planning 4 Conferences - Remote Year',
+  'arxiv - find papers which are good but not highly cited and find papers that may be highly cited in future ',
+  'Gant Chart for Dinner'
+]
 
 function App() {
   const [count, setCount] = useState(0)
@@ -104,6 +123,14 @@ function App() {
 
   return (
     <div className="grid grid-cols-2">
+    <label>pick a template</label>
+      <select
+       onChange={(e) => 
+       get('textarea').value = templateContent[e.target.selectedIndex]
+       }
+       className="m-5 border border-bluegray-800 border-dashed">
+      {templateNames.map(key => <option value={key}>{key}</option>)}
+    </select>
     <CodeEditor setComponents={setComponents}></CodeEditor>
     {/* <MosaicCrossFilterFlightsM /> */}
       <div className="card">{components}</div>
