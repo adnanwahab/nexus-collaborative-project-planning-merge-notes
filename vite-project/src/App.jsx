@@ -76,6 +76,8 @@ function Histogram() {
     </>
   );
 }
+//<iframe width="100%" height="1004" frameborder="0"
+//src="https://observablehq.com/embed/@ankitak/stars?cells=chart"></iframe>
 
 import React, {useRef, useEffect} from "react";
 //import notebook from "1420c244c74cb1bb";
@@ -204,14 +206,16 @@ let templateContent = [
     find all papers on arxiv relating to astornomy`,
     `find all trees in nyc 
      visualize how many are of which species in a histogram
-
+      reccomend places to plant a tree - find places with low tree density and high population density
     `,
 ]
 
 let templateNames = [
   'Group Travel Planning 4 Conferences - Remote Year',
   'arxiv - find papers which are good but not highly cited and find papers that may be highly cited in future ',
-  'Tree visualization - find best place to plant tree '
+  'Tree visualization - find best place to plant tree ',
+  'Astronomy',
+  '',
 ]
 
 
@@ -225,6 +229,18 @@ function App() {
   let One = diagrams['histogram']
   let Two = diagrams['timeSeries']
 
+
+  // useEffect(() => { 
+
+  //   const fetchData = async () => {
+  //     let data = await _()
+  //     data = compile(data);
+  //     setComponents(compile(data))    
+  //   }
+
+  //   fetchData()
+    
+  // }, [count])
   
   return (
     <div className="grid grid-cols-2">
@@ -233,7 +249,7 @@ function App() {
           <select 
           onChange={(e) => {
           get('textarea').value = templateContent[e.target.selectedIndex]
-          //_()
+            setCount(count + 1)
           }
           }
           className="w-64 m-5 border border-bluegray-800 border-dashed">
@@ -281,20 +297,3 @@ function Poll() {
 }
 
 
-
-
-
-`transportation`
-`wikimedia edits`
-
-`watch all tweets on that mention pizza and tennis 
-visualize sentiment over time series -> 2 graphs
-time Series Frequency #0 -> 2 graphs 
-`
-
-
-
-
-`twitch_comments
-getTopics
-if topic is food order a pizza `

@@ -327,7 +327,7 @@ def getProgram(sentence):
 
 def findAirbnb(_):
     from ipynb.fs.defs.geospatial import getAllAirbnbInCityThatAreNotNoisy
-    GTorLT = 'not noisy' in _
+    GTorLT = 'not noisy' in 'asdfasf'
     #use sentence to genreate function that call on the data of other functions to map filter
     #convert clauses to functions
     #look for clause 
@@ -344,16 +344,6 @@ def findAirbnb(_):
 def poll(_):
     return 'lots of cool polling data'
     return open('./poll.json', 'r').read()
-
-
-[
-    "find all airbnb that are not noisy and are near a yoga studio", #find airbnb
-    ":poll russia australia antarctica", #poll = transformed into a poll on the client -> into poll data on server 
-    ":poll food options in poll.11", #poll = transformed into a poll on the client -> into poll data on server
-    ":poll activity options in poll.11", #poll = transformed into a poll on the client -> into poll data on server
-    ":plant-trees find places to plant trees nearby 20418 autumn shore drive" #transformed ignore 
-]
-
 
 hasRendered = False
 hasRenderedContent = False
@@ -422,7 +412,6 @@ def substitute(name):
     #find most important word in the sentence and use that for component 
     #sort words by relevance / importance 
     print(name)
-    if (name[0] == ':'): return name
     for k in jupyter_functions:
         print('k---name',   k,name)
         if k in name:
@@ -446,7 +435,9 @@ async def makeFn(FnText:FnText):
     val = False
     args = []
     for fn in functions: 
-        val = fn(val)
+        if type(fn) == type(lambda _:_):
+            val = fn(val)
+        else: val = fn
         args.append(val)
     return {'fn': args}
     # print(Fn)
