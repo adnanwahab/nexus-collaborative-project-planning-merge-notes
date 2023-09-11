@@ -182,9 +182,10 @@ const components = {
 }
 
 function compile (dataList) {
+  if (! dataList.fn) return dataList
   return dataList.fn.map(function (datum) {
     if (Array.isArray(datum)) return List(datum)
-    if (datum === 'lots of cool polling data') return Poll()
+    //if (datum === 'lots of cool polling data') return Poll()
     if (typeof datum === 'object') { 
       return (
       <>
@@ -230,17 +231,17 @@ function App() {
   let Two = diagrams['timeSeries']
 
 
-  // useEffect(() => { 
+  useEffect(() => { 
 
-  //   const fetchData = async () => {
-  //     let data = await _()
-  //     data = compile(data);
-  //     setComponents(compile(data))    
-  //   }
+    const fetchData = async () => {
+      let data = await _()
+      data = compile(data);
+      setComponents(compile(data))    
+    }
 
-  //   fetchData()
+    fetchData()
     
-  // }, [count])
+  }, [count])
   
   return (
     <div className="grid grid-cols-2">
@@ -289,7 +290,7 @@ function Poll() {
   src="https://observablehq.com/embed/@d3/bar-chart?cells=chart"></iframe>)
 
   function vote ( ){
-    setHasVoted(true)
+    // setHasVoted(true)
   }
 
   return  <> {voted ? graph : buttons}</>
