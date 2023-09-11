@@ -315,7 +315,7 @@ import json
 #if poll.get('ballotZ') > 50%: regenerate pargraph z until 100% of people agree
 
 # deps store deps that are parsed from program definition
-def getProgram(sentence):
+def getProgram(_, sentence):
     encodings = getEncodings(sentence)
     program_generator_cache = json.load(open('encodings.json', 'w'))
     if encodings in program_generator_cache: return program_generator_cache[encodings]
@@ -325,9 +325,9 @@ def getProgram(sentence):
 
 
 
-def findAirbnb(_):
+def findAirbnb(previous, sentence):
     from ipynb.fs.defs.geospatial import getAllAirbnbInCityThatAreNotNoisy
-    GTorLT = 'not noisy' in 'asdfasf'
+    GTorLT = 'not noisy' in sentence
     #use sentence to genreate function that call on the data of other functions to map filter
     #convert clauses to functions
     #look for clause 
@@ -336,18 +336,17 @@ def findAirbnb(_):
     #find airbnbs in city that are noisy
     #find airbnbs in city that are noisy
     #find airbnbs in city that are noisy
-
     data = getAllAirbnbInCityThatAreNotNoisy(GTorLT) #todo make reactive live query
     return data
 
 
-def poll(_):
+def poll(_, second):
     return 'lots of cool polling data'
     return open('./poll.json', 'r').read()
 
 hasRendered = False
 hasRenderedContent = False
-def arxiv (_):
+def arxiv (_, sentence):
     global hasRendered, hasRenderedContent  # Declare as global to modify
     print('ARXIV')
     # from ipynb.fs.defs.Untitled import getAllArxiv
@@ -367,25 +366,25 @@ def arxiv (_):
             # Extract text from the page
                 text = page.extract_text()
                 content.append(text)
-               #print(f'Content from page {i + 1}:\n{text}')
+            #print(f'Content from page {i + 1}:\n{text}')
     print(content)
     hasRendered = True
     hasRenderedContent = content
     return content
 
+def trees_map(_, sentence):
+    from ipynb.fs.defs.geospatial import trees_map
+    return trees_map()[:100000]
 
-def trees_histogram(_):
+def trees_histogram(_, sentence):
     from ipynb.fs.defs.geospatial import trees_histogram
     print('trees histogram')
     return trees_histogram()
 
-def twitch_comments(_):
+def twitch_comments(_, sentence):
     return json.load(open('./data/twitch.json', 'r'))
 
-
-
-
-def getTopics(sentences):
+def getTopics(sentences, sentence):
     counts = defaultdict(int)
     for sentence in sentences:
         for word in sentence.split(' '):
@@ -398,11 +397,12 @@ def getTopics(sentences):
 
 jupyter_functions = {'airbnb': findAirbnb, 
                      'poll': poll,
-                     'plant-trees': lambda _: 'put map here',
+                     'plant-trees': lambda _,__: 'put map here',
                      'arxiv': arxiv,
                      'trees_histogram' : trees_histogram,
                      'twitch_comments' : twitch_comments,
-                     'getTopics': getTopics
+                     'getTopics': getTopics, 
+                     'trees_map': trees_map
 }
 
 #on client if colon -> substitute on client 
@@ -434,9 +434,10 @@ async def makeFn(FnText:FnText):
     functions = [substitute(fn) for fn in FnText.fn]
     val = False
     args = []
-    for fn in functions: 
+    for i, fn in enumerate(functions): 
         if type(fn) == type(lambda _:_):
-            val = fn(val)
+            print(fn.__name__)
+            val = fn(val, FnText.fn[i] )
         else: val = fn
         args.append(val)
     return {'fn': args}

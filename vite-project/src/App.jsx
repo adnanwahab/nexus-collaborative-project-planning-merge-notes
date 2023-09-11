@@ -5,7 +5,55 @@ import './App.css'
 import Favicon from "react-favicon";
 //npm install react-favicon --save
 import {Runtime, Inspector} from "@observablehq/runtime";
-// import notebook from "@uwdata/mosaic-cross-filter-flights-10m";
+import notebook from "@uwdata/mosaic-cross-filter-flights-10m";
+//import notebook from "3f6e237936d0a0c7";
+
+// import { MapContainer } from 'react-leaflet/MapContainer'
+// import { TileLayer } from 'react-leaflet/TileLayer'
+// import { useMap } from 'react-leaflet/hooks'
+import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
+
+
+
+function MapTrees(trees)  {
+  trees = trees.slice(0, 1e3)
+  const markers = trees.map((_, i) => (<Marker key={i} position={_}>
+    <Popup>
+      A pretty CSS3 popup. <br /> Easily customizable.
+    </Popup>
+  </Marker>))
+
+  return ( 
+  <div className="w-48 h-64 relative">
+  <MapContainer center={trees[0]} zoom={13} scrollWheelZoom={false}>
+    <TileLayer
+attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+/>
+{markers}
+
+  </MapContainer>
+  </div>
+  )
+}
+
+
+function Notebook() {
+  const ref = useRef();
+
+  useEffect(() => {
+    const runtime = new Runtime();
+    runtime.module(notebook, Inspector.into(ref.current));
+    return () => runtime.dispose();
+  }, []);
+
+  return (
+    <>
+      <div ref={ref} />
+      <p>Credit: <a href="https://observablehq.com/d/3f6e237936d0a0c7">Collaborative Travel Schedule Generation for Conferences by awahab</a></p>
+    </>
+  );
+}
 
 // import notebook from "@sandraviz/animated-line-chart";
 //import d3 from 'd3'
@@ -85,26 +133,26 @@ function Histogram() {
 import React, {useRef, useEffect} from "react";
 //import notebook from "1420c244c74cb1bb";
 
-function Notebook() {
-  const lineChartRef = useRef();
+// function Notebook() {
+//   const lineChartRef = useRef();
 
-  useEffect(() => {
-    console.log('TIMESERIES')
+//   useEffect(() => {
+//     console.log('TIMESERIES')
 
-    const runtime = new Runtime();
-    runtime.module(notebook, name => {
-      if (name === "lineChart") return new Inspector(lineChartRef.current);
-    });
-    return () => runtime.dispose();
-  }, []);
+//     const runtime = new Runtime();
+//     runtime.module(notebook, name => {
+//       if (name === "lineChart") return new Inspector(lineChartRef.current);
+//     });
+//     return () => runtime.dispose();
+//   }, []);
 
-  return (
-    <>
-      <div ref={lineChartRef} />
-      <p>Credit: <a href="https://observablehq.com/d/1420c244c74cb1bb">GNSS Position Timeseries by Yang</a></p>
-    </>
-  );
-}
+//   return (
+//     <>
+//       <div ref={lineChartRef} />
+//       <p>Credit: <a href="https://observablehq.com/d/1420c244c74cb1bb">GNSS Position Timeseries by Yang</a></p>
+//     </>
+//   );
+// }
 
 const diagrams = {
   'histogram': Histogram,
@@ -153,12 +201,12 @@ async function _() {
   return fn
 }
 
-
-
 function CodeEditor({setComponents}) {
   async function apply_(){
     let data = await _()
+    console.log(data)
     data = compile(data);
+
     setComponents(data)
   }
 
@@ -169,7 +217,11 @@ function CodeEditor({setComponents}) {
   </>)
 }
 
-const List = (list) => list.map(item => <div key="item">{item}</div>)
+const List = (list) => 
+  (<ul class="overflow-scroll h-64">
+    <li key="item font-white">{list.length}</li>
+    {list.map((item, idx) => <li key={idx}>{item}</li>)}
+  </ul>)
 
 function consoleLog(event) {
   return console.log(event.target.value)
@@ -186,18 +238,52 @@ const components = {
   'List': List
 }
 
+import notebook2 from "35ca09d7f1457ad3";
+
+function Notebook2() {
+  const chartRef = useRef();
+
+  useEffect(() => {
+    const runtime = new Runtime();
+    runtime.module(notebook2, name => {
+      if (name === "chart") return new Inspector(chartRef.current);
+    });
+    return () => runtime.dispose();
+  }, []);
+
+  return (
+    <>
+      <div ref={chartRef} />
+      <p>Credit: <a href="https://observablehq.com/d/35ca09d7f1457ad3">Learn D3: Animation by awahab</a></p>
+    </>
+  );
+}
+
+const isGeoCoordinate = (pair) => {
+  console.log(pair)
+  return Array.isArray(pair) && parseFloat(pair[0][0]) && parseFloat(pair[0][1])
+}
+
 function compile (dataList) {
   if (! dataList.fn) return dataList
   return dataList.fn.map(function (datum) {
+    if (isGeoCoordinate(datum)) {
+      return MapTrees(datum)
+    }
+
+
     if (Array.isArray(datum)) return List(datum)
     //if (datum === 'lots of cool polling data') return Poll()
     if (datum === 'timeseries') {
-      return( <AnimatedLineChart />)
+      return( <Notebook2 />)
     }
+
+
     if (typeof datum === 'object') { 
       return (
       <>
       <Histogram2 />
+      
       {/* { List(Object.values()) } */}
       </>
       )
@@ -207,7 +293,8 @@ function compile (dataList) {
 }
 
 let templateContent = [
-    `find all airbnb that are not noisy and are near a coworking space
+    `find all airbnb that are not noisy
+    find all airbnb that are noisy
 :poll russia australia antarctica
 :poll food options in poll.11
 :poll activity options in poll.11
@@ -215,9 +302,9 @@ let templateContent = [
 `:poll astronomy, physics, infoTheory
     find all papers on arxiv relating to astornomy`,
     `find all trees in nyc 
-     visualize how many are of which species in a histogram
-      reccomend places to plant a tree - find places with low tree density and high population density
-      trees_histogram
+       plot on a map
+      reccomend places to plant a tree based on h3
+      visualize how many are of which species in a trees_histogram
     `,
     `find best time to visualize all the planets in the solar system`
 ]
@@ -265,13 +352,13 @@ function App() {
           }
           }
           className="w-64 m-5 border border-bluegray-800 border-dashed">
-          {templateNames.map(key => <option value={key}>{key}</option>)}
+          {templateNames.map((key, index) => <option value={index}>{key}</option>)}
         </select>
         <CodeEditor setComponents={setComponents}></CodeEditor>        
-        <Histogram2 />
-        <vennDiagram />
+        {/* <Histogram2 /> */}
+        {/* <vennDiagram /> */}
         {/* <VisualizingTheNightSkyWorkingWithDCelestial /> */}
-
+        {/* <Notebook /> */}
       </div>
 
       <div className="card">{components}</div>
@@ -368,32 +455,7 @@ export default App
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //use a IDE to think of things you would not have thought of 
-
-
-
-
 //from a sentence -> generate a program
 //from a program -> generate an a comment
 //from a program -> generate a data 
@@ -417,15 +479,6 @@ export default App
 
 //write stuff -> computer tells you if it makes sense
 //if it thinks it doesnt make sense it tell you why
-
-
-
-
-
-
-
-
-
 
 //write a note that has live updating sentences
 //and you have diagrams that are UI components that can change the sentences
@@ -470,9 +523,5 @@ function Poll() {
   function vote ( ){
     // setHasVoted(true)
   }
-
   return  <> {voted ? graph : buttons}</>
-
 }
-
-
