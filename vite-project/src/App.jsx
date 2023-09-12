@@ -182,9 +182,11 @@ async function _() {
   let text = get('textarea').value.split('\n')
   //text = ['asdfasd', 'asdfasdf', 'asdf']
   let port = 8000
+  let url = `http://localhost:${port}/makeFn/`
+  url = `https://pypypy.ngrok.io/makeFn/`
   console.log(text)
 
-  let fn = await fetch(`http://localhost:${port}/makeFn/`, {
+  let fn = await fetch(url, {
     method: 'POST',
     headers: { "Content-Type": "application/json"},
               body: JSON.stringify({fn:text})

@@ -26,7 +26,7 @@ def makeFunctionFromText(text):
     {prompt}
     [/INST]
     '''
-    input_ids = tokenizer(prompt_template, return_tensors='pt').input_ids.cuda()
+    input_ids = tokenizer(prompt_template, return_tensors='pt').input_ids
     output = model.generate(inputs=input_ids, temperature=0.7, max_new_tokens=512)
     return re.match(r'[SOL](.*)[/SOL]', tokenizer.decode(output[0]))
 
