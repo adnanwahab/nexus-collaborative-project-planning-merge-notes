@@ -6,16 +6,32 @@ import Favicon from "react-favicon";
 //npm install react-favicon --save
 import {Runtime, Inspector} from "@observablehq/runtime";
 import notebook from "@uwdata/mosaic-cross-filter-flights-10m";
+import notebook2 from "35ca09d7f1457ad3";
 //import notebook from "3f6e237936d0a0c7";
-
 // import { MapContainer } from 'react-leaflet/MapContainer'
 // import { TileLayer } from 'react-leaflet/TileLayer'
 // import { useMap } from 'react-leaflet/hooks'
 import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
 
+import MapComponent from './Map'
 
 
 function MapTrees(trees)  {
+return MapComponent(trees)
+
+return (
+  <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+  <TileLayer
+    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  />
+  <Marker position={[51.505, -0.09]}>
+    <Popup>
+      A pretty CSS3 popup. <br /> Easily customizable.
+    </Popup>
+  </Marker>
+</MapContainer>
+)
   trees = trees.slice(0, 1e3)
   const markers = trees.map((_, i) => (<Marker key={i} position={_}>
     <Popup>
@@ -30,7 +46,6 @@ function MapTrees(trees)  {
 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 />
-{markers}
 
   </MapContainer>
   </div>
@@ -215,7 +230,6 @@ const components = {
   'List': List
 }
 
-import notebook2 from "35ca09d7f1457ad3";
 
 function Notebook2() {
   const chartRef = useRef();
@@ -269,6 +283,7 @@ function compile (dataList) {
   })
 }
 
+
 let templateContent = [
     `find all airbnb that are not noisy
     find all airbnb that are noisy
@@ -283,7 +298,7 @@ let templateContent = [
       reccomend places to plant a tree based on h3
       visualize how many are of which species in a trees_histogram
     `,
-    `find best time to visualize all the planets in the solar system`
+    `find best time to see all the planets in the solar system`
 ]
 
 let templateNames = [
@@ -291,23 +306,14 @@ let templateNames = [
   'arxiv - find papers which are good but not highly cited and find papers that may be highly cited in future ',
   'Tree visualization - find best place to plant tree ',
   'Astronomy',
-  '',
+  'stream comments -> topic -> automate',
 ]
-
-
-
 
 function App() {
   const [count, setCount] = useState(0)
   const [components, setComponents] = useState([])
 
-
-  let One = diagrams['histogram']
-  let Two = diagrams['timeSeries']
-
-
   useEffect(() => { 
-
     const fetchData = async () => {
       let data = await _()
       data = compile(data);
@@ -346,30 +352,30 @@ function App() {
 export default App
 
 
+function Poll() {
+  const [voted, setHasVoted] = useState(false)
+  let buttons = <>
+      <button onClick={() => vote(0)}>
+           {vote_titles[0]}
+        </button>
+        <button onClick={() => vote(1)}>
+        {vote_titles[1]}
+        </button>
+        <button onClick={() => vote(2)}>
+        {vote_titles[2]}
+        </button>
+        <button onClick={() => vote(3)}>
+        {vote_titles[3]}
+        </button>
+  </>
+  let graph = (<iframe width="100%" height="584" frameborder="0"
+  src="https://observablehq.com/embed/@d3/bar-chart?cells=chart"></iframe>)
 
-//english  = glue language 
-//javascript -> display + run queries on UI
-//python -> automatically create services on infinte data streams 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  function vote ( ){
+    // setHasVoted(true)
+  }
+  return  <> {voted ? graph : buttons}</>
+}
 
 //choose your own adventure
 
@@ -406,31 +412,9 @@ export default App
 //english -> generate javascript UI component -> generate python service that generates data and then ui co
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //program synthesis -> make that better 
 
 //given two subjects on arxiv -> find cool papers that relate to both of them
-
-
-
 
 //use a IDE to think of things you would not have thought of 
 //from a sentence -> generate a program
@@ -477,28 +461,6 @@ export default App
 //generate tests
 //tests are assertions that run on previous lines of code
 
-
-function Poll() {
-  const [voted, setHasVoted] = useState(false)
-  let buttons = <>
-      <button onClick={() => vote(0)}>
-           {vote_titles[0]}
-        </button>
-        <button onClick={() => vote(1)}>
-        {vote_titles[1]}
-        </button>
-        <button onClick={() => vote(2)}>
-        {vote_titles[2]}
-        </button>
-        <button onClick={() => vote(3)}>
-        {vote_titles[3]}
-        </button>
-  </>
-  let graph = (<iframe width="100%" height="584" frameborder="0"
-  src="https://observablehq.com/embed/@d3/bar-chart?cells=chart"></iframe>)
-
-  function vote ( ){
-    // setHasVoted(true)
-  }
-  return  <> {voted ? graph : buttons}</>
-}
+//english  = glue language 
+//javascript -> display + run queries on UI
+//python -> automatically create services on infinte data streams 

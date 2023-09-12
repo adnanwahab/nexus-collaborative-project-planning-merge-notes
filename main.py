@@ -4,33 +4,31 @@ import torch
 # For example: revision="gptq-4bit-32g-actorder_True"
 
 #get business ideas -> get most cool problems to work on that most people complain about.
-def textToCode():
+model = False
+tokenizer = False
+def initAlgae():
+    global model, tokenizer
+    from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+    import torch
+
     model_name_or_path = "TheBloke/CodeLlama-7B-Python-GPTQ"
     model = AutoModelForCausalLM.from_pretrained(model_name_or_path,
                                                 torch_dtype=torch.float16,
                                                 device_map="auto",
                                                 revision="main")
     tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
-    prompt = "make app 4 optimizing and automating workflows for anyone"
-    prompt_template=f'''[INST] Write code to solve the following coding problem that obeys the constraints and passes the example test cases. Please wrap your code answer using ```:
+    
+import re
+def makeFunctionFromText(text):
+    if not model: initAlgae()
+    prompt = "sum all numbers from 1 to 10,000"
+    prompt_template=f'''[INST] Write a code in javascript to sum fibonacci from 1 to 100```:
     {prompt}
     [/INST]
     '''
-    print("\n\n*** Generate:")
     input_ids = tokenizer(prompt_template, return_tensors='pt').input_ids.cuda()
     output = model.generate(inputs=input_ids, temperature=0.7, max_new_tokens=512)
-    print(tokenizer.decode(output[0]))
-    # Inference can also be done using transformers' pipeline
-    print("*** Pipeline:")
-    makeFunctionFromText = pipeline(
-        "text-generation",
-        model=model,
-        tokenizer=tokenizer,
-        max_new_tokens=512,
-        temperature=0.7,
-        top_p=0.95,
-        repetition_penalty=1.15
-    )
+    return re.match(r'[SOL](.*)[/SOL]', tokenizer.decode(output[0]))
 
 def makeFnFromEnglish(english):
     fnText = makeFunctionFromText(english)
@@ -438,7 +436,10 @@ async def makeFn(FnText:FnText):
         if type(fn) == type(lambda _:_):
             print(fn.__name__)
             val = fn(val, FnText.fn[i] )
-        else: val = fn
+        else: 
+            val = makeFunctionFromText(val)
+            print(val)
+            #val = fn return the sentence ? (comment)
         args.append(val)
     return {'fn': args}
     # print(Fn)
