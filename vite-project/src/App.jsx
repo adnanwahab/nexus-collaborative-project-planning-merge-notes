@@ -16,6 +16,7 @@ import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
 import MapComponent from './Map'
 
 
+
 function MapTrees(trees)  {
 return MapComponent(trees)
 

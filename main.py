@@ -5,28 +5,50 @@ import torch
 
 #get business ideas -> get most cool problems to work on that most people complain about.
 
-__ = {}
+_ = []
 def initAlgae():
     from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
     import torch
 
     model_name_or_path = "TheBloke/CodeLlama-7B-Python-GPTQ"
-    __['___'] = AutoModelForCausalLM.from_pretrained(model_name_or_path,
+    m = AutoModelForCausalLM.from_pretrained(model_name_or_path,
                                                 torch_dtype=torch.float16,
                                                 device_map="auto",
                                                 revision="main")
-    __['____'] = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
-    
+    t = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
+    _.append(m)
+    _.append(t)
+
+
+def processOutput(text):
+    text = text.split('\n')
+    withinBlock = False 
+    codeBlocks = []
+    for line in text:
+        if 'CODE' in line: withinBlock = not withinBlock
+        elif withinBlock: codeBlocks.append(line)
+    return codeBlocks
 import re
 def makeFunctionFromText(text):
-    if '___' not in  __: initAlgae()
-    prompt = "sum all numbers from 1 to 10,000"
-    prompt_template=f'''[INST] Write a code in javascript to sum fibonacci from 1 to 100```:
+    if len(_) == 0: initAlgae()
+    m = _[0]
+    t = _[1]
+    prompt = text
+    prompt_template=f'''[INST] Write a code in python and return the result```:
     {prompt}
     [/INST]
     '''
-    input_ids = __['____'](prompt_template, return_tensors='pt').input_ids.cuda()
-    output = __['___'].generate(inputs=input_ids, temperature=0.7, max_new_tokens=512)
+    #prompt_template = f'{prompt}'
+    input_ids = t(prompt_template, return_tensors='pt').input_ids.cuda()
+    output = m.generate(inputs=input_ids, temperature=0.7, max_new_tokens=512)
+    #print(output)
+    print(t.decode(output[0]))
+    text = t.decode(output[0])
+    #print(re.search(r'\[SOL\](.*?)\[SOL\]', )
+    #text = text.split('\n\n')[0].replace('[INST]', '').replace('[/INST]', '')
+    print(text)
+    return text
+    return re.search(r'\[SOL\](.*?)\[SOL\]', t.decode(output[0]))
     return re.match(r'[SOL](.*)[/SOL]', __['____'].decode(output[0]))
 
 def makeFnFromEnglish(english):
@@ -232,10 +254,12 @@ origins = [
     "https://localhost.tiangolo.com",
     "http://localhost",
     "http://localhost:8080",
+    "http://localhost:5173",
         "http://merge-sentences-todo.ngrok.io/",
 
 "https://merge-sentences-todo.ngrok.io/",
-    "*"
+    "*",
+    'https://pypypy.ngrok.io/makeFn'
 ]
 app = FastAPI()
 app.add_middleware(
@@ -425,6 +449,35 @@ def substitute(name):
     # if 'twitch' in name:
     #     return open('./RPC/fetch-twitch.js', 'r').read()
 
+
+def processOutput(text):
+    text = text.split('\n')
+    withinBlock = False 
+    codeBlocks = []
+    for line in text:
+        if 'CODE' in line: withinBlock = not withinBlock
+        elif withinBlock: codeBlocks.append(line)
+    return codeBlocks
+
+def _processOutput(_):
+    val = processOutput(_)
+    leadingSpaces = val[0]
+    return "\n".join([s[4:] for s in val])
+
+def execProgram(_):
+    val = _processOutput(_)
+    #val = '\n'.join(makeFunctionFromText(val))
+    print(val)
+    import ast
+    ___ = ast.walk(ast.parse(val))
+    __ = ___.__next__()
+    z = ___.__next__()
+    exec(val)
+    val = eval(z.name + '(100)')
+    return val
+
+#execProgram(_)
+
 @app.post("/makeFn")
 async def makeFn(FnText:FnText):
     print('FnText', FnText)
@@ -436,10 +489,8 @@ async def makeFn(FnText:FnText):
             print(fn.__name__)
             val = fn(val, FnText.fn[i] )
         else:
-            val = fn 
-            #val = makeFunctionFromText(val)
-            #print(val)
-            #val = fn return the sentence ? (comment)
+            val = makeFunctionFromText(fn)
+            val = execProgram(val)
         args.append(val)
     return {'fn': args}
     # print(Fn)
