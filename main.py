@@ -435,9 +435,10 @@ async def makeFn(FnText:FnText):
         if type(fn) == type(lambda _:_):
             print(fn.__name__)
             val = fn(val, FnText.fn[i] )
-        else: 
-            val = makeFunctionFromText(val)
-            print(val)
+        else:
+            val = fn 
+            #val = makeFunctionFromText(val)
+            #print(val)
             #val = fn return the sentence ? (comment)
         args.append(val)
     return {'fn': args}

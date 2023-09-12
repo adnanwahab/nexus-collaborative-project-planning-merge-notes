@@ -183,7 +183,7 @@ async function _() {
   //text = ['asdfasd', 'asdfasdf', 'asdf']
   let port = 8000
   let url = `http://localhost:${port}/makeFn/`
-  url = `https://pypypy.ngrok.io/makeFn/`
+  //url = `https://pypypy.ngrok.io/makeFn/`
   console.log(text)
 
   let fn = await fetch(url, {
@@ -275,7 +275,6 @@ function compile (dataList) {
     if (typeof datum === 'object') { 
       return (
       <>
-      <Histogram2 />
       
       {/* { List(Object.values()) } */}
       </>
