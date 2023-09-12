@@ -4,31 +4,31 @@ import torch
 # For example: revision="gptq-4bit-32g-actorder_True"
 
 #get business ideas -> get most cool problems to work on that most people complain about.
-model = False
-tokenizer = False
+
+__ = {}
 def initAlgae():
-    global model, tokenizer
     from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
     import torch
 
     model_name_or_path = "TheBloke/CodeLlama-7B-Python-GPTQ"
-    model = AutoModelForCausalLM.from_pretrained(model_name_or_path,
+    __['___'] = AutoModelForCausalLM.from_pretrained(model_name_or_path,
                                                 torch_dtype=torch.float16,
                                                 device_map="auto",
                                                 revision="main")
-    tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
+    __['____'] = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
     
 import re
 def makeFunctionFromText(text):
-    if not model: initAlgae()
+    if '___' not in  __: initAlgae()
     prompt = "sum all numbers from 1 to 10,000"
     prompt_template=f'''[INST] Write a code in javascript to sum fibonacci from 1 to 100```:
     {prompt}
     [/INST]
     '''
-    input_ids = tokenizer(prompt_template, return_tensors='pt').input_ids
-    output = model.generate(inputs=input_ids, temperature=0.7, max_new_tokens=512)
-    return re.match(r'[SOL](.*)[/SOL]', tokenizer.decode(output[0]))
+    print(tokenizer)
+    input_ids = __['____'](prompt_template, return_tensors='pt').input_ids
+    output = __['___'].generate(inputs=input_ids, temperature=0.7, max_new_tokens=512)
+    return re.match(r'[SOL](.*)[/SOL]', __['____'].decode(output[0]))
 
 def makeFnFromEnglish(english):
     fnText = makeFunctionFromText(english)
