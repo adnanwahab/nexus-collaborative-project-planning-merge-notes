@@ -184,7 +184,7 @@ async function _() {
   //text = ['asdfasd', 'asdfasdf', 'asdf']
   let port = 8000
   let url = `http://localhost:${port}/makeFn/`
-   //url = `https://pypypy.ngrok.io/makeFn/`
+   url = `https://pypypy.ngrok.io/makeFn/`
 
 
 
@@ -326,7 +326,7 @@ book for 1 month in each place -> 3 months of travel planning in 1 minute
     predict papers that will be highly cited
     or predict quality or relevance of paper that are too specific to have a lot of citations
     
-    within a given field, predict what are the most important questions or areas to work on.
+    What are the most important problems in your field -> how would you work on them?.
     `, //you and your research - answer the question much better than chat gpt -> configurable
 
 
@@ -365,6 +365,8 @@ book for 1 month in each place -> 3 months of travel planning in 1 minute
 //videogames
 //statstics for stream data
 //make a cool app (w/ data + ml + graphics) in 3-4 lines of english :) 
+
+
 
 let templateNames = [
   'Group Travel Planning 4 Conferences - Remote Year',
