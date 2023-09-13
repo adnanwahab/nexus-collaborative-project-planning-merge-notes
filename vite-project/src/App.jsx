@@ -16,6 +16,42 @@ import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
 import MapComponent from './Map'
 
 
+//pick optimal housing location for next 10-30 years 
+//visualize school disticts
+//visualize proximity to closest whole foods
+//visualize proximity to biking path
+//print 5 best choices -> visit them 
+//map scatterplot trees.csv
+//map isochrone union_square
+//map heatmap water_fountains
+//select regions on above 3 maps and then sort by most likely to appreciate in value
+//return list of houses 
+function makeDeckGLMap(){
+
+}
+
+
+import notebook3 from "ab80bfd4252083e3";
+
+function HousingIntersectionFinder() {
+  const ref = useRef();
+
+  useEffect(() => {
+    const runtime = new Runtime();
+    runtime.module(notebook3, Inspector.into(ref.current));
+    return () => runtime.dispose();
+  }, []);
+
+  return (
+    <>
+      <div ref={ref} />
+      <p>Credit: <a href="https://observablehq.com/d/ab80bfd4252083e3@95">Untitled by awahab</a></p>
+    </>
+  );
+}
+
+
+
 
 function MapTrees(trees)  {
 return MapComponent(trees)
@@ -303,6 +339,10 @@ function compile (dataList) {
     if (typeof datum === 'object') { 
       return <Histogram />
     }
+    if (datum === 'housing_intersection') {
+        return <HousingIntersectionFinder />
+    }
+
     return datum
   })
 }
@@ -412,6 +452,7 @@ function App() {
         {/* <vennDiagram /> */}
         {/* <VisualizingTheNightSkyWorkingWithDCelestial /> */}
         {/* <Notebook /> */}
+
       </div>
 
       <div className="card">{components}</div>

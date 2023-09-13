@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "1420c244c74cb1bb": "https://api.observablehq.com/d/1420c244c74cb1bb.tgz?v=3",
     "@deck.gl/layers": "^8.9.27",
     "@deck.gl/react": "^8.9.27",
     "@observablehq/plot-bivariate-choropleth-explained": "https://api.observablehq.com/@observablehq/plot-bivariate-choropleth-explained.tgz?v=3",
@@ -19,7 +20,7 @@
     "@sandraviz/animated-line-chart": "https://api.observablehq.com/@sandraviz/animated-line-chart.tgz?v=3",
     "@uwdata/mosaic-cross-filter-flights-10m": "https://api.observablehq.com/@uwdata/mosaic-cross-filter-flights-10m.tgz?v=3",
     "@vega/vega-lite-annotated-time-series": "https://api.observablehq.com/@vega/vega-lite-annotated-time-series.tgz?v=3",
-    "1420c244c74cb1bb": "https://api.observablehq.com/d/1420c244c74cb1bb.tgz?v=3",
+    "ab80bfd4252083e3": "https://api.observablehq.com/d/ab80bfd4252083e3@95.tgz?v=3",
     "add": "^2.0.6",
     "d3": "^7.8.5",
     "deck.gl": "^8.9.27",

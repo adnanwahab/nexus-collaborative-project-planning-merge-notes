@@ -403,7 +403,8 @@ jupyter_functions = {'airbnb': findAirbnb,
                      'trees_histogram' : trees_histogram,
                      'twitch_comments' : twitch_comments,
                      'getTopics': getTopics, 
-                     'trees_map': trees_map
+                     'trees_map': trees_map,
+                     'housing_intersection': 'housing_intersection',
 }
 
 #on client if colon -> substitute on client 
