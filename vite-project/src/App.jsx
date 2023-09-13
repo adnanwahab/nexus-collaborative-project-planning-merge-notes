@@ -14,7 +14,7 @@ import notebook2 from "35ca09d7f1457ad3";
 import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
 
 import MapComponent from './Map'
-
+import * as d3 from 'd3'
 
 //pick optimal housing location for next 10-30 years 
 //visualize school disticts
@@ -30,15 +30,20 @@ function makeDeckGLMap(){
 
 }
 
+import notebook3 from "@groundbear/housing123";
 
-import notebook3 from "ab80bfd4252083e3";
+let houses = await d3.csv('/calif_housing.csv')
+console.log(houses)
 
 function HousingIntersectionFinder() {
   const ref = useRef();
 
   useEffect(() => {
     const runtime = new Runtime();
-    runtime.module(notebook3, Inspector.into(ref.current));
+    runtime.module(notebook3, Inspector.into(ref.current))
+    //.redefine('redefineColor', 'green')
+    .redefine('houses', houses)
+    //.define(["foo"], foo => `Hello, ${foo}.`)
     return () => runtime.dispose();
   }, []);
 
@@ -200,10 +205,11 @@ function MosaicCrossFilterFlightsM() {
 
   useEffect(() => {
     const runtime = new Runtime();
-    const module0 = runtime.module(notebook, name => {
-      if (name === "viewof flights") return new Inspector(viewofFlightsRef.current);
-    })
-    module0.variable().define("foo", 42);
+    // const module0 = runtime.module(notebook, name => {
+    //   if (name === "viewof flights") return new Inspector(viewofFlightsRef.current);
+    // }).redefine('redefineColor', 'purple')
+   
+    console.log('hi')
     return () => runtime.dispose();
   }, []);
 
@@ -297,6 +303,8 @@ const components = {
 }
 
 
+
+
 function Notebook2() {
   const chartRef = useRef();
 
@@ -304,7 +312,11 @@ function Notebook2() {
     const runtime = new Runtime();
     runtime.module(notebook2, name => {
       if (name === "chart") return new Inspector(chartRef.current);
-    });
+    })
+    // .define("houses", houses)
+    // .import("houses", "houses", houses)
+    // .variable().define("houses", houses)
+    .redefine('houses', houses)
     return () => runtime.dispose();
   }, []);
 
@@ -349,7 +361,10 @@ function compile (dataList) {
 
 
 let templateContent = [
-    `find all airbnb that are not noisy
+    `
+    housing_intersection
+
+    find all airbnb that are not noisy
     find all airbnb that are noisy
 :poll russia australia antarctica
 :poll food options in poll.11

@@ -509,6 +509,10 @@
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.48.0.tgz"
   integrity sha512-ZSjtmelB7IJfWD2Fvb7+Z+ChTIKWq6kjda95fLcQKNS5aheVHn4IkfgRQE3sIIzTcSLwLcLZUD9UBt+V7+h+Pw==
 
+"@groundbear/housing123@https://api.observablehq.com/@groundbear/housing123.tgz?v=3":
+  version "111.0.0"
+  resolved "https://api.observablehq.com/@groundbear/housing123.tgz?v=3#8fda90a8271281f0ba4b928e75b2d99ca4400621"
+
 "@humanwhocodes/config-array@^0.11.10":
   version "0.11.11"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.11.11.tgz"
@@ -1174,9 +1178,9 @@
     "@babel/plugin-transform-react-jsx-source" "^7.22.5"
     react-refresh "^0.14.0"
 
-"ab80bfd4252083e3@https://api.observablehq.com/d/ab80bfd4252083e3@95.tgz?v=3":
-  version "95.0.0"
-  resolved "https://api.observablehq.com/d/ab80bfd4252083e3@95.tgz?v=3#5831407a0582637a43081e5001badddd76665b93"
+"ab80bfd4252083e3@https://api.observablehq.com/d/ab80bfd4252083e3.tgz?v=3":
+  version "111.0.0"
+  resolved "https://api.observablehq.com/d/ab80bfd4252083e3.tgz?v=3#0e5a9063c739315fa3314496b681634bd3f8d0aa"
 
 acorn-jsx@^5.3.2:
   version "5.3.2"
