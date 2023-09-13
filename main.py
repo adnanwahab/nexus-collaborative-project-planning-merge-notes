@@ -258,8 +258,7 @@ origins = [
         "http://merge-sentences-todo.ngrok.io/",
 
 "https://merge-sentences-todo.ngrok.io/",
-    "*",
-    'https://pypypy.ngrok.io/makeFn'
+    "*"
 ]
 app = FastAPI()
 app.add_middleware(
