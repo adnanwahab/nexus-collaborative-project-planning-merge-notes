@@ -184,17 +184,45 @@ async function _() {
   //text = ['asdfasd', 'asdfasdf', 'asdf']
   let port = 8000
   let url = `http://localhost:${port}/makeFn/`
-  url = `https://pypypy.ngrok.io/makeFn/`
-  console.log(text)
+  let url2 = `https://pypypy.ngrok.io/makeFn/`
 
-  let fn = await fetch(url, {
-    method: 'POST',
-    headers: { "Content-Type": "application/json"},
-              body: JSON.stringify({fn:text})
-  })
-  fn = await fn.json()
-  return fn
+
+
+    let fn = await fetch(url2 , {
+      method: 'POST',
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", 
+      headers: { "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": true,
+
+
+    },
+                body: JSON.stringify({fn:text})
+    })
+    console.log(123)
+    return fn = await fn.json()
+
+
+  // let fn2 = await fetch(url, {
+  //   method: 'POST',
+  //   headers: { "Content-Type": "application/json"},
+  //             body: JSON.stringify({fn:text})
+  // })
+  // fn2 = await fn2.json()
 }
+
+
+function delay (fn) {
+  let one = Date.now()
+  return function () {
+    console.log('yay')
+    let two = Date.now()
+    if (two - one > 2000) fn()
+    one = two
+  }
+}
+
 
 function CodeEditor({setComponents}) {
   async function apply_(){
@@ -207,7 +235,7 @@ function CodeEditor({setComponents}) {
 
   return (<><textarea 
   className="bg-blue-200 w-full h-64 border border-gray-300 rounded-lg p-2"
-  onKeyUp={apply_}> 
+  onKeyUp={delay(apply_, 1000)}> 
   </textarea> 
   </>)
 }
