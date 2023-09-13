@@ -322,7 +322,9 @@ def getProgram(_, sentence):
     json.dump(program_generator_cache, open('encodings.json', 'w'))
     return {'fn': program_generator_cache[encodings]}
 
-
+def generateWinningTeam():
+    from ipynb.fs.defs.geospatial import getCounter
+    return getCounter('celebi')
 
 def findAirbnb(previous, sentence):
     from ipynb.fs.defs.geospatial import getAllAirbnbInCityThatAreNotNoisy

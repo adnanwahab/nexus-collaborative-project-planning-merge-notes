@@ -184,11 +184,11 @@ async function _() {
   //text = ['asdfasd', 'asdfasdf', 'asdf']
   let port = 8000
   let url = `http://localhost:${port}/makeFn/`
-  let url2 = `https://pypypy.ngrok.io/makeFn/`
+   //url = `https://pypypy.ngrok.io/makeFn/`
 
 
 
-    let fn = await fetch(url2 , {
+    let fn = await fetch(url , {
       method: 'POST',
       mode: "cors", // no-cors, *cors, same-origin
       cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -216,7 +216,6 @@ async function _() {
 function delay (fn) {
   let one = Date.now()
   return function () {
-    console.log('yay')
     let two = Date.now()
     if (two - one > 2000) fn()
     one = two
@@ -288,26 +287,21 @@ const isGeoCoordinate = (pair) => {
 
 function compile (dataList) {
   if (! dataList.fn) return dataList
+  console.log(dataList)
   return dataList.fn.map(function (datum) {
     if (isGeoCoordinate(datum)) {
       return MapTrees(datum)
     }
 
-
     if (Array.isArray(datum)) return List(datum)
     //if (datum === 'lots of cool polling data') return Poll()
     if (datum === 'timeseries') {
-      return( <Notebook2 />)
+ 
     }
 
 
     if (typeof datum === 'object') { 
-      return (
-      <>
-      
-      {/* { List(Object.values()) } */}
-      </>
-      )
+      return <Histogram />
     }
     return datum
   })
@@ -320,24 +314,68 @@ let templateContent = [
 :poll russia australia antarctica
 :poll food options in poll.11
 :poll activity options in poll.11
-:plant-trees find places to plant trees nearby 20418 autumn shore drive`,
+:plant-trees find places to plant trees nearby 20418 autumn shore drive
+given a favorite food and shared interests, generate a schedule of places to see and eat
+book for 1 month in each place -> 3 months of travel planning in 1 minute
+`,
+
+
+
 `:poll astronomy, physics, infoTheory
-    find all papers on arxiv relating to astornomy`,
+    find all papers on arxiv relating to astronomy
+    predict papers that will be highly cited
+    or predict quality or relevance of paper that are too specific to have a lot of citations
+    
+    within a given field, predict what are the most important questions or areas to work on.
+    `, //you and your research - answer the question much better than chat gpt -> configurable
+
+
     `find all trees in nyc 
        plot on a map
       reccomend places to plant a tree based on h3
       visualize how many are of which species in a trees_histogram
+      trees_map
+      find a place to plant a new tree that is optimal
+    `, //use satellite imaging to find all trees in any city -> find best place to plant them
+    //use 
+
+
+    `find best time to see all the planets in the solar system`,
+
+
+    `get all twitch comments from astralife
+    then group them into topics
+    when more than 5 comments about win trading or food -> order a pizza
     `,
-    `find best time to see all the planets in the solar system`
+
+
+    `given a favorite pokemon - select
+    make best team that counters elite 4
+    element counters
+    schedule - spend 30 min in viridian city`,
+    
+    `
+    make a dictionary/graph out of https://dota2.fandom.com/wiki/Category:Counters
+     should look like complements, counterThem, countersYou
+    given a team pick - pick 5 best team that counters it`
 ]
+//solve community - remote year
+//geospatial
+//astronomy
+//videogames
+//statstics for stream data
+//make a cool app (w/ data + ml + graphics) in 3-4 lines of english :) 
 
 let templateNames = [
   'Group Travel Planning 4 Conferences - Remote Year',
-  'arxiv - find papers which are good but not highly cited and find papers that may be highly cited in future ',
+  'arxiv - find papers which are good but not highly cited yet and find papers that may be highly cited in future ',
   'Tree visualization - find best place to plant tree ',
   'Astronomy',
   'stream comments -> topic -> automate',
-]
+  'Pokedex - type + counters + ', //pick one of 250 -> pick best team of 3 or 6
+  'dota counters -> pick best team', //if red team picks _ hero -> pick _ hero to get best odds
+  'given a satellite image + join other data -> best place to plant a tree or build a house'
+] //request for contributions / cofounders / open source people to help build this
 
 function App() {
   const [count, setCount] = useState(0)
@@ -492,5 +530,6 @@ function Poll() {
 //tests are assertions that run on previous lines of code
 
 //english  = glue language 
+//linked diagrams
 //javascript -> display + run queries on UI
 //python -> automatically create services on infinte data streams 
