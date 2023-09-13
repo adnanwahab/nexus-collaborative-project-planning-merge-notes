@@ -19,6 +19,7 @@ def initAlgae():
     
 import re
 def makeFunctionFromText(text):
+    if text === '': return 0
     if '___' not in  __: initAlgae()
     prompt = "sum all numbers from 1 to 10,000"
     prompt_template=f'''[INST] Write a code in javascript to sum fibonacci from 1 to 100```:
