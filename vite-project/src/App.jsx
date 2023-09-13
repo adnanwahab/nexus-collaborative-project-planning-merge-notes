@@ -43,6 +43,8 @@ function HousingIntersectionFinder() {
     runtime.module(notebook3, Inspector.into(ref.current))
     //.redefine('redefineColor', 'green')
     .redefine('houses', houses)
+
+    runtime.value('')
     //.define(["foo"], foo => `Hello, ${foo}.`)
     return () => runtime.dispose();
   }, []);
@@ -362,7 +364,9 @@ function compile (dataList) {
 
 let templateContent = [
     `
-    housing_intersection
+    find best airbnb in every city -> 100,000 cities -> fetch all data 
+    define criteria 
+    
 
     find all airbnb that are not noisy
     find all airbnb that are noisy
@@ -412,7 +416,11 @@ book for 1 month in each place -> 3 months of travel planning in 1 minute
     `
     make a dictionary/graph out of https://dota2.fandom.com/wiki/Category:Counters
      should look like complements, counterThem, countersYou
-    given a team pick - pick 5 best team that counters it`
+    given a team pick - pick 5 best team that counters it`,
+
+    `for each satellite images in area find anything that matches criteria`,
+
+    `housing_intersection`
 ]
 //solve community - remote year
 //geospatial
@@ -432,6 +440,7 @@ let templateNames = [
   'Pokedex - type + counters + ', //pick one of 250 -> pick best team of 3 or 6
   'dota counters -> pick best team', //if red team picks _ hero -> pick _ hero to get best odds
   'given a satellite image + join other data -> best place to plant a tree or build a house'
+  ,'find best house'
 ] //request for contributions / cofounders / open source people to help build this
 
 function App() {
