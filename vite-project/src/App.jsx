@@ -1,3 +1,5 @@
+//goal - get developers to make components that are scriptable with natural language
+//how to - make like 200 and then share 
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
@@ -40,11 +42,11 @@ function HousingIntersectionFinder() {
 
   useEffect(() => {
     const runtime = new Runtime();
-    runtime.module(notebook3, Inspector.into(ref.current))
-    //.redefine('redefineColor', 'green')
-    .redefine('houses', houses)
-
-    runtime.value('')
+    let module0 = runtime.module(notebook3, Inspector.into(ref.current));
+    module0.redefine('redefineColor', 'green');
+    module0.redefine('houses', houses);
+    module0.value('housesWithinIntersction').then((_) => { return console.log(_)})
+    window._ = module0;
     //.define(["foo"], foo => `Hello, ${foo}.`)
     return () => runtime.dispose();
   }, []);
@@ -402,9 +404,10 @@ book for 1 month in each place -> 3 months of travel planning in 1 minute
     `find best time to see all the planets in the solar system`,
 
 
-    `get all twitch comments from astralife
+    `get all twitch comments from top 3 streamers
     then group them into topics
     when more than 5 comments about win trading or food -> order a pizza
+    detect spikes in user activity by recording timestamp
     `,
 
 
@@ -420,7 +423,10 @@ book for 1 month in each place -> 3 months of travel planning in 1 minute
 
     `for each satellite images in area find anything that matches criteria`,
 
-    `housing_intersection`
+    `housing_intersection`,
+
+
+    
 ]
 //solve community - remote year
 //geospatial
@@ -441,6 +447,7 @@ let templateNames = [
   'dota counters -> pick best team', //if red team picks _ hero -> pick _ hero to get best odds
   'given a satellite image + join other data -> best place to plant a tree or build a house'
   ,'find best house'
+  ,`_`
 ] //request for contributions / cofounders / open source people to help build this
 
 function App() {
