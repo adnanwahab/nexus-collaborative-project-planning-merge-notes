@@ -393,7 +393,7 @@ const isGeoCoordinate = (pair) => {
 
 function compile (dataList, apply_) {
   if (! dataList.fn) return dataList
-  console.log(dataList, apply_)
+  console.log(dataList)
   return dataList.fn.map(function (datum) {
     if (datum.component === '<Radio>') {
       return <Radio apply_={apply_}  cities={Array.isArray(datum.data) ? datum.data : false}></Radio>
@@ -402,10 +402,11 @@ function compile (dataList, apply_) {
     //   return MapTrees(datum)
     // }
 
-    if (Array.isArray(datum)) return List(datum)
+    if (Array.isArray(datum)) return List(datum.map(_=>_.link))
     // //if (datum === 'lots of cool polling data') return Poll()
     // if (datum === 'timeseries') {
     // }
+
 
 
     // if (typeof datum === 'object') { 
@@ -533,7 +534,7 @@ function App() {
     const fetchData = async () => {
       let data = await _()
       data = compile(data, apply_);
-      setComponents(compile(data, apply_))    
+      setComponents(data)    
     }
 
     fetchData()
