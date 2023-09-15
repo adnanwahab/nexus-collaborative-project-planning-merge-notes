@@ -31,10 +31,63 @@ import * as d3 from 'd3'
 function makeDeckGLMap(){
 }
 
+let formData = {}
+function setFormData (key, val) {
+  formData[key] = val
+} 
+
+function getFormData () {
+  return formData
+}
+
+
+
+
+
+function Radio(props) {
+
+  let cities = props.cities || ['asia', 'europe', 'africa']
+  let [getCity, setCity] = useState('')
+  console.log(props)
+  let apply_ = props.apply_
+//  console.log(cities)
+
+  useEffect(() => {
+    setFormData('city', getCity)
+    apply_() //dont just send text -> send the data on the client 
+    //get all satellite images for every country in america
+    //tune contrast -> see if there are any patterns
+  }, [getCity])
+
+  return (
+    <div>
+      <fieldset className="mt-4">
+        <div className="space-y-4">
+          {cities.map((city, idx) => (
+            <div key={idx} className="flex items-center">
+              <input
+                id={city}
+                name="notification-method"
+                type="radio"
+                checked={getCity === city}
+                className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                onChange={() => {setCity(city)}}
+              />
+              <label htmlFor={city} className="ml-3 block text-sm font-medium leading-6 text-gray-900">
+                {city}
+              </label>
+            </div>
+          ))}
+        </div>
+      </fieldset>
+    </div>
+  )
+}
+
 import notebook3 from "@groundbear/housing123";
 
-let houses = await d3.csv('/calif_housing.csv')
-console.log(houses)
+// let houses = await d3.csv('/calif_housing.csv')
+// console.log(houses)
 
 function HousingIntersectionFinder() {
   const ref = useRef();
@@ -225,11 +278,11 @@ function MosaicCrossFilterFlightsM() {
 }
 
 async function _() {
-  let text = get('textarea').value.split('\n')
+  let text = get('textarea').value.split('\n') //TODO whitespace removal
   //text = ['asdfasd', 'asdfasdf', 'asdf']
   let port = 8000
   let url = `http://localhost:${port}/makeFn/`
-   url = `https://pypypy.ngrok.io/makeFn/`
+   //url = `https://pypypy.ngrok.io/makeFn/`
 
 
 
@@ -243,10 +296,13 @@ async function _() {
 
 
     },
-                body: JSON.stringify({fn:text})
+                body: JSON.stringify({fn:text,
+                                      sentenceComponentData: getFormData()
+                })
     })
-    console.log(123)
-    return fn = await fn.json()
+    fn = await fn.json()
+    console.log(fn)
+    return fn
 
 
   // let fn2 = await fetch(url, {
@@ -268,14 +324,8 @@ function delay (fn) {
 }
 
 
-function CodeEditor({setComponents}) {
-  async function apply_(){
-    let data = await _()
-    console.log(data)
-    data = compile(data);
+function CodeEditor({apply_}) {
 
-    setComponents(data)
-  }
 
   useEffect(() => {
     get('textarea').value = templateContent[0]
@@ -341,28 +391,31 @@ const isGeoCoordinate = (pair) => {
   return Array.isArray(pair) && parseFloat(pair[0][0]) && parseFloat(pair[0][1])
 }
 
-function compile (dataList) {
+function compile (dataList, apply_) {
   if (! dataList.fn) return dataList
-  console.log(dataList)
+  console.log(dataList, apply_)
   return dataList.fn.map(function (datum) {
-    if (isGeoCoordinate(datum)) {
-      return MapTrees(datum)
+    if (datum.component === '<Radio>') {
+      return <Radio apply_={apply_}  cities={Array.isArray(datum.data) ? datum.data : false}></Radio>
     }
+    // if (isGeoCoordinate(datum)) {
+    //   return MapTrees(datum)
+    // }
 
     if (Array.isArray(datum)) return List(datum)
-    //if (datum === 'lots of cool polling data') return Poll()
-    if (datum === 'timeseries') {
-    }
+    // //if (datum === 'lots of cool polling data') return Poll()
+    // if (datum === 'timeseries') {
+    // }
 
 
-    if (typeof datum === 'object') { 
-      return <Histogram />
-    }
-    if (datum === 'housing_intersection') {
-        return <HousingIntersectionFinder />
-    }
+    // if (typeof datum === 'object') { 
+    //   return <Histogram />
+    // }
+    // if (datum === 'housing_intersection') {
+    //     return <HousingIntersectionFinder />
+    // }
 
-    return datum
+    return 'hello\n'
   })
 }
 //10 good examples -> 
@@ -391,11 +444,9 @@ let templateContent = [
 // book for 1 month in each place -> 3 months of travel planning in 1 minute
 // `,
 
-`
-choose a city in [asia, europe, africa]
+`choose a city in [asia, europe, africa]
 find all airbnb in that city
-filter by distance to shopping store
-`,
+filter by distance to shopping store`,
 
 
 
@@ -471,11 +522,18 @@ function App() {
   const [count, setCount] = useState(0)
   const [components, setComponents] = useState([])
 
+  async function apply_(){
+    let data = await _()
+    console.log(data)
+    data = compile(data, apply_);
+
+    setComponents(data)
+  }
   useEffect(() => { 
     const fetchData = async () => {
       let data = await _()
-      data = compile(data);
-      setComponents(compile(data))    
+      data = compile(data, apply_);
+      setComponents(compile(data, apply_))    
     }
 
     fetchData()
@@ -499,7 +557,7 @@ function App() {
         url={cat}
          />
 
-        <CodeEditor setComponents={setComponents}></CodeEditor>        
+        <CodeEditor apply_={apply_}></CodeEditor>        
         {/* <Histogram2 /> */}
         {/* <vennDiagram /> */}
         {/* <VisualizingTheNightSkyWorkingWithDCelestial /> */}

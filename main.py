@@ -296,7 +296,7 @@ async def index():
 
 class FnText(BaseModel):
     fn: list[str]
-
+    sentenceComponentData: dict
 import json 
 
 
@@ -396,15 +396,67 @@ def getTopics(sentences, sentence):
             topics.append(k)
     return topics
 
-jupyter_functions = {'airbnb': findAirbnb, 
-                     'poll': poll,
-                     'plant-trees': lambda _,__: 'put map here',
-                     'arxiv': arxiv,
-                     'trees_histogram' : trees_histogram,
-                     'twitch_comments' : twitch_comments,
-                     'getTopics': getTopics, 
-                     'trees_map': trees_map,
-                     'housing_intersection': 'housing_intersection',
+
+def cityRadio(_, __):
+    from ipynb.fs.defs.geospatial import getCityList
+    #make a radio input for contient and then another one for all cities in that continent ???
+    #make it possible to pick one city per month
+    #make it possible to plan a remote year for 1-500ish people x 1 million
+    #different cities have different dataset available -> nyc = 311 and open data standard - vancouver mls
+    #find what data is common to all cities based on _
+    return {'data': getCityList()['Asia'][-3:], 'component': '<Radio>'}
+
+import subprocess
+import json
+def getAirbnbs(_, componentData='cairo, egypt'):
+    print(componentData)
+    from ipynb.fs.defs.geospatial import getAllApt_
+
+    if 'city' not in componentData: return 'hello-world'
+    location = getAllApt_(componentData['city'])
+#    getAllApt_(componentData['city'])
+
+    args = [
+        "node",
+        "getAptInCity.js",
+        location
+    ]
+
+    # Execute the command
+    # try:
+    #result = subprocess.run(command, check=True)
+    # except subprocess.CalledProcessError as e:
+    #     print(f"The command failed with error: {e}")
+    # completed_process = subprocess.run(args
+    #                                    #, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True
+    #                                    )
+    print(location)
+    apts = json.load(open('jaipur--india_apt.json', 'r'))
+    print(apts)
+    return apts
+    return [
+        ['34', '75', '5 miles from closest shopping center', 'https://www.airbnb.com/rooms/18348796?adults=1&children=0&enable_m3_private_room=true&infants=0&pets=0&check_in=2023-09-29&check_out=2023-10-04&source_impression_id=p3_1694800441_pmfkF8b1nTZSAVAg&previous_page_section_name=1000&federated_search_id=843e1746-b87e-43ca-8b98-ac700cb1a66f']
+
+    ]
+
+def filter_by_distance_to_shopping_store(airbnbs, _):
+    return [apt for apt in airbnbs 
+            #if distance(airbnb, closestShoppingPlace(airbnb)) < 1
+            ]
+
+jupyter_functions = {'choose a city in [asia, europe, africa]': cityRadio,
+                     'find all airbnb in that city': getAirbnbs,
+                     'filter by distance to shopping store': filter_by_distance_to_shopping_store,
+
+    # '!airbnb': findAirbnb, 
+    #                  'poll': poll,
+    #                  'plant-trees': lambda _,__: 'put map here',
+    #                  'arxiv': arxiv,
+    #                  'trees_histogram' : trees_histogram,
+    #                  'twitch_comments' : twitch_comments,
+    #                  'getTopics': getTopics, 
+    #                  'trees_map': trees_map,
+    #                  'housing_intersection': 'housing_intersection',
 }
 
 #on client if colon -> substitute on client 
@@ -415,7 +467,7 @@ def substitute(name):
     #sort words by relevance / importance 
     print(name)
     for k in jupyter_functions:
-        print('k---name',   k,name)
+        #print('k---name',   k,name)
         if k in name:
             return jupyter_functions[k]
             return {'data':jupyter_functions[k](name),
@@ -439,7 +491,8 @@ async def makeFn(FnText:FnText):
     for i, fn in enumerate(functions): 
         if type(fn) == type(lambda _:_):
             print(fn.__name__)
-            val = fn(val, FnText.fn[i] )
+            val = fn(val, FnText.sentenceComponentData)
+            #pass in previous value, sentenceComponentData + document context(todo idk )
         else:
             val = fn 
             #val = makeFunctionFromText(val)
