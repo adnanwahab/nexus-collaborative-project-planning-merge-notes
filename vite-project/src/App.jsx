@@ -302,7 +302,7 @@ async function _() {
   let text = get('textarea').value.split('\n') //TODO whitespace removal
   //text = ['asdfasd', 'asdfasdf', 'asdf']
   let port = 8000
-  let url = `http://localhost:${port}/makeFn/`
+let url = `http://localhost:${port}/makeFn/`
    //url = `https://pypypy.ngrok.io/makeFn/`
 
   // let fn_ = await fetch('mockData.json');
@@ -311,9 +311,12 @@ async function _() {
   // return {fn: fn_}
     let fn = await fetch( url , {
       method: 'POST',
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", 
       mode: "cors", // no-cors, *cors, same-origin
       cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", 
+//      credentials: "same-origin", 
+      credentials: 'include',
       headers: { "Content-Type": "application/json",
       "ngrok-skip-browser-warning": true,
       "Access-Control-Allow-Origin": "*"

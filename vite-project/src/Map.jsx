@@ -13,7 +13,7 @@ async function getIsochrone(longitude, latitude, contours_minutes) {
       const response = await fetch(isochroneUrl);
       
       if (response.ok) {
-          const geojsonData = await response.json();
+        const geojsonData = await response.json();
           console.log(geojsonData);
           // Do something with the geojson data
       } else {
@@ -48,28 +48,30 @@ function updatePercentiles(
   };
 }
 
+const colors = [
+  [0, '#3288bd'],
+  [1, '#66c2a5'],
+  [2, '#abdda4'],
+  [3, '#e6f598'],
+  [4, '#ffffbf'],
+  [5, '#fee08b'],
+  [6, '#fdae61'],
+  [7, '#f46d43'],
+  [8, '#d53e4f']
+]
 
-const dataLayer = {
+
+const dataLayer = () => {
+  let color = colors[Math.floor(Math.random() * 8)][1]
+  console.log(color)
+  return {
   id: 'data',
   type: 'fill',
   paint: {
-    'fill-color': {
-      property: 'percentile',
-      stops: [
-        [0, '#3288bd'],
-        [1, '#66c2a5'],
-        [2, '#abdda4'],
-        [3, '#e6f598'],
-        [4, '#ffffbf'],
-        [5, '#fee08b'],
-        [6, '#fdae61'],
-        [7, '#f46d43'],
-        [8, '#d53e4f']
-      ]
-    },
+    'fill-color': color,
     'fill-opacity': 0.8
   }
-};
+}}
 
 async function fetchCoffeeShops() {
   const latitude = 37.8;
@@ -123,6 +125,10 @@ const NAV_CONTROL_STYLE = {
 };
 
 function Map(props) {
+  if (props.data === 'hello world' ||
+  props.data === 'hello-world'
+  
+  ) return <></>
   console.log('props', props)
   // const geoJson = props.data[0]
   // const coffeeShops = props.data[0][0]
@@ -151,7 +157,7 @@ function Map(props) {
 
   let geoJson = props.data.map((listing, idx) => {
     return <Source key={idx} type="geojson" data={listing[1]}>
-      <Layer {...dataLayer} />
+      <Layer {...dataLayer()} />
     </Source>
   })
 
@@ -175,8 +181,8 @@ const mapRef = useRef();
       mapStyle="https://api.maptiler.com/maps/streets/style.json?key=D8xiby3LSvsdgkGzkOmN"
     >
     {shopMarkers}
-    {geoJson}
-    </ReactMap>
+    {geoJson[2]}
+    </ReactMap> 
   );
 }
 export default Map

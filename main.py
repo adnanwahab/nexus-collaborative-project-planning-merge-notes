@@ -308,6 +308,8 @@ origins = [
     "*",
     "pypypy.ngrok.io",
         "http://localhost:5173",
+        "localhost:5173"
+        
 ]
 app = FastAPI()
 app.add_middleware(
@@ -738,9 +740,9 @@ def isochroneLibrary(longitude, latitude):
     contours_minutes = 15
     # longitude = -122.4
     # latitude = 37.8
-    contours_minutes = 60
+    contours_minutes = 30
     assert(latitude < 90 and latitude > -90)
-    isochrone_url = f'https://api.mapbox.com/isochrone/v1/mapbox/driving-traffic/{longitude}%2C{latitude}?contours_minutes={contours_minutes}&polygons=true&denoise=0&generalize=0&access_token=pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg'
+    isochrone_url = f'https://api.mapbox.com/isochrone/v1/mapbox/walking/{longitude}%2C{latitude}?contours_minutes={contours_minutes}&polygons=true&denoise=0&generalize=0&access_token=pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg'
     geojson_data = requests.get(isochrone_url).json()
     #get all appartments that are 5 min by train to any library 
     #check whether library falls within geo-json
