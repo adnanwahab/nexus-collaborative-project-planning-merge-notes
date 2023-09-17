@@ -305,9 +305,11 @@ async function _() {
   let url = `http://localhost:${port}/makeFn/`
    //url = `https://pypypy.ngrok.io/makeFn/`
 
-
-
-    let fn = await fetch(url , {
+  let fn_ = await fetch('mockData.json');
+  fn_ = await fn_.json();
+  console.log(fn_);
+  return {fn: fn_}
+    let fn = await fetch( url , {
       method: 'POST',
       mode: "cors", // no-cors, *cors, same-origin
       cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -403,8 +405,13 @@ function Notebook2() {
 }
 
 const isGeoCoordinate = (pair) => {
-  console.log(pair)
+
   return Array.isArray(pair) && parseFloat(pair[0][0]) && parseFloat(pair[0][1])
+}
+
+function isIsochroney(datum) {
+  if (datum.length == 11) return true
+  return Array.isArray(datum[0]) && 'features' in datum[1] && datum[1].type === 'featureCollection'
 }
 
 function compile (dataList, apply_) {
@@ -412,6 +419,12 @@ function compile (dataList, apply_) {
   // console.log(dataList)
   // console.log(getFormData(), 'shit')
   return dataList.fn.map(function (datum) {
+    console.log('isochrone', isIsochroney(datum))
+    if (isIsochroney(datum)) {
+      return <Map data={datum}></Map>
+    }
+
+
     if (datum.component === '<Radio>') {
       return <Radio apply_={apply_} 
         formDataKey={datum.key}

@@ -1,6 +1,6 @@
 import {useRef, useMemo, useState, useEffect} from 'react';
 import {createRoot} from 'react-dom/client';
-import ReactMap, {Source, Layer} from 'react-map-gl';
+import ReactMap, {Source, Layer, Marker} from 'react-map-gl';
 import DeckGL, {GeoJsonLayer, ArcLayer} from 'deck.gl';
 import {range} from 'd3-array';
 import {scaleQuantile} from 'd3-scale';
@@ -25,7 +25,7 @@ async function getIsochrone(longitude, latitude, contours_minutes) {
 }
 
 // Call the function
-getIsochrone('longitude-here', 'latitude-here', 'contours_minutes-here');
+//getIsochrone('longitude-here', 'latitude-here', 'contours_minutes-here');
 
 
 function updatePercentiles(
@@ -101,7 +101,7 @@ async function fetchCoffeeShops() {
 }
 
 // Call the function
-fetchCoffeeShops();
+//fetchCoffeeShops();
 
 // source: Natural Earth http://www.naturalearthdata.com/ via geojson.xyz
 const AIR_PORTS =
@@ -122,83 +122,53 @@ const NAV_CONTROL_STYLE = {
   left: 10
 };
 
-function Map() {
-  const [year, setYear] = useState(2015);
-
-  useEffect(() => {
-    const accessToken="pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg"
-    const contours_minutes = 15;
-    const longitude = -122.4;
-    const latitude = 37.8;
-    fetch(
-      `https://api.mapbox.com/isochrone/v1/mapbox/driving-traffic/${longitude}%2C${latitude}?contours_minutes=${contours_minutes}&polygons=true&denoise=0&generalize=0&access_token=${accessToken}`    )
-      .then(resp => resp.json())
-      .then(json => setAllData(json))
-      .catch(err => console.error('Could not load data', err)); // eslint-disable-line
-  }, []);
-
-
-  const [allData, setAllData] = useState(null);
-
+function Map(props) {
+  console.log('props', props)
+  const geoJson = props.data[0]
+  const coffeeShops = props.data[0][0]
+  const latitude = props.data[1][2]
+  const longitude = props.data[1][3]
   const onClick = () => {
     console.log('hello')
   }
-  const layers = [
-    new GeoJsonLayer({
-      id: 'airports',
-      data: AIR_PORTS,
-      // Styles
-      filled: true,
-      pointRadiusMinPixels: 2,
-      pointRadiusScale: 2000,
-      getPointRadius: f => 11 - f.properties.scalerank,
-      getFillColor: [200, 0, 80, 180],
-      // Interactive props
-      pickable: true,
-      autoHighlight: true,
-      onClick
-    }),
-    new ArcLayer({
-      id: 'arcs',
-      data: AIR_PORTS,
-      dataTransform: d => d.features.filter(f => f.properties.scalerank < 4),
-      // Styles
-      getSourcePosition: f => [-0.4531566, 51.4709959], // London
-      getTargetPosition: f => f.geometry.coordinates,
-      getSourceColor: [0, 128, 200],
-      getTargetColor: [200, 0, 80],
-      getWidth: 1
-    })
-  ];
-const mapboxAccessToken = ``
+
+
+const pins = coffeeShops.map((shop, index)=> {
+  return <Marker
+  key={`marker-${index}`}
+  longitude={shop.lon}
+  latitude={shop.lat}
+  anchor="bottom"
+  onClick={e => {
+    // If we let the click event propagates to the map, it will immediately close the popup
+    // with `closeOnClick: true`
+    e.originalEvent.stopPropagation();
+    setPopupInfo(city);
+  }}
+>
+  {/* <Pin /> */}
+</Marker>
+})
 
 const mapRef = useRef();
-
-const data = useMemo(() => {
-  return allData
-//  return allData && updatePercentiles(allData, f => f.properties.income[year]);
-}, [allData, year]);
-
   return (
     <ReactMap
        ref={mapRef}
         mapboxAccessToken="pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg"
       initialViewState={{
-        longitude: -122.4,
-        latitude: 37.8,
+        longitude,
+        latitude,
         zoom: 14
       }}
       style={{width: 1000, height: 2000}}
       onClick={onClick}
-
       // mapStyle="mapbox://styles/mapbox/streets-v3"
       mapStyle="https://api.maptiler.com/maps/streets/style.json?key=D8xiby3LSvsdgkGzkOmN"
     >
-    <Source type="geojson" data={data}>
+    {pins}
+    <Source type="geojson" data={props.data[1][1]}>
           <Layer {...dataLayer} />
         </Source>
-
-
     </ReactMap>
   );
 }
