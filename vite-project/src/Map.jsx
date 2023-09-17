@@ -124,31 +124,40 @@ const NAV_CONTROL_STYLE = {
 
 function Map(props) {
   console.log('props', props)
-  const geoJson = props.data[0]
-  const coffeeShops = props.data[0][0]
+  // const geoJson = props.data[0]
+  // const coffeeShops = props.data[0][0]
   const latitude = props.data[1][2]
   const longitude = props.data[1][3]
   const onClick = () => {
     console.log('hello')
   }
 
+  const renderShop = (shop, index)=> {
+    return <Marker
+    key={`marker-${index}`}
+    longitude={shop.lon}
+    latitude={shop.lat}
+    anchor="bottom"
+    onClick={e => {
+      // If we let the click event propagates to the map, it will immediately close the popup
+      // with `closeOnClick: true`
+      e.originalEvent.stopPropagation();
+      setPopupInfo(city);
+    }}
+  >
+    {/* <Pin /> */}
+  </Marker>
+  }
 
-const pins = coffeeShops.map((shop, index)=> {
-  return <Marker
-  key={`marker-${index}`}
-  longitude={shop.lon}
-  latitude={shop.lat}
-  anchor="bottom"
-  onClick={e => {
-    // If we let the click event propagates to the map, it will immediately close the popup
-    // with `closeOnClick: true`
-    e.originalEvent.stopPropagation();
-    setPopupInfo(city);
-  }}
->
-  {/* <Pin /> */}
-</Marker>
-})
+  let geoJson = props.data.map((listing, idx) => {
+    return <Source key={idx} type="geojson" data={listing[1]}>
+      <Layer {...dataLayer} />
+    </Source>
+  })
+
+  let shopMarkers = props.data.map(listing => {
+    return listing[0].map(renderShop)
+  })
 
 const mapRef = useRef();
   return (
@@ -165,10 +174,8 @@ const mapRef = useRef();
       // mapStyle="mapbox://styles/mapbox/streets-v3"
       mapStyle="https://api.maptiler.com/maps/streets/style.json?key=D8xiby3LSvsdgkGzkOmN"
     >
-    {pins}
-    <Source type="geojson" data={props.data[1][1]}>
-          <Layer {...dataLayer} />
-        </Source>
+    {shopMarkers}
+    {geoJson}
     </ReactMap>
   );
 }

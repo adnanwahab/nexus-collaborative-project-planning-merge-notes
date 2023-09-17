@@ -305,10 +305,10 @@ async function _() {
   let url = `http://localhost:${port}/makeFn/`
    //url = `https://pypypy.ngrok.io/makeFn/`
 
-  let fn_ = await fetch('mockData.json');
-  fn_ = await fn_.json();
-  console.log(fn_);
-  return {fn: fn_}
+  // let fn_ = await fetch('mockData.json');
+  // fn_ = await fn_.json();
+  // console.log(fn_);
+  // return {fn: fn_}
     let fn = await fetch( url , {
       method: 'POST',
       mode: "cors", // no-cors, *cors, same-origin
