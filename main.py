@@ -307,6 +307,7 @@ origins = [
 "https://merge-sentences-todo.ngrok.io/",
     "*",
     "pypypy.ngrok.io",
+        "http://localhost:5173",
 ]
 app = FastAPI()
 app.add_middleware(
