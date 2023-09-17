@@ -1,9 +1,76 @@
-import {useRef} from 'react';
+import {useRef, useMemo, useState, useEffect} from 'react';
 import {createRoot} from 'react-dom/client';
-import ReactMap from 'react-map-gl';
+import ReactMap, {Source, Layer} from 'react-map-gl';
 import DeckGL, {GeoJsonLayer, ArcLayer} from 'deck.gl';
+import {range} from 'd3-array';
+import {scaleQuantile} from 'd3-scale';
 
-console.log(ReactMap)
+async function getIsochrone(longitude, latitude, contours_minutes) {
+  const accessToken = 'your-access-token-here';
+  const isochroneUrl = `https://api.mapbox.com/isochrone/v1/mapbox/driving-traffic/${longitude}%2C${latitude}?contours_minutes=${contours_minutes}&polygons=true&denoise=0&generalize=0&access_token=${accessToken}`;
+
+  try {
+      const response = await fetch(isochroneUrl);
+      
+      if (response.ok) {
+          const geojsonData = await response.json();
+          console.log(geojsonData);
+          // Do something with the geojson data
+      } else {
+          console.log('Failed to fetch isochrone data:', response.status, response.statusText);
+      }
+  } catch (error) {
+      console.error('Error fetching isochrone data:', error);
+  }
+}
+
+// Call the function
+getIsochrone('longitude-here', 'latitude-here', 'contours_minutes-here');
+
+
+function updatePercentiles(
+  featureCollection,
+  accessor,
+) {
+  const {features} = featureCollection;
+  const scale = scaleQuantile().domain(features.map(accessor)).range(range(9));
+  return {
+    type: 'FeatureCollection',
+    features: features.map(f => {
+      const value = accessor(f);
+      const properties = {
+        ...f.properties,
+        value,
+        percentile: scale(value)
+      };
+      return {...f, properties};
+    })
+  };
+}
+
+
+const dataLayer = {
+  id: 'data',
+  type: 'fill',
+  paint: {
+    'fill-color': {
+      property: 'percentile',
+      stops: [
+        [0, '#3288bd'],
+        [1, '#66c2a5'],
+        [2, '#abdda4'],
+        [3, '#e6f598'],
+        [4, '#ffffbf'],
+        [5, '#fee08b'],
+        [6, '#fdae61'],
+        [7, '#f46d43'],
+        [8, '#d53e4f']
+      ]
+    },
+    'fill-opacity': 0.8
+  }
+};
+
 // source: Natural Earth http://www.naturalearthdata.com/ via geojson.xyz
 const AIR_PORTS =
   'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_10m_airports.geojson';
@@ -24,6 +91,22 @@ const NAV_CONTROL_STYLE = {
 };
 
 function Map() {
+  const [year, setYear] = useState(2015);
+
+  useEffect(() => {
+    const accessToken="pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg"
+    const contours_minutes = 15;
+    const longitude = -122.4;
+    const latitude = 37.8;
+    fetch(
+      `https://api.mapbox.com/isochrone/v1/mapbox/driving-traffic/${longitude}%2C${latitude}?contours_minutes=${contours_minutes}&polygons=true&denoise=0&generalize=0&access_token=${accessToken}`    )
+      .then(resp => resp.json())
+      .then(json => setAllData(json))
+      .catch(err => console.error('Could not load data', err)); // eslint-disable-line
+  }, []);
+
+
+  const [allData, setAllData] = useState(null);
 
   const onClick = () => {
     console.log('hello')
@@ -59,6 +142,11 @@ const mapboxAccessToken = ``
 
 const mapRef = useRef();
 
+const data = useMemo(() => {
+  return allData
+//  return allData && updatePercentiles(allData, f => f.properties.income[year]);
+}, [allData, year]);
+
   return (
     <ReactMap
        ref={mapRef}
@@ -73,10 +161,14 @@ const mapRef = useRef();
 
       // mapStyle="mapbox://styles/mapbox/streets-v3"
       mapStyle="https://api.maptiler.com/maps/streets/style.json?key=D8xiby3LSvsdgkGzkOmN"
-    ></ReactMap>
+    >
+    <Source type="geojson" data={data}>
+          <Layer {...dataLayer} />
+        </Source>
+
+
+    </ReactMap>
   );
 }
-
-/* global document */
 export default Map
 

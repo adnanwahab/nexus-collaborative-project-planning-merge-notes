@@ -604,7 +604,6 @@ function App() {
       </div>
       <ProgressBar></ProgressBar>
       <div className="card">{components}</div>
-      <MapComponent>  </MapComponent>
     </div>
   )
 }

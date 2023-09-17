@@ -696,6 +696,9 @@ def trees_map(_, sentence):
 
 
 def isochroneLibrary(latitude, longitude):
+    contours_minutes = 15
+    longitude = -122.4
+    latitude = 37.8
     contours_minutes = 60
     isochrone_url = f'https://api.mapbox.com/isochrone/v1/mapbox/driving-traffic/{longitude}%2C{latitude}?contours_minutes={contours_minutes}&polygons=true&denoise=0&generalize=0&access_token=pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg'
     geojson_data = requests.get(isochrone_url).json()
