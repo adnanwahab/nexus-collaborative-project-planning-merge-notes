@@ -5,6 +5,7 @@ import torch
 #get business ideas -> get most cool problems to work on that most people complain about.
 import requests
 import easyocr
+from fastapi import Request, FastAPI
 
 def getYoutube(url):
     import youtube_dl
@@ -919,18 +920,46 @@ def assignPeopleToAirbnbBasedOnPreferences():
      #150 million people who live in cities who may want data driven decision making to choose a better appartment that would save them time commuting 
      return makePref()
 
-@app.get("/callFn")
-async def admin():
+class UserInDB(BaseModel):
+    _k: str
+    _v: str
+
+import random
+@app.post("/callFn")
+async def admin(request: Request):
     #render 12 maps for 12 cities
+    print('val', await request.json())
+    json = await request.json()
+    # k = json['_k']
+    # v = json['_v']
+
+    cities = ['tokyo', 'houston', 'moscow', 'cairo', 'mumbai', 'delhi', 'shanghai', 'beijing', 'dhaka', 'osaka', 'chongqing', 'istanbul']
     def rankApt(personCoefficentPreferences, apt):
         diff = 0
+        print(apt)
         for val in apt:
-            diff += abs(val - personCoefficentPreferences)
+            diff += abs(apt[val] - personCoefficentPreferences)
         return diff 
     cityAptChoice = {}
-    for city in cities:
-       cityAptChoice[city] = ([rankApt(personCoefficentPreferences, apt) for apt in city])
+    personCoefficentPreferences = json['getCoefficents']
 
+    def makeApt():
+        props = ['commuteDistance', 'library', 'bar', 'coffee'] 
+        coeffs = {}
+        for prop in props: coeffs[prop] = random.random()
+        return coeffs
+
+    cities = {
+        'tokyo': [makeApt() for i in range(5)],
+        'houston': [makeApt() for i in range(5)],
+        'moscow': [makeApt() for i in range(5)],
+    }
+
+    for city_name in cities:
+       apt_list = cities[city_name]
+       print(apt_list)
+       sorted(apt_list, key=lambda apt: rankApt(personCoefficentPreferences, apt))
+       cityAptChoice[city_name] = apt_list
     #10,000 cities
     #1 week stays - 4 per city
     # group size of 30,000 

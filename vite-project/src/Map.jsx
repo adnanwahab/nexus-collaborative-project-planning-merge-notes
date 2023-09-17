@@ -170,17 +170,17 @@ function Map(props) {
   console.log(latitude, longitude)
 
   useEffect(() => {
-    const [minLng, minLat, maxLng, maxLat] = [
-      longitude - .01, latitude - .01, longitude + .01, latitude + .01
-    ]
+    // const [minLng, minLat, maxLng, maxLat] = [
+    //   longitude - .01, latitude - .01, longitude + .01, latitude + .01
+    // ]
 
-    mapRef.current.fitBounds(
-      [
-        [minLng, minLat],
-        [maxLng, maxLat]
-      ],
-      {padding: 40, duration: 1000}
-    );
+    // mapRef.current.fitBounds(
+    //   [
+    //     [minLng, minLat],
+    //     [maxLng, maxLat]
+    //   ],
+    //   {padding: 40, duration: 1000}
+    // );
 
   }, [latitude, longitude])
   const onClick = () => {
@@ -229,7 +229,7 @@ function Map(props) {
 let places = ['commuteDistance', 'library', 'bar', 'coffee']
 let placeCoefficents = {} 
 places.forEach(place => {
-  placeCoefficents[places] = 0
+  placeCoefficents[place] = 0
 })
 
 //sentences + componentData = list of component + states from props
@@ -237,12 +237,12 @@ places.forEach(place => {
 //CallFn - change a UI component 
 const makeOnCoefficentChange = (name) => {
   return (e) => {
-    placeCoefficents[name] = e.target.value
-    setCoefficents(placeCoefficents)
+    placeCoefficents[name] = parseFloat(e.target.value) / 100
+    setCoefficents(Object.assign({}, placeCoefficents))
   }
 }
-let coefficentsSliders = Object.entries(places).map((pair) => {
-  return <><label>{pair[0]}</label><input type='range' onChange={ makeOnCoefficentChange(pair[0])}/></>
+let coefficentsSliders = places.map((pair) => {
+  return <><label>{pair}</label><input type='range' onChange={ makeOnCoefficentChange(pair)}/></>
 })
 let [getCoefficents, setCoefficents] = useState(placeCoefficents)
 
@@ -252,13 +252,26 @@ useEffect(() => {
   //sentence -> returns a component
   //on interaction -> sends a networkRequest -> /rpc/function_name with json = parameters
   //returns function and then re-renders data
-  // fetch('callFn/filter-airnbs', {
-  //   method: 'POST',
-  //   body: JSON.stringify({
-  //     coefficents: getCoefficents,
-  //     documentRow: 4
-  //   })
-  // })
+  console.log(getCoefficents, 'getCoefficents')
+  let fn = async ()=>  {
+    let _ = await fetch('http://localhost:8000/callFn/', {
+      method: 'POST',
+      body: JSON.stringify({
+        getCoefficents
+        // _k: Object.keys(getCoefficents).join(','),
+        // _v: Object.values(getCoefficents).join(','),
+
+            })
+    })
+    let data = await _.json()
+    return data
+  }
+
+  fn().then((_) => {
+    console.log(_)
+  })
+
+
 }, [getCoefficents])
 
 

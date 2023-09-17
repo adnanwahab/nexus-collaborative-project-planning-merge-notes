@@ -303,8 +303,9 @@ async function _() {
   //text = ['asdfasd', 'asdfasdf', 'asdf']
   let port = 8000
 let url = `http://localhost:${port}/makeFn/`
-   //url = `https://pypypy.ngrok.io/makeFn/`
-
+// if (window.location.hostname !== 'localhost') {
+//    url = `https://pypypy.ngrok.io/makeFn/`
+// }
   // let fn_ = await fetch('mockData.json');
   // fn_ = await fn_.json();
   // console.log(fn_);
