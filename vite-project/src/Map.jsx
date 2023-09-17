@@ -54,31 +54,7 @@ async function getIsochrone(longitude, latitude, contours_minutes) {
       console.error('Error fetching isochrone data:', error);
   }
 }
-
 // Call the function
-//getIsochrone('longitude-here', 'latitude-here', 'contours_minutes-here');
-
-
-function updatePercentiles(
-  featureCollection,
-  accessor,
-) {
-  const {features} = featureCollection;
-  const scale = scaleQuantile().domain(features.map(accessor)).range(range(9));
-  return {
-    type: 'FeatureCollection',
-    features: features.map(f => {
-      const value = accessor(f);
-      const properties = {
-        ...f.properties,
-        value,
-        percentile: scale(value)
-      };
-      return {...f, properties};
-    })
-  };
-}
-
 const colors = [
   [0, '#3288bd'],
   [1, '#66c2a5'],
@@ -90,7 +66,6 @@ const colors = [
   [7, '#f46d43'],
   [8, '#d53e4f']
 ]
-
 
 const dataLayer = () => {
   let color = colors[Math.floor(Math.random() * 8)][1]
@@ -108,7 +83,7 @@ async function fetchCoffeeShops() {
   const latitude = 37.8;
   const longitude = -122.4;
   const radius = 1000; // radius in meters
-  
+
   // Build Overpass API URL
   const query = `[out:json][timeout:25];` +
                 `(node["amenity"="cafe"](${latitude - 0.01},${longitude - 0.01},${latitude + 0.01},${longitude + 0.01});` +
@@ -133,28 +108,6 @@ async function fetchCoffeeShops() {
   }
 }
 
-// Call the function
-//fetchCoffeeShops();
-
-// source: Natural Earth http://www.naturalearthdata.com/ via geojson.xyz
-const AIR_PORTS =
-  'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_10m_airports.geojson';
-
-const INITIAL_VIEW_STATE = {
-  latitude: 51.47,
-  longitude: 0.45,
-  zoom: 4,
-  bearing: 0,
-  pitch: 30
-};
-
-const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
-const NAV_CONTROL_STYLE = {
-  position: 'absolute',
-  top: 10,
-  left: 10
-};
-
 function Map(props) {
   const mapRef = useRef();
 
@@ -162,27 +115,11 @@ function Map(props) {
   props.data === 'hello-world'
   ) return <></>
 
-  console.log('props', props)
   // const geoJson = props.data[0]
   // const coffeeShops = props.data[0][0]
   const latitude = props.data[1][2]
   const longitude = props.data[1][3]
-  console.log(latitude, longitude)
 
-  useEffect(() => {
-    // const [minLng, minLat, maxLng, maxLat] = [
-    //   longitude - .01, latitude - .01, longitude + .01, latitude + .01
-    // ]
-
-    // mapRef.current.fitBounds(
-    //   [
-    //     [minLng, minLat],
-    //     [maxLng, maxLat]
-    //   ],
-    //   {padding: 40, duration: 1000}
-    // );
-
-  }, [latitude, longitude])
   const onClick = () => {
     console.log('hello')
   }
@@ -231,7 +168,6 @@ let placeCoefficents = {}
 places.forEach(place => {
   placeCoefficents[place] = 0
 })
-
 //sentences + componentData = list of component + states from props
 //makeFn - for now just re-render and redo whole document - con might be slow w/o caching??
 //CallFn - change a UI component 
@@ -260,18 +196,12 @@ useEffect(() => {
         getCoefficents
         // _k: Object.keys(getCoefficents).join(','),
         // _v: Object.values(getCoefficents).join(','),
-
             })
     })
     let data = await _.json()
     return data
   }
-
-  fn().then((_) => {
-    console.log(_)
-  })
-
-
+  fn().then((_) => {})
 }, [getCoefficents])
 
 
