@@ -4,6 +4,37 @@ import ReactMap, {Source, Layer, Marker} from 'react-map-gl';
 import DeckGL, {GeoJsonLayer, ArcLayer} from 'deck.gl';
 import {range} from 'd3-array';
 import {scaleQuantile} from 'd3-scale';
+import { Listbox } from '@headlessui/react'
+
+
+const typesOfPlaces = [
+  { id: 1, name: 'coffee', unavailable: false },
+  { id: 2, name: 'Bar', unavailable: false },
+  { id: 3, name: 'Library', unavailable: false },
+  { id: 4, name: 'Grocery', unavailable: true },
+  { id: 5, name: 'yoga', unavailable: false },
+]
+
+function MyListbox() {
+  const [selectedPerson, setSelectedPerson] = useState(typesOfPlaces[0])
+
+  return (
+    <Listbox value={selectedPerson} onChange={setSelectedPerson}>
+      <Listbox.Button>{selectedPerson.name}</Listbox.Button>
+      <Listbox.Options>
+        {typesOfPlaces.map((person) => (
+          <Listbox.Option
+            key={person.id}
+            value={person}
+            disabled={person.unavailable}
+          >
+            {person.name}
+          </Listbox.Option>
+        ))}
+      </Listbox.Options>
+    </Listbox>
+  )
+}
 
 async function getIsochrone(longitude, latitude, contours_minutes) {
   const accessToken = 'your-access-token-here';
@@ -127,8 +158,8 @@ const NAV_CONTROL_STYLE = {
 function Map(props) {
   if (props.data === 'hello world' ||
   props.data === 'hello-world'
-  
   ) return <></>
+
   console.log('props', props)
   // const geoJson = props.data[0]
   // const coffeeShops = props.data[0][0]
@@ -148,25 +179,73 @@ function Map(props) {
       // If we let the click event propagates to the map, it will immediately close the popup
       // with `closeOnClick: true`
       e.originalEvent.stopPropagation();
-      setPopupInfo(city);
+      // setPopupInfo(city);
     }}
   >
     {/* <Pin /> */}
   </Marker>
   }
 
+  function merge (json) {
+    return json.reduce((acc, item) => {
+      acc.features.push(item.features[0])
+      return acc
+    })
+  }
+
   let geoJson = props.data.map((listing, idx) => {
-    return <Source key={idx} type="geojson" data={listing[1]}>
-      <Layer {...dataLayer()} />
-    </Source>
+    return listing[1]
   })
+  console.log('geoJson', geoJson);
+
+  geoJson = merge(geoJson)
+
+  let renderGeoJson = (<Source type="geojson" data={geoJson}>
+      <Layer {...dataLayer()} />
+    </Source>)
 
   let shopMarkers = props.data.map(listing => {
     return listing[0].map(renderShop)
   })
 
+let places = ['commuteDistance', 'library', 'bar', 'coffee']
+let placeCoefficents = {} 
+places.forEach(place => {
+  placeCoefficents[places] = 0
+})
+
+//sentences + componentData = list of component + states from props
+//makeFn - for now just re-render and redo whole document - con might be slow w/o caching??
+//CallFn - change a UI component 
+const onCoefficentChange = (e) => {
+  placeCoefficents[pair[0]] = e.target.value
+  setCoefficents(placeCoefficents)
+}
+Object.entries(places).map((pair) => {
+  return <><label>{pair[0]}</label><input type='range' onChange={ onCoefficentChange}/></>
+})
+
+useEffect(() => {
+  //sentence defines not an endpoint but a function that can be called from endpoint
+  //sentence -> returns a component
+  //on interaction -> sends a networkRequest -> /rpc/function_name with json = parameters
+  //returns function and then re-renders data
+  // fetch('callFn/filter-airnbs', {
+  //   method: 'POST',
+  //   body: JSON.stringify({
+  //     coefficents: getCoefficents,
+  //     documentRow: 4
+  //   })
+  // })
+}, [getCoefficents])
+
+let [getCoefficents, setCoefficents] = useState(placeCoefficents)
+
 const mapRef = useRef();
-  return (
+  return (<>
+  {}
+
+
     <ReactMap
        ref={mapRef}
         mapboxAccessToken="pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg"
@@ -181,9 +260,9 @@ const mapRef = useRef();
       mapStyle="https://api.maptiler.com/maps/streets/style.json?key=D8xiby3LSvsdgkGzkOmN"
     >
     {shopMarkers}
-    {geoJson[2]}
+    {renderGeoJson}
     </ReactMap> 
-  );
+    </>);
 }
 export default Map
 

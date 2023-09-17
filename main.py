@@ -63,6 +63,8 @@ def makeFnFromEnglish(english):
 #try for 
 
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
+
 from fastapi.responses import JSONResponse, FileResponse
 from collections import defaultdict
 import uvicorn
@@ -496,27 +498,27 @@ import json
 import requests
 
 def fetch_coffee_shops(longitude, latitude):
-    query = f"""
-    [out:json][timeout:25];
-    (
-        node["amenity"="cafe"]({latitude - 0.01},{longitude - 0.01},{latitude + 0.01},{longitude + 0.01});
-        way["amenity"="cafe"]({latitude - 0.01},{longitude - 0.01},{latitude + 0.01},{longitude + 0.01});
-        relation["amenity"="cafe"]({latitude - 0.01},{longitude - 0.01},{latitude + 0.01},{longitude + 0.01});
-    );
-    out body;
-    """
+    amenities = ['cafe', 'library', 'bar']
+    places = []
+    for i in amenities:
+        query = f"""
+        [out:json][timeout:25];
+        (
+            node["amenity"="{i}"]({latitude - 0.01},{longitude - 0.01},{latitude + 0.01},{longitude + 0.01});
+        );
+        out body;
+        """
+        
+        overpass_url = "https://overpass-api.de/api/interpreter"
+        response = requests.get(overpass_url, params={'data': query})
     
-    overpass_url = "https://overpass-api.de/api/interpreter"
-    response = requests.get(overpass_url, params={'data': query})
-    
-    if response.status_code == 200:
-        data = response.json()
-        #print(data)
-        coffee_shops = data['elements']
-        return coffee_shops
-    else:
-        print(f"Failed to fetch data: {response.status_code}, {response.reason}")
-
+        if response.status_code == 200:
+            data = response.json()
+            #print(data)
+            coffee_shops = data['elements']
+            places += coffee_shops
+    print(places)
+    return places
 # Call the function
 
 
@@ -818,6 +820,9 @@ def substitute(name):
     # if 'twitch' in name:
     #     return open('./RPC/fetch-twitch.js', 'r').read()
 
+app.mount("/demo", StaticFiles(directory="vite-project/dist/assets"), name="demo")
+
+
 @app.post("/makeFn")
 async def makeFn(FnText:FnText):
     print('FnText', FnText)
@@ -911,7 +916,11 @@ async def admin():
 
 @app.get("/")
 async def metrics():
-    return FileResponse('index.html')
+#     @app.get("/")
+# def read_root():
+#     with open("path/to/your/vite/dist/index.html") as f:
+#         return f.read()
+    return FileResponse('/vite-project/dist/index.html')
 
 @app.get("client.js")
 async def js():

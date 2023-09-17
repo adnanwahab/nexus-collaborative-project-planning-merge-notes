@@ -412,8 +412,8 @@ const isGeoCoordinate = (pair) => {
 }
 
 function isIsochroney(datum) {
-  if (datum.length == 11) return true
-  return Array.isArray(datum[0]) && 'features' in datum[1] && datum[1].type === 'featureCollection'
+  console.log(datum)
+  return datum[0] && datum[0][0] && datum[0][0][1] && datum[0][0][1].type === 'node'
 }
 
 function compile (dataList, apply_) {
