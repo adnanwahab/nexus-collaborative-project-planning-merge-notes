@@ -532,7 +532,10 @@ get sentences that are highly similar or support the same thesis
     `housing_intersection`,
 
 
-    
+    `get transcript from https://www.youtube.com/watch?v=a02S4yHHKEw&ab_channel=AllThatOfficial
+     get all jokes from transcript
+     find jokes that are duplicated in modern family
+    `
 ]
 //solve community - remote year
 //geospatial

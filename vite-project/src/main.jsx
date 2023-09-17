@@ -5,12 +5,12 @@ import './index.css'
 import Map from './Map.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <App />
+  <App />
 )
 /* global window */
 
-export function renderToDom(container) {
-  createRoot(container).render(<App />);
-}
+// export function renderToDom(container) {
+//   createRoot(container).render(<App />);
+// }
 
-renderToDom(document.querySelector('#map'))
+//renderToDom(document.querySelector('#map'))

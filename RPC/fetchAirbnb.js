@@ -9,18 +9,13 @@ const fs = require('fs')
 //get the img urls
 
 //make these callable from python
-
 let fn = process.argv[2]
-
-
 async function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-
-
 const get_img_url = async (apt_listing) => {
-//    const browser = await puppeteer.launch();
+    //const browser = await puppeteer.launch();
     //console.log(apt_listing)
     const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
@@ -30,20 +25,12 @@ const get_img_url = async (apt_listing) => {
       });
     // Go to the Twitter homepage
     await page.goto(apt_listing);
-    
     // Wait for the page to load completely
-
-
     //await autoScroll(page);
-
     // await page.screenshot({
     //     path: 'yoursite.png',
     //     fullPage: true
     // });
-
-
-   
- 
     let query = 'section'
     await page.waitForSelector(query);
     page.evaluate(_ => {
@@ -59,8 +46,7 @@ const get_img_url = async (apt_listing) => {
         document.querySelector('.cj0q2ib.sne7mb7.rp6dtyx.c1y4i074.dir.dir-ltr').click()
       });
       await delay(1000)
-
-      //console.log('SCROLLING IS DONE')
+    //console.log('SCROLLING IS DONE')
     // Get all the tweets on the page
     let selector = ('.gm-style img')
     const tweets = await page.$$eval(selector, (img) => {

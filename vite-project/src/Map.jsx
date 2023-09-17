@@ -71,6 +71,38 @@ const dataLayer = {
   }
 };
 
+async function fetchCoffeeShops() {
+  const latitude = 37.8;
+  const longitude = -122.4;
+  const radius = 1000; // radius in meters
+  
+  // Build Overpass API URL
+  const query = `[out:json][timeout:25];` +
+                `(node["amenity"="cafe"](${latitude - 0.01},${longitude - 0.01},${latitude + 0.01},${longitude + 0.01});` +
+                `way["amenity"="cafe"](${latitude - 0.01},${longitude - 0.01},${latitude + 0.01},${longitude + 0.01});` +
+                `relation["amenity"="cafe"](${latitude - 0.01},${longitude - 0.01},${latitude + 0.01},${longitude + 0.01}););` +
+                `out body;`;
+  const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
+  
+  try {
+    const response = await fetch(overpassUrl);
+    
+    if (response.ok) {
+      const data = await response.json();
+      const coffeeShops = data.elements;
+      console.log("Coffee Shops:", coffeeShops);
+      // Do something with the fetched coffee shops
+    } else {
+      console.log('Failed to fetch data:', response.status, response.statusText);
+    }
+  } catch (error) {
+    console.error('Error fetching coffee shops:', error);
+  }
+}
+
+// Call the function
+fetchCoffeeShops();
+
 // source: Natural Earth http://www.naturalearthdata.com/ via geojson.xyz
 const AIR_PORTS =
   'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_10m_airports.geojson';

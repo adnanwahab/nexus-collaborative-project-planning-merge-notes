@@ -2,10 +2,19 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import torch
 # To use a different branch, change revision
 # For example: revision="gptq-4bit-32g-actorder_True"
-
 #get business ideas -> get most cool problems to work on that most people complain about.
 import requests
 import easyocr
+
+def getYoutube(url):
+    import youtube_dl
+    youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s'}).download(['https://www.youtube.com/watch?v=a02S4yHHKEw&ab_channel=AllThatOfficial'])
+    import openai
+    audio_file= open("audio.mp3", "rb")
+    transcript = openai.Audio.transcribe("whisper-1", audio_file)
+    open('transcript.txt', 'w').write(transcript)
+    return '<audio src="audio.mp3">'
+
 access_token = 'pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjI1MmNheTBkZmcyeGwwNWRnZmxxMzEifQ.7KOCTZCiV4QfSeqCQl7HjA'
 class Memoize:
     def __init__(self, fn):
@@ -16,21 +25,16 @@ class Memoize:
         if args not in self.memo:
             self.memo[args] = self.fn(*args)
         return self.memo[args]
-
-
-
 __ = {}
 def initAlgae():
     from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
     import torch
-
     model_name_or_path = "TheBloke/CodeLlama-7B-Python-GPTQ"
     __['___'] = AutoModelForCausalLM.from_pretrained(model_name_or_path,
                                                 torch_dtype=torch.float16,
                                                 device_map="auto",
                                                 revision="main")
     __['____'] = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
-    
 import re
 def makeFunctionFromText(text):
     if text == '': return ''
@@ -156,11 +160,13 @@ def key_function (_):
 #@Memoize
 memoizer = {}
 def imageToCoords(url_list, location='_', apt_url='_'):
-    if os.path.exists(f'{apt_url}_geoCoordinates.json'):
-        return json.load(open(f'{apt_url}_geoCoordinates.json', 'r'))
+    fp = f'{apt_url}_geoCoordinates.json'
+    print('reading cache ', os.path.exists(fp))
+    if os.path.exists(fp):
+        return json.load(open(fp, 'r'))
 
-    if len(url_list) < 1: return [] 
-    if url_list[0] in memoizer: return memoizer[url_list[0]]
+    #if len(url_list) < 1: return [] 
+    #if url_list[0] in memoizer: return memoizer[url_list[0]]
     cache = set()
     for _ in url_list[:5]:
         response = requests.get(_)
@@ -169,13 +175,14 @@ def imageToCoords(url_list, location='_', apt_url='_'):
                 f.write(response.content)
 
         ocr = ocrImage(_[-50:-1])
-        print(ocr)
+        #print(ocr)
         if not ocr: continue
         coords = geoCode(ocr, location)
-        print(coords)
+        #print(coords)
         if not coords: continue
         cache.add(str(coords[0]) + ':' + str(coords[1]))
-    json.dump(list(cache), open(f'{apt_url}_geoCoordinates.json', 'w'))
+    print ('writing to' + fp)
+    json.dump(list(cache), open(fp, 'w'))
     return list(cache)
 
 def ocrImage(fp):
@@ -191,18 +198,13 @@ def ocrImage(fp):
 
 def geoCode(address, city):
     accessToken = "pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg"  # Replace with your actual access token
-
     geocodeUrl = f"https://api.mapbox.com/geocoding/v5/mapbox.places/{address}%2C%20{city}.json?access_token={accessToken}"
-
     response = requests.get(geocodeUrl)
     data = response.json()
-
     if 'features' in data and len(data['features']) > 0:
         location = data['features'][0]['geometry']['coordinates']
         #print(f"Longitude: {location[0]}, Latitude: {location[1]}")
         return location
-    
-
 
 def computeSimilarity(s1, s2):
     if (s1 == s2): return False
@@ -210,6 +212,7 @@ def computeSimilarity(s1, s2):
     embedding_2 = model.encode(s2, convert_to_tensor=True)
     sim = util.pytorch_cos_sim(embedding_1, embedding_2)
     return sim < .75
+
 def getSimilarity(sentences):
     #print('getSimilarity', sentences)
     encodings = getEncodings(sentences)
@@ -254,7 +257,6 @@ def replaceIfInTags(string):
     return string
 
 def processMessages(content):
-    
     content = [replaceIfInTags(item) for sublist in content for item in sublist]
     content = [getClassification(string) for string in content 
                if len([w for w in word_tokenize(string) if is_real_word(w)]) > 0]
@@ -262,7 +264,6 @@ def processMessages(content):
             if len([w for w in word_tokenize(string) if is_real_word(w)]) == 0
     ]
     result = getSimilarity(content)
-
     returnValue = {}
     for grouping in result:
         title = grouping[0].split(':')[1]
@@ -293,7 +294,6 @@ nexusContent = []
 for i in range(100):
     materials = ['bricks', 'clay', 'sod', 'glass']
     messages.append('i want to build an app that lets users design houses made from ' + materials[i % 2])
-
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -351,7 +351,6 @@ async def concat_messages(message: MessageInput):
     return content
     return JSONResponse(content=messages)
 
-
 class RPCBlahBlah(BaseModel):
     text: str
 @app.post("/rpc")
@@ -395,7 +394,7 @@ def generateWinningTeam():
     from ipynb.fs.defs.geospatial import getCounter
     return getCounter('celebi')
 
-def findAixrbnb(previous, sentence):
+def findAirbnb(previous, sentence):
     from ipynb.fs.defs.geospatial import getAllAirbnbInCityThatAreNotNoisy
     GTorLT = 'not noisy' in sentence
     #use sentence to genreate function that call on the data of other functions to map filter
@@ -491,6 +490,36 @@ def cityRadio(_, __):
 
 import subprocess
 import json
+import requests
+
+def fetch_coffee_shops(longitude, latitude):
+    query = f"""
+    [out:json][timeout:25];
+    (
+        node["amenity"="cafe"]({latitude - 0.01},{longitude - 0.01},{latitude + 0.01},{longitude + 0.01});
+        way["amenity"="cafe"]({latitude - 0.01},{longitude - 0.01},{latitude + 0.01},{longitude + 0.01});
+        relation["amenity"="cafe"]({latitude - 0.01},{longitude - 0.01},{latitude + 0.01},{longitude + 0.01});
+    );
+    out body;
+    """
+    
+    overpass_url = "https://overpass-api.de/api/interpreter"
+    response = requests.get(overpass_url, params={'data': query})
+    
+    if response.status_code == 200:
+        data = response.json()
+        #print(data)
+        coffee_shops = data['elements']
+        return coffee_shops
+    else:
+        print(f"Failed to fetch data: {response.status_code}, {response.reason}")
+
+# Call the function
+
+
+
+
+
 def getAirbnbs(_, componentData='cairo, egypt'):
     #print(componentData)
     from ipynb.fs.defs.geospatial import getAllApt_
@@ -629,6 +658,13 @@ def filter_by_distance_to_shopping_store(airbnbs, documentContext):
     airbnbs = [apt for apt in airbnbs if doesExist(apt['link'])]
     images = [json.load(open(fp)) for fp in set([f"gm_{get_room_id(apt_url['link'])}.json" for apt_url in airbnbs])]
     geoCoordinates = [imageToCoords(image, documentContext['city'], get_room_id(airbnbs[idx]['link']) ) for idx, image in enumerate(images[:18])]
+
+    geoCoordinates = [coord[0].split(':') for coord in geoCoordinates if len(coord) > 1]
+    print(geoCoordinates)
+    _ = [isochroneLibrary(pt[0], pt[1]) for pt in geoCoordinates]
+
+    return [_ for _ in _ if _ != False]  
+    #isochroneLibrary()
     # geoCoordinates = [[75.775256, 26.897392],
     # [75.818982, 26.915458],
     # [75.822858, 26.915904],
@@ -666,12 +702,11 @@ def filter_by_distance_to_shopping_store(airbnbs, documentContext):
     #get isochrone for subway 
     #get places from google for best completenes
     # #Google Places API   
-    points = [fetch_cafes() for ]
+    #points = [fetch_cafes() for ]
     
-    [isochroneLibrary(pt[0], pt[1]) for pt in points]
     #return [{'link': 'asdfasd'}, {'link': str(len(geoCoordinates))}]
-    print(distance_to_shopping_store)
-    print('this is cool',len(distance_to_shopping_store), len(airbnbs))
+    #print(distance_to_shopping_store)
+    #print('this is cool',len(distance_to_shopping_store), len(airbnbs))
     #get 10 airbnb that are closest to shopping out of list in 20 airbnbs
     #tenth = distance_to_shopping_store.copy().sort()
     #make instant by caching all places and all geo-coordinate.
@@ -695,11 +730,15 @@ def trees_map(_, sentence):
     }
 
 
-def isochroneLibrary(latitude, longitude):
+def isochroneLibrary(longitude, latitude):
+    latitude = float(latitude)
+    longitude = float(longitude)  
+    print('get all the coffee shops within driving distance of this airbnb') 
     contours_minutes = 15
-    longitude = -122.4
-    latitude = 37.8
+    # longitude = -122.4
+    # latitude = 37.8
     contours_minutes = 60
+    assert(latitude < 90 and latitude > -90)
     isochrone_url = f'https://api.mapbox.com/isochrone/v1/mapbox/driving-traffic/{longitude}%2C{latitude}?contours_minutes={contours_minutes}&polygons=true&denoise=0&generalize=0&access_token=pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg'
     geojson_data = requests.get(isochrone_url).json()
     #get all appartments that are 5 min by train to any library 
@@ -709,12 +748,24 @@ def isochroneLibrary(latitude, longitude):
     from shapely.geometry import shape, Point
     # Load your GeoJSON FeatureCollection
     # Create a Shapely Point object for the coordinates you want to check
-    point_to_check = Point(latitude, longitude)
-    # Iterate over features in the GeoJSON object
-    for feature in geojson_data['features']:
-        polygon = shape(feature['geometry'])
-        if polygon.contains(point_to_check):
-            print(f"The point is contained in the polygon with the name: {feature['properties']['name']}")
+
+    coffee_shops = fetch_coffee_shops(longitude, latitude, )
+    #print(coffee_shops, 'coffee_shops')
+    #print('geojson_data', geojson_data)
+    data = []
+    for shop in coffee_shops: 
+        if 'lat' not in shop or 'lon' not in shop: 
+            print(shop)
+            continue
+        point_to_check = Point(shop['lon'], shop['lat'])
+        for feature in geojson_data['features']:
+            polygon = shape(feature['geometry'])
+            if polygon.contains(point_to_check):
+                data.append(shop)
+    print('cofee shops within geojson', len(data))
+    if len(data) > 0: 
+        return [data, geojson_data, latitude, longitude]
+    else : return False
     #get the simplified version or the bounding box
 
 jupyter_functions = {
@@ -725,8 +776,9 @@ jupyter_functions = {
                      'filter by distance to shopping store': filter_by_distance_to_shopping_store,
                      #'landDistribution': landDistribution,
 
-                     'filter by 30 min subway to a public library': isochroneLibrary,
-                     'plot on a map': trees_map
+                     'filter by 10 min train or drive to a library above 4 star': filter_by_distance_to_shopping_store,
+                     'plot on a map': lambda x,y: x,
+                     'get transcript from ': getYoutube
 
     # '!airbnb': findAirbnb, 
     #                  'poll': poll,
@@ -807,6 +859,46 @@ async def makeFn(FnText:FnText):
 #     fn = makeFunctionFromText('get all the comments on my twitch page and list the ones that have popcorn in them')[0]['generated_text']
 #     print('something else')
 #     return fn
+
+import random 
+def assignPeopleToAirbnbBasedOnPreferences():
+     makePref = lambda _: [random.random(), random.random(), random.random()]
+     [makePref() for i in range(50)]
+     # library
+     # shopping
+     # bar
+     #find the count within the geojson and 
+     #20 people, 5 airbnbs
+
+     #airbnb ->
+        #library : 0 or 1
+        # shopping = count within / max of 10
+        # bar = count within / max of 10
+
+        # one airbnb has 50 bars,
+        # total is 100 
+         #hayes, dogpatch, sunset,  bernal heights, presidio,
+         #shinjuku, fuji, hokaido, narita, nagasaki
+        # .5, .1, .25, .15,  0 bars
+        #  0, 1, 1, 1, 1, library
+        #  3, .3, .3, .3, 0 shopping
+
+        #person_one = hayes, shinjuku 
+        #person_two = presidio, nagasaki
+        #strong preferences allocated first, then weak preferences allocated second
+        # for each person:
+        #     for each airbnb:
+        #         for each preference:
+        #             if airbnb[0] - person[0] < .1 allocateshere
+
+        # person_one = [0, .5, .5]
+        # person_two = [1, .5, 0]
+        # person_three = [.5, .5, .5]
+     # coffee w/ lan
+     # land usage - green vs urban or proximity to park
+     #optimal commute between all friends (5 addresses?)
+     #150 million people who live in cities who may want data driven decision making to choose a better appartment that would save them time commuting 
+     return makePref()
 
 @app.get("/admin")
 async def admin():
