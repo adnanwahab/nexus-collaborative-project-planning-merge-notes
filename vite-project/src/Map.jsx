@@ -156,6 +156,8 @@ const NAV_CONTROL_STYLE = {
 };
 
 function Map(props) {
+  const mapRef = useRef();
+
   if (props.data === 'hello world' ||
   props.data === 'hello-world'
   ) return <></>
@@ -165,6 +167,22 @@ function Map(props) {
   // const coffeeShops = props.data[0][0]
   const latitude = props.data[1][2]
   const longitude = props.data[1][3]
+  console.log(latitude, longitude)
+
+  useEffect(() => {
+    const [minLng, minLat, maxLng, maxLat] = [
+      longitude - .01, latitude - .01, longitude + .01, latitude + .01
+    ]
+
+    mapRef.current.fitBounds(
+      [
+        [minLng, minLat],
+        [maxLng, maxLat]
+      ],
+      {padding: 40, duration: 1000}
+    );
+
+  }, [latitude, longitude])
   const onClick = () => {
     console.log('hello')
   }
@@ -217,15 +235,19 @@ places.forEach(place => {
 //sentences + componentData = list of component + states from props
 //makeFn - for now just re-render and redo whole document - con might be slow w/o caching??
 //CallFn - change a UI component 
-const onCoefficentChange = (e) => {
-  placeCoefficents[pair[0]] = e.target.value
-  setCoefficents(placeCoefficents)
+const makeOnCoefficentChange = (name) => {
+  return (e) => {
+    placeCoefficents[name] = e.target.value
+    setCoefficents(placeCoefficents)
+  }
 }
-Object.entries(places).map((pair) => {
-  return <><label>{pair[0]}</label><input type='range' onChange={ onCoefficentChange}/></>
+let coefficentsSliders = Object.entries(places).map((pair) => {
+  return <><label>{pair[0]}</label><input type='range' onChange={ makeOnCoefficentChange(pair[0])}/></>
 })
+let [getCoefficents, setCoefficents] = useState(placeCoefficents)
 
 useEffect(() => {
+  console.log('fetch to callFN here') //make do makeFN with better caching 
   //sentence defines not an endpoint but a function that can be called from endpoint
   //sentence -> returns a component
   //on interaction -> sends a networkRequest -> /rpc/function_name with json = parameters
@@ -239,13 +261,9 @@ useEffect(() => {
   // })
 }, [getCoefficents])
 
-let [getCoefficents, setCoefficents] = useState(placeCoefficents)
 
-const mapRef = useRef();
   return (<>
-  {}
-
-
+  {coefficentsSliders}
     <ReactMap
        ref={mapRef}
         mapboxAccessToken="pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg"

@@ -783,17 +783,17 @@ jupyter_functions = {
 
                      'filter by 10 min train or drive to a library above 4 star': filter_by_distance_to_shopping_store,
                      'plot on a map': lambda x,y: x,
-                     'get transcript from ': getYoutube
+                     'get transcript from ': getYoutube,
 
     # '!airbnb': findAirbnb, 
-    #                  'poll': poll,
-    #                  'plant-trees': lambda _,__: 'put map here',
-    #                  'arxiv': arxiv,
-    #                  'trees_histogram' : trees_histogram,
-    #                  'twitch_comments' : twitch_comments,
-    #                  'getTopics': getTopics, 
-    #                  'trees_map': trees_map,
-    #                  'housing_intersection': 'housing_intersection',
+                     'poll': poll,
+                     'plant-trees': lambda _,__: 'put map here',
+                     'arxiv': arxiv,
+                     'trees_histogram' : trees_histogram,
+                     'twitch_comments' : twitch_comments,
+                     'getTopics': getTopics, 
+                     'trees_map': trees_map,
+                     'housing_intersection': 'housing_intersection',
 }
 
 
@@ -894,10 +894,21 @@ def assignPeopleToAirbnbBasedOnPreferences():
         #person_one = hayes, shinjuku 
         #person_two = presidio, nagasaki
         #strong preferences allocated first, then weak preferences allocated second
+        # while all not allocated
         # for each person:
-        #     for each airbnb:
-        #         for each preference:
+        #     for idx each apt:
+        #         if closeEnough(person, apt): 
+        #            apt.remove(idx)
+        # closeEnoughThreshold -= .01
         #             if airbnb[0] - person[0] < .1 allocateshere
+        # airbnbs = [shinjuku, fuji, hokaido, narita, nagasaki]
+        # shinjuku = [.5, 0, 3]
+
+        #given 12 people
+        #12 cities
+        # choose the optimal airbnb for each thats within walking distance of each other
+
+
 
         # person_one = [0, .5, .5]
         # person_two = [1, .5, 0]
@@ -907,6 +918,28 @@ def assignPeopleToAirbnbBasedOnPreferences():
      #optimal commute between all friends (5 addresses?)
      #150 million people who live in cities who may want data driven decision making to choose a better appartment that would save them time commuting 
      return makePref()
+
+@app.get("/callFn")
+async def admin():
+    #render 12 maps for 12 cities
+    def rankApt(personCoefficentPreferences, apt):
+        diff = 0
+        for val in apt:
+            diff += abs(val - personCoefficentPreferences)
+        return diff 
+    cityAptChoice = {}
+    for city in cities:
+       cityAptChoice[city] = ([rankApt(personCoefficentPreferences, apt) for apt in city])
+
+    #10,000 cities
+    #1 week stays - 4 per city
+    # group size of 30,000 
+    #work on parsing and make the whole thing cool
+    #{japan: airbnbURL, india: airbnbURL, canada: airbnbURL}
+    return cityAptChoice
+            
+
+
 
 @app.get("/admin")
 async def admin():
