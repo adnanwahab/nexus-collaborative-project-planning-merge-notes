@@ -4,6 +4,20 @@ import torch
 # For example: revision="gptq-4bit-32g-actorder_True"
 
 #get business ideas -> get most cool problems to work on that most people complain about.
+import requests
+import easyocr
+access_token = 'pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjI1MmNheTBkZmcyeGwwNWRnZmxxMzEifQ.7KOCTZCiV4QfSeqCQl7HjA'
+class Memoize:
+    def __init__(self, fn):
+        self.fn = fn
+        self.memo = {}
+    def __call__(self, *args):
+        print(args)
+        if args not in self.memo:
+            self.memo[args] = self.fn(*args)
+        return self.memo[args]
+
+
 
 __ = {}
 def initAlgae():
@@ -134,6 +148,61 @@ tag_map = {
 }
 def getEncodings(sentences):
     return model.encode(sentences, convert_to_tensor=True, device='cpu')
+
+
+def key_function (_):
+    return _[1]
+
+#@Memoize
+memoizer = {}
+def imageToCoords(url_list, location='_', apt_url='_'):
+    if os.path.exists(f'{apt_url}_geoCoordinates.json'):
+        return json.load(open(f'{apt_url}_geoCoordinates.json', 'r'))
+
+    if len(url_list) < 1: return [] 
+    if url_list[0] in memoizer: return memoizer[url_list[0]]
+    cache = set()
+    for _ in url_list[:5]:
+        response = requests.get(_)
+        if response.status_code == 200:
+            with open(_[-50:-1], 'wb') as f:
+                f.write(response.content)
+
+        ocr = ocrImage(_[-50:-1])
+        print(ocr)
+        if not ocr: continue
+        coords = geoCode(ocr, location)
+        print(coords)
+        if not coords: continue
+        cache.add(str(coords[0]) + ':' + str(coords[1]))
+    json.dump(list(cache), open(f'{apt_url}_geoCoordinates.json', 'w'))
+    return list(cache)
+
+def ocrImage(fp):
+    reader = easyocr.Reader(['en'])
+    extract_info = reader.readtext(fp)
+    #print(extract_info)
+    from time import time
+    sorted(extract_info, key=key_function)
+    #if 0 not in extract_info: return print('wtf', extract_info)
+    #print(extract_info)
+    if (not extract_info): return False
+    return extract_info[0][1]   
+
+def geoCode(address, city):
+    accessToken = "pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg"  # Replace with your actual access token
+
+    geocodeUrl = f"https://api.mapbox.com/geocoding/v5/mapbox.places/{address}%2C%20{city}.json?access_token={accessToken}"
+
+    response = requests.get(geocodeUrl)
+    data = response.json()
+
+    if 'features' in data and len(data['features']) > 0:
+        location = data['features'][0]['geometry']['coordinates']
+        #print(f"Longitude: {location[0]}, Latitude: {location[1]}")
+        return location
+    
+
 
 def computeSimilarity(s1, s2):
     if (s1 == s2): return False
@@ -326,7 +395,7 @@ def generateWinningTeam():
     from ipynb.fs.defs.geospatial import getCounter
     return getCounter('celebi')
 
-def findAirbnb(previous, sentence):
+def findAixrbnb(previous, sentence):
     from ipynb.fs.defs.geospatial import getAllAirbnbInCityThatAreNotNoisy
     GTorLT = 'not noisy' in sentence
     #use sentence to genreate function that call on the data of other functions to map filter
@@ -340,7 +409,7 @@ def findAirbnb(previous, sentence):
     data = getAllAirbnbInCityThatAreNotNoisy(GTorLT) #todo make reactive live query
     return data
 
-
+import os
 def poll(_, second):
     return 'lots of cool polling data'
     return open('./poll.json', 'r').read()
@@ -396,6 +465,20 @@ def getTopics(sentences, sentence):
             topics.append(k)
     return topics
 
+def continentRadio(_, __):
+    from ipynb.fs.defs.geospatial import getCityList
+    #make a radio input for contient and then another one for all cities in that continent ???
+    #make it possible to pick one city per month
+    #make it possible to plan a remote year for 1-500ish people x 1 million
+    #different cities have different dataset available -> nyc = 311 and open data standard - vancouver mls
+    #find what data is common to all cities based on _
+    return {
+        
+        'key':'continent',
+        'data': 
+            ['Europe', 'North America', 'Asia', 'South America', 'Africa', 'Australia and Oceania', 'Others/Islands']
+            
+            , 'component': '<Radio>'}
 
 def cityRadio(_, __):
     from ipynb.fs.defs.geospatial import getCityList
@@ -404,49 +487,243 @@ def cityRadio(_, __):
     #make it possible to plan a remote year for 1-500ish people x 1 million
     #different cities have different dataset available -> nyc = 311 and open data standard - vancouver mls
     #find what data is common to all cities based on _
-    return {'data': getCityList()['Asia'][-3:], 'component': '<Radio>'}
+    return {'key':'city','data': getCityList(), 'component': '<Radio>'}
 
 import subprocess
 import json
 def getAirbnbs(_, componentData='cairo, egypt'):
-    print(componentData)
+    #print(componentData)
     from ipynb.fs.defs.geospatial import getAllApt_
-
+    #return ['first', 'second']
     if 'city' not in componentData: return 'hello-world'
-    location = getAllApt_(componentData['city'])
+    #location = getAllApt_(componentData['city'])
 #    getAllApt_(componentData['city'])
-
+    location = componentData['city']
+    location = location.replace(', ', '--')
     args = [
         "node",
         "getAptInCity.js",
         location
     ]
-
     # Execute the command
     # try:
     #result = subprocess.run(command, check=True)
     # except subprocess.CalledProcessError as e:
     #     print(f"The command failed with error: {e}")
-    # completed_process = subprocess.run(args
-    #                                    #, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True
-    #                                    )
+    completed_process = subprocess.run(args
+                                       #, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True
+                                       )
+    args = [
+        "node",
+        "airbnb_get_img_url.js",
+        f'{location}_apt.json'
+        #'Kuala\ Lumpur--Malaysia_apt.json'
+    ]
+    completed_process = subprocess.run(args
+                                    #, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True
+                                    )
+    #print(location)
+    apts = json.load(open(f'{location}_apt.json', 'r'))
+    #print(apts)
     print(location)
-    apts = json.load(open('jaipur--india_apt.json', 'r'))
-    print(apts)
     return apts
     return [
         ['34', '75', '5 miles from closest shopping center', 'https://www.airbnb.com/rooms/18348796?adults=1&children=0&enable_m3_private_room=true&infants=0&pets=0&check_in=2023-09-29&check_out=2023-10-04&source_impression_id=p3_1694800441_pmfkF8b1nTZSAVAg&previous_page_section_name=1000&federated_search_id=843e1746-b87e-43ca-8b98-ac700cb1a66f']
 
     ]
+def url_to_file_name(url):
+    return re.sub(r'[^a-zA-Z0-9]', '_', url)
 
-def filter_by_distance_to_shopping_store(airbnbs, _):
-    return [apt for apt in airbnbs 
-            #if distance(airbnb, closestShoppingPlace(airbnb)) < 1
+
+
+import re
+
+def get_room_id(url):
+    match = re.search(r'rooms/(\d+)', url)
+    if match:
+        return match.group(1)
+    else:
+        return None
+
+
+
+import geopy.distance
+ 
+def geoDistance(one, two):
+    return geopy.distance.geodesic(one, two).km
+
+def getPlacesOfInterest(aptGeoLocation):
+    print('aptGeoLocation', aptGeoLocation)
+    aptGeoLocation = aptGeoLocation.split(':')
+    aptGeoLocation =  [float(aptGeoLocation[0]), float(aptGeoLocation[1])]
+    all_json = []
+    return 0
+    if not aptGeoLocation: return print('no aptGeoLocation')
+    latitude = aptGeoLocation[1]
+    longitude = aptGeoLocation[0]
+    url = f"""https://api.mapbox.com/search/searchbox/v1/category/shopping?access_token=pk.eyJ1Ijoic2VhcmNoLW1hY2hpbmUtdXNlci0xIiwiYSI6ImNrNnJ6bDdzdzA5cnAza3F4aTVwcWxqdWEifQ.RFF7CVFKrUsZVrJsFzhRvQ&language=en&limit=20&proximity={longitude}%2C%20{latitude}"""
+    _ = requests.get(url).json()
+    if 'features' not in _: 
+        print(_)
+        return 0
+    for place in _['features']:
+        #print(place)
+        all_json.append(place)
+    poi = []
+    for place in all_json:
+        coords = place['geometry']['coordinates']
+        categories = place['properties']['poi_category']
+        poi.append([coords, categories])
+        #print(place)
+    sorted(poi, key=lambda _: geoDistance(_[0], aptGeoLocation))
+    print(poi)
+    return geoDistance(poi[0][0], aptGeoLocation)
+
+
+cache = {}
+
+def addToCache(fn, **kwargs):
+    #fn(**kwargs)
+    #cache[f'{fn.__name__}:city:aptUrl'] = result
+    return fn(**kwargs)
+
+
+def my_decorator_func(func):
+    def wrapper_func(*args, **kwargs):
+        # Do something before the function.
+        result = func(*args, **kwargs)
+        result = addToCache(func, **kwargs)
+        #saveCacheToDiskOrRedisOrSqlLiteOr?
+        #   
+        # Do something after the function.
+    return wrapper_func
+
+
+
+def filter_by_distance_to_shopping_store(airbnbs, documentContext):
+    #return ['asdf', 'hello']
+    #print(airbnbs, airbnbs)
+    #return ['asdf', 'hello']
+    #SSreturn airbnbs[:10]
+    #subprocess.run(['node', 'airbnb_get_img_url.js', 'jaipur--india_apt.json'])
+    if airbnbs =='hello-world': return 'hello world'
+    #writes to listing_url.json
+    #for each listing_url -> get img url
+    #for each img url -> OCR
+    #for each OCR -> geocode
+    #for each geocode -> get nearby shopping stores
+    #sort list of appartments by distance to shopping store
+    #make better
+    #imageToCoords() #apt_url -> coordinate
+    
+    #getPlacesOfInterest() #coordiante -> get distance to shopping store
+    #print ('airbnbs', airbnbs)
+    #for each apt
+    #return airbnbs[:10]
+    cache = {}
+    def doesExist(url):
+        if url not in cache: 
+            cache[url]  = True
+            return True
+        return False
+    airbnbs = [apt for apt in airbnbs if doesExist(apt['link'])]
+    images = [json.load(open(fp)) for fp in set([f"gm_{get_room_id(apt_url['link'])}.json" for apt_url in airbnbs])]
+    geoCoordinates = [imageToCoords(image, documentContext['city'], get_room_id(airbnbs[idx]['link']) ) for idx, image in enumerate(images[:18])]
+    # geoCoordinates = [[75.775256, 26.897392],
+    # [75.818982, 26.915458],
+    # [75.822858, 26.915904],
+    # [75.632758, 26.697753],
+    # [6.9561, 50.944057],
+    # [75.787137, 26.933939],
+    # [75.804092, 26.815534],
+    # [75.822858, 26.915904],
+    # [75.78857, 26.919951],
+    # [75.818982, 26.915458],
+    # [75.775256, 26.897392],
+    # [75.818982, 26.915458],
+    # [75.632758, 26.697753],
+    # [75.822858, 26.915904],
+    # [6.9561, 50.944057],
+    # [75.818982, 26.915458],
+    # [6.9561, 50.944057],
+    # [75.739386, 26.936794],
+    # [75.804092, 26.815534],
+    # [30.203709, 59.987311],
+    # [75.784422, 26.8726],
+    # [75.203905, 26.464273],]
+    # return [apt for apt in airbnbs]
+
+
+
+    # distance_to_shopping_store = [getPlacesOfInterest(geoCoordinate[0]) for geoCoordinate in geoCoordinates
+    #                               if len(geoCoordinate) > 0
+                                  
+    # for every apt           
+    #   get geojson 
+    #   get all cafes within bounding box of isochrone
+    #   then do point in polygon intersection
+    #   if cafes within isochrone > 1-> return true
+    #get isochrone for subway 
+    #get places from google for best completenes
+    # #Google Places API   
+    points = [fetch_cafes() for ]
+    
+    [isochroneLibrary(pt[0], pt[1]) for pt in points]
+    #return [{'link': 'asdfasd'}, {'link': str(len(geoCoordinates))}]
+    print(distance_to_shopping_store)
+    print('this is cool',len(distance_to_shopping_store), len(airbnbs))
+    #get 10 airbnb that are closest to shopping out of list in 20 airbnbs
+    #tenth = distance_to_shopping_store.copy().sort()
+    #make instant by caching all places and all geo-coordinate.
+    #what are pros/cons of 1 list per column vs 10 columns per item?
+    #how to add 10 "synthetic" or custom columns based on user input in a generic way?
+    return [apt for idx, apt in enumerate(airbnbs)
+            #if distance_to_shopping_store[idx] < .1
             ]
 
-jupyter_functions = {'choose a city in [asia, europe, africa]': cityRadio,
+def landDistribution(_, sentence):
+    #within 10 mile commute time
+    #
+
+    return 123
+    #return landDistribution()
+
+def trees_map(_, sentence):
+    return {
+        'data': [[34, 34], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]],
+        'component': '<map>'
+    }
+
+
+def isochroneLibrary(latitude, longitude):
+    contours_minutes = 60
+    isochrone_url = f'https://api.mapbox.com/isochrone/v1/mapbox/driving-traffic/{longitude}%2C{latitude}?contours_minutes={contours_minutes}&polygons=true&denoise=0&generalize=0&access_token=pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg'
+    geojson_data = requests.get(isochrone_url).json()
+    #get all appartments that are 5 min by train to any library 
+    #check whether library falls within geo-json
+    #point -> polygon intersection test
+    #list of libraries
+    from shapely.geometry import shape, Point
+    # Load your GeoJSON FeatureCollection
+    # Create a Shapely Point object for the coordinates you want to check
+    point_to_check = Point(latitude, longitude)
+    # Iterate over features in the GeoJSON object
+    for feature in geojson_data['features']:
+        polygon = shape(feature['geometry'])
+        if polygon.contains(point_to_check):
+            print(f"The point is contained in the polygon with the name: {feature['properties']['name']}")
+    #get the simplified version or the bounding box
+
+jupyter_functions = {
+    
+    'for each continent': continentRadio,
+    'choose a city in each': cityRadio,
                      'find all airbnb in that city': getAirbnbs,
                      'filter by distance to shopping store': filter_by_distance_to_shopping_store,
+                     #'landDistribution': landDistribution,
+
+                     'filter by 30 min subway to a public library': isochroneLibrary,
+                     'plot on a map': trees_map
 
     # '!airbnb': findAirbnb, 
     #                  'poll': poll,
@@ -458,6 +735,7 @@ jupyter_functions = {'choose a city in [asia, europe, africa]': cityRadio,
     #                  'trees_map': trees_map,
     #                  'housing_intersection': 'housing_intersection',
 }
+
 
 #on client if colon -> substitute on client 
 
@@ -544,9 +822,6 @@ async def js():
 @app.get("/data/george.txt")
 async def george():
     return FileResponse('/data/george.txt', media_type="text/plain")
-
-
-
 #uvicorn.run(app,host="0.0.0.0",port="8080")
 #for os.listdir('./')
 #app.mount("/static", StaticFiles(directory="./"), name="static")

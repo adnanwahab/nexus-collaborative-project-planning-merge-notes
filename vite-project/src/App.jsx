@@ -40,20 +40,40 @@ function getFormData () {
   return formData
 }
 
+let percent = 0
+function ProgressBar () {
+  let percentage = percent++
+  let style = {width: `${percentage}%`}
+  let [_, set_] = useState(0)
+
+  useEffect(function _() {
+    setTimeout(() => {
+      set_(_+1)
+
+    }, 1000)
+  }, [_])
+
+  return (<div className="hidden absolute top-0 progress-bar h-8 bg-blue-500" style={style}> </div>)
+}
 
 
+function isNestedArray (arr) {  
+  console.log('arr',arr)
+  return Array.isArray(arr['Asia']) 
+}
 
 
 function Radio(props) {
+  let cities = props.cities
 
-  let cities = props.cities || ['asia', 'europe', 'africa']
   let [getCity, setCity] = useState('')
-  console.log(props)
+  let [_, set_] = useState(false)
+
   let apply_ = props.apply_
-//  console.log(cities)
 
   useEffect(() => {
-    setFormData('city', getCity)
+    console.log(props)
+    setFormData(props.formDataKey, getCity)
     apply_() //dont just send text -> send the data on the client 
     //get all satellite images for every country in america
     //tune contrast -> see if there are any patterns
@@ -80,6 +100,7 @@ function Radio(props) {
           ))}
         </div>
       </fieldset>
+      -----------------------------------------------------
     </div>
   )
 }
@@ -114,7 +135,7 @@ function HousingIntersectionFinder() {
 
 
 
-function MapTrees(trees)  {
+function Map(trees)  {
 return MapComponent(trees)
 
 return (
@@ -325,8 +346,6 @@ function delay (fn) {
 
 
 function CodeEditor({apply_}) {
-
-
   useEffect(() => {
     get('textarea').value = templateContent[0]
     apply_()
@@ -360,9 +379,6 @@ const components = {
   'List': List
 }
 
-
-
-
 function Notebook2() {
   const chartRef = useRef();
 
@@ -393,11 +409,21 @@ const isGeoCoordinate = (pair) => {
 
 function compile (dataList, apply_) {
   if (! dataList.fn) return dataList
-  console.log(dataList)
+  // console.log(dataList)
+  // console.log(getFormData(), 'shit')
   return dataList.fn.map(function (datum) {
     if (datum.component === '<Radio>') {
-      return <Radio apply_={apply_}  cities={Array.isArray(datum.data) ? datum.data : false}></Radio>
+      return <Radio apply_={apply_} 
+        formDataKey={datum.key}
+       cities={Array.isArray(datum.data) ? datum.data : datum.data[getFormData()['continent'] || 'Asia']}></Radio>
     }
+
+
+    if (datum.component === '<map>') {
+      console.log(datum)
+      return <Map data={Array.isArray(datum.data) ? datum.data : false}></Map>
+    }
+
     // if (isGeoCoordinate(datum)) {
     //   return MapTrees(datum)
     // }
@@ -445,13 +471,24 @@ let templateContent = [
 // book for 1 month in each place -> 3 months of travel planning in 1 minute
 // `,
 
-`choose a city in [asia, europe, africa]
+// `choose a city in [asia, europe, africa]
+// find all airbnb in that city
+// filter by distance to shopping store`,
+`for each continent
+choose a city in each
 find all airbnb in that city
-filter by distance to shopping store`,
+filter by 10 min train or drive to a library above 4 star
+plot on a map
+
+`,
+//find airbnb that is 30 minutes by train to 340 west 34th street
 
 
-
-`:poll astronomy, physics, infoTheory
+`find all papers on https://scholar.google.com/scholar?start=0&q=psilocybin&hl=en&as_sdt=0,44
+get all diagrams
+get all tables
+get sentences that are highly similar or support the same thesis 
+:poll astronomy, physics, infoTheory
     find all papers on arxiv relating to astronomy
     predict papers that will be highly cited
     or predict quality or relevance of paper that are too specific to have a lot of citations
@@ -565,8 +602,9 @@ function App() {
         {/* <Notebook /> */}
 
       </div>
-
+      <ProgressBar></ProgressBar>
       <div className="card">{components}</div>
+      <MapComponent>  </MapComponent>
     </div>
   )
 }
