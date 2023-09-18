@@ -234,6 +234,8 @@ import random
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
+    "https://cooperation.party",
+    "http://cooperation.party",
     "http://localhost.tiangolo.com",
     "https://localhost.tiangolo.com",
     "http://localhost",
@@ -658,12 +660,8 @@ async def makeFn(FnText:FnText):
         if type(fn) == type(lambda _:_):
             print(fn.__name__)
             val = fn(val, FnText.sentenceComponentData)
-            #pass in previous value, sentenceComponentData + document context(todo idk )
         else:
             val = fn 
-            #val = makeFunctionFromText(val)
-            #print(val)
-            #val = fn return the sentence ? (comment)
         args.append(val)
     return {'fn': args}
 
@@ -675,12 +673,11 @@ def assignPeopleToAirbnbBasedOnPreferences():
      # bar
      #find the count within the geojson and 
      #20 people, 5 airbnbs
-
-     #airbnb ->
+   #airbnb ->
         #library : 0 or 1
         # shopping = count within / max of 10
         # bar = count within / max of 10
-
+  
         # one airbnb has 50 bars,
         # total is 100 
          #hayes, dogpatch, sunset,  bernal heights, presidio,

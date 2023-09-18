@@ -285,7 +285,6 @@ function MosaicCrossFilterFlightsM() {
     // const module0 = runtime.module(notebook, name => {
     //   if (name === "viewof flights") return new Inspector(viewofFlightsRef.current);
     // }).redefine('redefineColor', 'purple')
-   
     console.log('hi')
     return () => runtime.dispose();
   }, []);
@@ -302,10 +301,10 @@ async function _() {
   let text = get('textarea').value.split('\n') //TODO whitespace removal
   //text = ['asdfasd', 'asdfasdf', 'asdf']
   let port = 8000
-let url = `http://localhost:${port}/makeFn/`
-// if (window.location.hostname !== 'localhost') {
-//    url = `https://pypypy.ngrok.io/makeFn/`
-// }
+  let url = `http://localhost:${port}/makeFn/`
+if (window.location.hostname !== 'localhost') {
+   url = `https://pypypy.ngrok.io/makeFn/`
+}
   // let fn_ = await fetch('mockData.json');
   // fn_ = await fn_.json();
   // console.log(fn_);
@@ -339,7 +338,6 @@ let url = `http://localhost:${port}/makeFn/`
   // fn2 = await fn2.json()
 }
 
-
 function delay (fn) {
   let one = Date.now()
   return function () {
@@ -348,7 +346,6 @@ function delay (fn) {
     one = two
   }
 }
-
 
 function CodeEditor({apply_}) {
   useEffect(() => {
