@@ -218,23 +218,24 @@ function vennDiagram() {
     </svg>)
 }
 
-function Histogram() {
+import notebook4 from "6c8bcf8857e3482e";
+
+function Histogram(props) {
   const chartRef = useRef();
 
   useEffect(() => {
     console.log('HISTOGRAM')
     const runtime = new Runtime();
-    runtime.module(notebook, name => {
+    runtime.module(notebook4, name => {
       console.log('chart')
       if (name === "chart") return new Inspector(chartRef.current);
-    });
+    }).redefine('data', props.data)
     return () => runtime.dispose();
   }, []);
 
   return (
     <>
       <div ref={chartRef} />
-      <p>Credit: <a href="https://observablehq.com/@rithwikanand/histogram">Histogram by Rithwik Anand</a></p>
     </>
   );
 }
@@ -419,7 +420,6 @@ function compile (dataList, apply_) {
   // console.log(dataList)
   // console.log(getFormData(), 'shit')
   return dataList.fn.map(function (datum) {
-    console.log('isochrone', isIsochroney(datum))
     if (isIsochroney(datum)) {
       return <Map data={datum}></Map>
     }
@@ -432,25 +432,22 @@ function compile (dataList, apply_) {
     }
 
 
-    if (datum.component === '<map>') {
-      console.log(datum)
-      return <Map data={Array.isArray(datum.data) ? datum.data : false}></Map>
+    if (typeof datum === 'object') { 
+      return <Histogram data={Object.values(datum)}/>
     }
 
     // if (isGeoCoordinate(datum)) {
     //   return MapTrees(datum)
     // }
 
-    if (Array.isArray(datum)) return List(datum.map(_=>_.link))
+    if (Array.isArray(datum)) return List(datum)
     // //if (datum === 'lots of cool polling data') return Poll()
     // if (datum === 'timeseries') {
     // }
 
 
 
-    // if (typeof datum === 'object') { 
-    //   return <Histogram />
-    // }
+
     // if (datum === 'housing_intersection') {
     //     return <HousingIntersectionFinder />
     // }

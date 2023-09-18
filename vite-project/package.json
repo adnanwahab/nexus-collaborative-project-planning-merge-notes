@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "1420c244c74cb1bb": "https://api.observablehq.com/d/1420c244c74cb1bb.tgz?v=3",
+    "6c8bcf8857e3482e": "https://api.observablehq.com/d/6c8bcf8857e3482e@280.tgz?v=3",
     "@deck.gl/layers": "^8.9.27",
     "@deck.gl/react": "^8.9.27",
     "@groundbear/housing123": "https://api.observablehq.com/@groundbear/housing123.tgz?v=3",

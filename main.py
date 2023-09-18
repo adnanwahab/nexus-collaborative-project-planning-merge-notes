@@ -27,6 +27,7 @@ import torch
 import json
 import os.path
 import nltk
+from nltk.corpus import words
 from nltk.tag import pos_tag
 from nltk.tokenize import word_tokenize
 nltk.download('punkt')
@@ -66,13 +67,20 @@ def makeFnFromEnglish(english):
     print('fnText', fnText)
     return fnText
 
-
-
-
-from nltk.corpus import words
 def is_real_word(word):
     word_list = words.words()
     return word.lower() in word_list
+
+#todo - make reactive -> when parameters change, recompute -> update anything that reads
+fn_cache = {}
+
+def cacheThisFunction(func):
+    def _(*args):
+        key = func.__name__ + args.join(',')
+        if key in fn_cache: return fn_cache[key]
+        val = func(*args)
+        fn_cache[key] = val
+    return _
 
 classifications = """Retraction
 Explanation
@@ -429,7 +437,7 @@ def getAirbnbs(_, componentData='cairo, egypt'):
     apts = json.load(open(f'{location}_apt.json', 'r'))
     #print(apts)
     print(location)
-    return apts
+    return [apt['link'] for apt in apts]
 def url_to_file_name(url):
     return re.sub(r'[^a-zA-Z0-9]', '_', url)
 
@@ -496,8 +504,8 @@ def my_decorator_func(func):
         # Do something after the function.
     return wrapper_func
 
-
-
+#get ARIBNBS -> 
+#convert AIRBNS to CITY NAME 
 def filter_by_distance_to_shopping_store(airbnbs, documentContext):
     #return ['asdf', 'hello']
     #print(airbnbs, airbnbs)

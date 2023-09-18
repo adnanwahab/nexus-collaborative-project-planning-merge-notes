@@ -7,6 +7,10 @@
   resolved "https://api.observablehq.com/d/1420c244c74cb1bb.tgz?v=3"
   integrity sha512-NOWvi4qJ81e8FSSylJpK0VhHpwDai5w9Y1xud9WEWn+oz6qbCDI0x3yiZCOFwbVDaCnP2IB7NSjbE01qAus13g==
 
+"6c8bcf8857e3482e@https://api.observablehq.com/d/6c8bcf8857e3482e@280.tgz?v=3":
+  version "280.0.0"
+  resolved "https://api.observablehq.com/d/6c8bcf8857e3482e@280.tgz?v=3#b01be31098666af377aab1071fa91d692867c654"
+
 "@aashutoshrathi/word-wrap@^1.2.3":
   version "1.2.6"
   resolved "https://registry.npmjs.org/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz"
