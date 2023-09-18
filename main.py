@@ -633,6 +633,15 @@ def isochroneLibrary(longitude, latitude):
         return [data, geojson_data, latitude, longitude]
     else : return False
 
+import requests
+def satellite_housing(_, sentence):
+    requests.get('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/-122.4241,37.78,14.25,0,60/600x600?access_token=pk.eyJ1IjoiYXdhaGFiIiwiYSI6ImNrdjc3NW11aTJncmIzMXExcXRiNDNxZWYifQ.tqFU7uVd6mbhHtjYsjtvlg')
+    return 'for each satellite images in area find anything that matches criteria'
+
+def pokemon(_, __):
+    from ipynb.fs.defs.Pokemon_Dota_Arxiv import generate_team
+    return generate_team()
+
 jupyter_functions = { #read all functions in directory -> 
     'for each continent': continentRadio,
     'choose a city in each': cityRadio,
@@ -649,6 +658,9 @@ jupyter_functions = { #read all functions in directory ->
     'getTopics': getTopics, 
     'trees_map': trees_map,
     'housing_intersection': 'housing_intersection',
+
+    'for each satellite images in area find anything that matches criteria': satellite_housing,
+    'given a favorite pokemon': pokemon
 }
 def substitute(name):
     print(name)

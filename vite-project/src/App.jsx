@@ -224,10 +224,9 @@ function Histogram(props) {
   const chartRef = useRef();
 
   useEffect(() => {
-    console.log('HISTOGRAM')
+    console.log('HISTOGRAM', props)
     const runtime = new Runtime();
     runtime.module(notebook4, name => {
-      console.log('chart')
       if (name === "chart") return new Inspector(chartRef.current);
     }).redefine('data', props.data)
     return () => runtime.dispose();
@@ -235,7 +234,7 @@ function Histogram(props) {
 
   return (
     <>
-      <div ref={chartRef} />
+      <div class="w-128" ref={chartRef} />
     </>
   );
 }
@@ -417,7 +416,7 @@ function isIsochroney(datum) {
 
 function compile (dataList, apply_) {
   if (! dataList.fn) return dataList
-  // console.log(dataList)
+  console.log(dataList)
   // console.log(getFormData(), 'shit')
   return dataList.fn.map(function (datum) {
     if (isIsochroney(datum)) {
@@ -432,7 +431,7 @@ function compile (dataList, apply_) {
     }
 
 
-    if (typeof datum === 'object') { 
+    if (typeof datum === 'object' && ! Array.isArray(datum)) { 
       return <Histogram data={Object.values(datum)}/>
     }
 
@@ -445,17 +444,20 @@ function compile (dataList, apply_) {
     // if (datum === 'timeseries') {
     // }
 
-
-
-
     // if (datum === 'housing_intersection') {
     //     return <HousingIntersectionFinder />
     // }
 
-    return 'hello\n'
+    return <TextPresenter text={datum} />
   })
 }
-//10 good examples -> 
+
+
+function TextPresenter(props) {
+  return <div class=" border border-purple-500">
+    {props.text}
+  </div>
+}
 
 //server returns component: radio, data: cities['asia']
 
