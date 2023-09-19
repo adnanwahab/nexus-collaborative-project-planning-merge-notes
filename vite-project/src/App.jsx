@@ -522,7 +522,7 @@ get sentences that are highly similar or support the same thesis
     `find best time to see all the planets in the solar system`,
 
 
-    `get all twitch comments from top 3 streamers
+    `get all twitch comments from ['zackrawrr', 'elajjaz', 'arthars']
     then group them into topics
     when more than 5 comments about win trading or food -> order a pizza
     detect spikes in user activity by recording timestamp

@@ -33,6 +33,8 @@ from nltk.tokenize import word_tokenize
 nltk.download('punkt')
 nltk.download('universal_tagset')
 nltk.download('words')
+def removeWhiteSpace(_):
+    return _.strip()
 
 def getYoutube(url):
     youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s'}).download(['https://www.youtube.com/watch?v=a02S4yHHKEw&ab_channel=AllThatOfficial'])
@@ -404,8 +406,7 @@ def fetch_coffee_shops(longitude, latitude):
             node["amenity"="{i}"]({latitude - 0.01},{longitude - 0.01},{latitude + 0.01},{longitude + 0.01});
         );
         out body;
-        """
-        
+        """ 
         overpass_url = "https://overpass-api.de/api/interpreter"
         response = requests.get(overpass_url, params={'data': query})
     
@@ -413,7 +414,6 @@ def fetch_coffee_shops(longitude, latitude):
             data = response.json()
             coffee_shops = data['elements']
             places += coffee_shops
-    print(places)
     return places
 
 def getAirbnbs(_, componentData='cairo, egypt'):
@@ -642,7 +642,73 @@ def pokemon(_, __):
     from ipynb.fs.defs.Pokemon_Dota_Arxiv import generate_team
     return generate_team()
 
+
+def groupBySimilarity(sentences, documents):
+    return sentences
+    # encodings = model.encode(sentences, convert_to_tensor=True, device='cpu')
+    # clusters = util.community_detection(encodings, min_community_size=1, threshold=0.55)
+    # return clusters
+async def delay(time):
+    await asyncio.sleep(time)
+import pyppeteer
+async def get_html(channel_name):
+    print(f"hi, {channel_name}")
+
+    browser = await pyppeteer.launch(headless=True)
+    page = await browser.newPage()
+
+    await page.setViewport({"width": 1920, "height": 1080})
+    await page.goto(f"https://www.twitch.tv/{channel_name}", {"waitUntil": "networkidle2"})
+
+    await delay(1)
+
+    await page.waitForFunction("""
+    () => {
+        const el = document.querySelector('div[data-a-target="chat-welcome-message"].chat-line__status');
+        return !!el;
+    }
+    """, polling="raf")
+
+    selector = '.chat-line__message, .chat-line__status, div[data-a-target="chat-line-message"]'
+    await page.waitForSelector(selector)
+
+    text_elements = await page.querySelectorAll(selector)
+    texts = []
+
+    for element in text_elements:
+        content = await page.evaluate('(element) => element.textContent', element)
+        texts.append(content.strip())
+
+    await browser.close()
+
+    print(f"texts: {texts}")
+
+    with open(f"twitch-{channel_name}.json", "w") as f:
+        json.dump(texts, f)
+
+    return texts
+async def twitch_comments(streamers, sentenceComponentFormData):
+    print('_', sentenceComponentFormData)
+    sentence = sentenceComponentFormData['setences'][0]
+    pattern = r"\[([^\]]+)\]"
+
+    match = re.search(pattern, sentence)
+    
+    streamers =  match[0][1:-1].replace('\'', '').split(',')
+    streamers = [removeWhiteSpace(s) for s in streamers] 
+    # for streamer in streamers:
+    #     subprocess.run(['node', 'RPC/fetch-twitch.js', streamer])
+    # return [json.load(open(f'twitch-{streamer}.json', 'r')) for streamer in streamers]     
+    # loop = asyncio.get_event_loop()
+    # loop.create_task(main())
+    #idea is create 3 threads and every 3 seconds poll chat for new messages
+    #diff the messages and timestamp new ones 
+    tasks = [get_html(streamer) for streamer in streamers]
+    results = await asyncio.gather(*tasks)
+    return results
+
 jupyter_functions = { #read all functions in directory -> 
+    'group them into topics': groupBySimilarity,
     'for each continent': continentRadio,
     'choose a city in each': cityRadio,
     'find all airbnb in that city': getAirbnbs,
@@ -660,8 +726,13 @@ jupyter_functions = { #read all functions in directory ->
     'housing_intersection': 'housing_intersection',
 
     'for each satellite images in area find anything that matches criteria': satellite_housing,
-    'given a favorite pokemon': pokemon
+    'given a favorite pokemon': pokemon,
+
+    'get all twitch comments': twitch_comments,
 }
+import asyncio
+import inspect
+
 def substitute(name):
     print(name)
     for k in jupyter_functions:
@@ -674,12 +745,17 @@ app.mount("/demo", StaticFiles(directory="vite-project/dist/assets"), name="demo
 async def makeFn(FnText:FnText):
     print('FnText', FnText)
     functions = [substitute(fn) for fn in FnText.fn]
+    FnText.sentenceComponentData['setences'] = FnText.fn
+    
     val = False
     args = []
     for i, fn in enumerate(functions): 
         if type(fn) == type(lambda _:_):
             print(fn.__name__)
-            val = fn(val, FnText.sentenceComponentData)
+            if inspect.iscoroutinefunction(fn):
+                val = await fn(val, FnText.sentenceComponentData)
+            else:
+                val = fn(val, FnText.sentenceComponentData)
         else:
             val = fn 
         args.append(val)
